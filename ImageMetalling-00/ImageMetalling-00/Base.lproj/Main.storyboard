@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Saturation View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="IMPSaturationViewController" customModule="ImageMetalling_00" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="e7J-UI-OA7"/>
+                        <viewControllerLayoutGuide type="bottom" id="U40-BB-aMr"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dFE-nj-chY">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qI5-zw-EIT" customClass="IMPSaturationView" customModule="ImageMetalling_00" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <animations/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="rm1-tQ-TA7">
+                                <rect key="frame" x="0.0" y="-15" width="118" height="31"/>
+                                <animations/>
+                                <connections>
+                                    <action selector="valueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="wdw-bN-qTX"/>
+                                </connections>
+                            </slider>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="U40-BB-aMr" firstAttribute="top" secondItem="rm1-tQ-TA7" secondAttribute="bottom" constant="76" id="G2c-Qm-oNd"/>
+                            <constraint firstItem="qI5-zw-EIT" firstAttribute="centerX" secondItem="rm1-tQ-TA7" secondAttribute="centerX" id="Uyb-pf-cJB"/>
+                            <constraint firstItem="rm1-tQ-TA7" firstAttribute="leading" secondItem="dFE-nj-chY" secondAttribute="leadingMargin" id="XcD-OT-zbX"/>
+                            <constraint firstItem="qI5-zw-EIT" firstAttribute="leading" secondItem="dFE-nj-chY" secondAttribute="leading" id="bzC-ts-k2K"/>
+                            <constraint firstItem="qI5-zw-EIT" firstAttribute="top" secondItem="e7J-UI-OA7" secondAttribute="bottom" id="e3c-sM-nrJ"/>
+                            <constraint firstAttribute="trailing" secondItem="qI5-zw-EIT" secondAttribute="trailing" id="i7s-ZY-pKG"/>
+                            <constraint firstItem="rm1-tQ-TA7" firstAttribute="top" secondItem="qI5-zw-EIT" secondAttribute="bottom" constant="74" id="yrh-Gl-Qg9"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="qI5-zw-EIT"/>
+                                <exclude reference="rm1-tQ-TA7"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="G2c-Qm-oNd"/>
+                                <exclude reference="XcD-OT-zbX"/>
+                                <exclude reference="yrh-Gl-Qg9"/>
+                                <exclude reference="Uyb-pf-cJB"/>
+                                <exclude reference="bzC-ts-k2K"/>
+                                <exclude reference="e3c-sM-nrJ"/>
+                                <exclude reference="i7s-ZY-pKG"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="qI5-zw-EIT"/>
+                                <include reference="rm1-tQ-TA7"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="G2c-Qm-oNd"/>
+                                <include reference="XcD-OT-zbX"/>
+                                <include reference="yrh-Gl-Qg9"/>
+                                <include reference="Uyb-pf-cJB"/>
+                                <include reference="bzC-ts-k2K"/>
+                                <include reference="e3c-sM-nrJ"/>
+                                <include reference="i7s-ZY-pKG"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="renderingView" destination="qI5-zw-EIT" id="OhG-4e-Trm"/>
+                        <outlet property="saturationSlider" destination="rm1-tQ-TA7" id="aC0-IC-Wv3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="318" y="387"/>
+        </scene>
+    </scenes>
+</document>

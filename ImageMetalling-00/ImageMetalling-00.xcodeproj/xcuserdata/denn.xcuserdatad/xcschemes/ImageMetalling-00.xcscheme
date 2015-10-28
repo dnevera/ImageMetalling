@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3136E4CA1BDEAD5300018245"
-               BuildableName = "ImageMetalling-01.app"
-               BlueprintName = "ImageMetalling-01"
-               ReferencedContainer = "container:ImageMetalling-01.xcodeproj">
+               BlueprintIdentifier = "31483B9C1BDFC38900BDFB81"
+               BuildableName = "ImageMetalling-00.app"
+               BlueprintName = "ImageMetalling-00"
+               ReferencedContainer = "container:ImageMetalling-00.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3136E4CA1BDEAD5300018245"
-            BuildableName = "ImageMetalling-01.app"
-            BlueprintName = "ImageMetalling-01"
-            ReferencedContainer = "container:ImageMetalling-01.xcodeproj">
+            BlueprintIdentifier = "31483B9C1BDFC38900BDFB81"
+            BuildableName = "ImageMetalling-00.app"
+            BlueprintName = "ImageMetalling-00"
+            ReferencedContainer = "container:ImageMetalling-00.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -55,10 +55,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3136E4CA1BDEAD5300018245"
-            BuildableName = "ImageMetalling-01.app"
-            BlueprintName = "ImageMetalling-01"
-            ReferencedContainer = "container:ImageMetalling-01.xcodeproj">
+            BlueprintIdentifier = "31483B9C1BDFC38900BDFB81"
+            BuildableName = "ImageMetalling-00.app"
+            BlueprintName = "ImageMetalling-00"
+            ReferencedContainer = "container:ImageMetalling-00.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -74,10 +74,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3136E4CA1BDEAD5300018245"
-            BuildableName = "ImageMetalling-01.app"
-            BlueprintName = "ImageMetalling-01"
-            ReferencedContainer = "container:ImageMetalling-01.xcodeproj">
+            BlueprintIdentifier = "31483B9C1BDFC38900BDFB81"
+            BuildableName = "ImageMetalling-00.app"
+            BlueprintName = "ImageMetalling-00"
+            ReferencedContainer = "container:ImageMetalling-00.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
