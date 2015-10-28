@@ -179,7 +179,7 @@ class IMPSaturationView: UIView {
         commandQueue = device.newCommandQueue()
         
         //
-        // Библиотека шейдеров. В библиотеку компилируются все файлы с раширением .metal добавленыые в проект.
+        // Библиотека шейдеров. В библиотеку компилируются все файлы с раcширением .metal добавленyые в проект.
         //
         let library:MTLLibrary!  = self.device.newDefaultLibrary()
         
@@ -189,7 +189,7 @@ class IMPSaturationView: UIView {
         let function:MTLFunction! = library.newFunctionWithName("kernel_adjustSaturation")
         
         //
-        // Теперь создаем основной объект который будет ссылаться на исполняемый код нашего фильра.
+        // Теперь создаем основной объект который будет ссылаться на исполняемый код нашего фильтра.
         //
         pipeline = try! self.device.newComputePipelineStateWithFunction(function)
     }
