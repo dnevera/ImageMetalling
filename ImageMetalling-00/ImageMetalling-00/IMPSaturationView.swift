@@ -61,7 +61,7 @@ class IMPSaturationView: UIView {
     //
     // Очередь команд в которую мы будем записывать команды которые должен будет исполнить металический слой.
     //
-    private var commandQueue:MTLCommandQueue!=nil;
+    private var commandQueue:MTLCommandQueue!=nil
     
     //
     // Можно создать слой Core Animation, в котором можно отрендерить содержимое текстуры представленой в Metal,
@@ -70,7 +70,7 @@ class IMPSaturationView: UIView {
     // MetalKit немного экономит для нас время - дает сосредоточится на функционале, вместо того что бы писать
     // много лишнего кода.
     //
-    private var metalView:MTKView!=nil;
+    private var metalView:MTKView!=nil
     
     //
     // Переменная котейнер доя храения текстуры с которой будем работать. В текстуру мы загрузим картинку 
@@ -86,7 +86,7 @@ class IMPSaturationView: UIView {
     // Функция которую будем применять к изображению назовем kernel_adjustSaturation
     // и разместим в файле проекта: IMPSaturationFilter.metal.
     //
-    private var pipeline:MTLComputePipelineState!=nil;
+    private var pipeline:MTLComputePipelineState!=nil
     
     //
     // Настраиваем распараллеливание. Например, мы решили, что нам достаточно запустить по 8 тредов в каждом направлении
@@ -153,7 +153,7 @@ class IMPSaturationView: UIView {
         //
         metalView = MTKView(frame: self.bounds, device: self.device)
         metalView.autoResizeDrawable = true
-        metalView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth];
+        metalView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
         
         //
         // Координатная система Metal: ...The origin of the window coordinates is in the upper-left corner...
@@ -162,8 +162,8 @@ class IMPSaturationView: UIView {
         // Поэтому что бы отобразить загруженную текстуру и не возится с вращением картинки пока сделаем так:
         // просто приведем координаты к bottom-left варианту, т.е. попросту зеркально отобразим
         //
-        metalView.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI),1.0,0.0,0.0);
-        self.addSubview(metalView);
+        metalView.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI),1.0,0.0,0.0)
+        self.addSubview(metalView)
         
         //
         // Нам нужно сказать рисовалке о реальной размерности экрана в котором будет картинка рисоваться.
