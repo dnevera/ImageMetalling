@@ -148,7 +148,7 @@ class IMPSaturationView: UIView {
         super.init(coder: aDecoder)
         
         // 
-        // Сначала подготовим анимационны слой в который будем рисовать результаты работы 
+        // Сначала подготовим анимационный слой в который будем рисовать результаты работы
         // нашего фильтра.
         //
         metalView = MTKView(frame: self.bounds, device: self.device)
@@ -159,7 +159,7 @@ class IMPSaturationView: UIView {
         // Координатная система Metal: ...The origin of the window coordinates is in the upper-left corner...
         // https://developer.apple.com/library/ios/documentation/Miscellaneous/Conceptual/MetalProgrammingGuide/Render-Ctx/Render-Ctx.html
         //
-        // Поэтому что бы отобразить загруженную текстуру и не возится с вращением картинки пока сделаем так:
+        // Поэтому, что бы отобразить загруженную текстуру и не возится с вращением картинки пока сделаем так:
         // просто приведем координаты к bottom-left варианту, т.е. попросту зеркально отобразим
         //
         metalView.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI),1.0,0.0,0.0)
