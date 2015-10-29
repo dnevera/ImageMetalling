@@ -30,12 +30,6 @@ class IMPSaturationViewController: UIViewController {
         self.renderingView.saturation = sender.value;
     }
     
-    /**
-     * Срежем углы и сделаем по быстрому простое ручное обвноление параметра фильра.
-     */
-    func updateViewWith(saturation:Float){
-    }
-    
     //
     // ... как обычно ...
     //
