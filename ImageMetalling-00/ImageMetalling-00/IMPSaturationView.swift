@@ -124,14 +124,14 @@ class IMPSaturationView: UIView {
             //
             if let image = UIImage(named: file){
                 //
-                // Положм картинку в текстуру. Теперь мы можем применять различные преобразования к нашей кртинке
+                // Положим картинку в текстуру. Теперь мы можем применять различные преобразования к нашей картинке
                 // используя всю мощь GPU.
                 //
                 imageTexture = try! textureLoader.newTextureWithCGImage(image.CGImage!, options: nil)
                 
                 //
                 // Количество групп параллельных потоков зависит от размера картинки.
-                // По сути мы должны сказать сколько раз мы должны запустить вычисления разных кусков кратинки.
+                // По сути мы должны сказать сколько раз мы должны запустить вычисления разных кусков картинки.
                 //
                 threadGroups = MTLSizeMake(
                     (imageTexture.width+threadGroupCount.width)/threadGroupCount.width,
