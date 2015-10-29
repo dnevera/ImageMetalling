@@ -23,17 +23,17 @@ class IMPSaturationViewController: UIViewController {
      */
     @IBOutlet weak var renderingView: IMPSaturationView!
     
+    /**
+     * Ловим события от слайдера
+     */
     @IBAction func valueChanged(sender: UISlider) {
-        NSLog(" *** value changed", sender.value)
-        self.updateViewWith(sender.value)
+        self.renderingView.saturation = sender.value;
     }
     
     /**
      * Срежем углы и сделаем по быстрому простое ручное обвноление параметра фильра.
      */
     func updateViewWith(saturation:Float){
-        self.renderingView.saturation = saturation
-        self.renderingView.refresh()
     }
     
     //
@@ -42,10 +42,20 @@ class IMPSaturationViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        //
+        // картинуку берем прям из ресурсов проекта
+        //
         renderingView.loadImage("IMG_6295_1.JPG")
 
+        //
+        // инициализируем слайдер
+        //
         self.saturationSlider.value = 1
-        self.updateViewWith(1)
+        
+        //
+        // выставляем занчение нассыщенности
+        //
+        self.renderingView.saturation = self.saturationSlider.value;
     }
     
     override func viewDidLoad() {

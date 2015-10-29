@@ -36,6 +36,11 @@ class IMPSaturationView: UIView {
             // записвывем в буфер для передачи в GPU в момент исполнения металической команды
             //
             memcpy(saturationUniform.contents(), &saturation, sizeof(Float))
+            
+            //
+            // Обновляем вью
+            //
+            refresh()
         }
     }
     
