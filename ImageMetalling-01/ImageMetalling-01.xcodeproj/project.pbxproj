@@ -14,8 +14,9 @@
 		313391DD1BE24E18002D9035 /* IMPSHLFilter.metal in Sources */ = {isa = PBXBuildFile; fileRef = 313391DA1BE24E18002D9035 /* IMPSHLFilter.metal */; };
 		313391DE1BE24E18002D9035 /* IMPSHLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313391DB1BE24E18002D9035 /* IMPSHLView.swift */; };
 		313391DF1BE24E18002D9035 /* IMPSHLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313391DC1BE24E18002D9035 /* IMPSHLViewController.swift */; };
-		313391E21BE24E75002D9035 /* IMG_9326.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 313391E11BE24E75002D9035 /* IMG_9326.JPG */; };
-		313391E41BE26F76002D9035 /* IMG_8239.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 313391E31BE26F76002D9035 /* IMG_8239.JPG */; };
+		313391E21BE24E75002D9035 /* shadows3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 313391E11BE24E75002D9035 /* shadows3.jpg */; };
+		313391E41BE26F76002D9035 /* shadows2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 313391E31BE26F76002D9035 /* shadows2.jpg */; };
+		313391E61BE2D218002D9035 /* shadows1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 313391E51BE2D218002D9035 /* shadows1.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,8 +29,9 @@
 		313391DA1BE24E18002D9035 /* IMPSHLFilter.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPSHLFilter.metal; sourceTree = "<group>"; };
 		313391DB1BE24E18002D9035 /* IMPSHLView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPSHLView.swift; sourceTree = "<group>"; };
 		313391DC1BE24E18002D9035 /* IMPSHLViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPSHLViewController.swift; sourceTree = "<group>"; };
-		313391E11BE24E75002D9035 /* IMG_9326.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = IMG_9326.JPG; path = Images/IMG_9326.JPG; sourceTree = "<group>"; };
-		313391E31BE26F76002D9035 /* IMG_8239.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = IMG_8239.JPG; path = Images/IMG_8239.JPG; sourceTree = "<group>"; };
+		313391E11BE24E75002D9035 /* shadows3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = shadows3.jpg; path = Images/shadows3.jpg; sourceTree = "<group>"; };
+		313391E31BE26F76002D9035 /* shadows2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = shadows2.jpg; path = Images/shadows2.jpg; sourceTree = "<group>"; };
+		313391E51BE2D218002D9035 /* shadows1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = shadows1.jpg; path = Images/shadows1.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,8 +80,9 @@
 		313391E01BE24E27002D9035 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				313391E11BE24E75002D9035 /* IMG_9326.JPG */,
-				313391E31BE26F76002D9035 /* IMG_8239.JPG */,
+				313391E51BE2D218002D9035 /* shadows1.jpg */,
+				313391E31BE26F76002D9035 /* shadows2.jpg */,
+				313391E11BE24E75002D9035 /* shadows3.jpg */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -143,10 +146,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				313391D31BE24DCA002D9035 /* LaunchScreen.storyboard in Resources */,
-				313391E41BE26F76002D9035 /* IMG_8239.JPG in Resources */,
+				313391E61BE2D218002D9035 /* shadows1.jpg in Resources */,
+				313391E41BE26F76002D9035 /* shadows2.jpg in Resources */,
 				313391D01BE24DCA002D9035 /* Assets.xcassets in Resources */,
 				313391CE1BE24DCA002D9035 /* Main.storyboard in Resources */,
-				313391E21BE24E75002D9035 /* IMG_9326.JPG in Resources */,
+				313391E21BE24E75002D9035 /* shadows3.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +312,7 @@
 				313391D91BE24DCA002D9035 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

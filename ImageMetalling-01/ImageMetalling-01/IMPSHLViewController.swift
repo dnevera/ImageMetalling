@@ -55,7 +55,7 @@ class IMPSHLViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
-        renderingView.loadImage("IMG_8239.JPG")
+        renderingView.loadImage("shadows1.jpg")
 
         self.shadowsLevelSlider.value = self.renderingView.shadowsLevel
         self.shadowsWidthSlider.value = self.renderingView.shadowsWidth
