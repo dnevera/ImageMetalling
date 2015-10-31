@@ -10,13 +10,6 @@
 #include <simd/simd.h>
 using namespace metal;
 
-inline float4 blendScreen(float4 base, float4 blend){
-    //
-    // from: https://en.wikipedia.org/wiki/Blend_modes#Screen
-    //
-    return (1.0 - ((1.0 - base) * (1.0 - blend)));
-}
-
 inline float4 blendNormal(float4 c2, float4 c1)
 {
     //
@@ -40,33 +33,57 @@ typedef struct{
     packed_float4 shadows;       // [level, weight, tonal width, slop]
 } IMPShadows;
 
-inline float shadows_weight_internal(float x, float weight, float width, float slop){
-    float w = width * 0.5;
-    return weight/ exp( 3 * x * slop / w) * (w);
+
+//
+// Прямое переложение функции расчета веса светов в якростном канале сигнала
+//
+inline float luminance_weight(float Li, float W, float Wt, float Ks){
+    return W / exp( 6 * Ks * Li / Wt) * (Wt * 0.5);
 }
 
-inline float shadows_weight(float x, float weight, float width, float slop){
-    float maxe = shadows_weight_internal(0, weight, width, slop);
-    return weight * shadows_weight_internal(x, weight, width, slop)/maxe;
-}
-
+//
+// РЕзультирующая функция коррекции теней
+//
 inline float4 adjustShadows(float4 source, constant IMPShadows &adjustment)
 {
-    float3 rgb       = source.rgb;
-    
-    float4 shadows(adjustment.shadows);
-    
+    float3 rgb = source.rgb;
+
+    //
+    // выучите эту строчку наизусть, используется почти везде
+    //
     float luminance = dot(rgb, float3(0.299, 0.587, 0.114));
 
-    float weight = shadows_weight(luminance,
-                                  shadows.y,
-                                  shadows.z,
-                                  shadows.w);
+    //
+    // Распаковываем выходной буфер, прилетевший из памяти приложения в память GPU
+    // подразумеваем:
+    // 1. x - уровень воздействия фильтра
+    // 2. y - коэффициент нормализации фильтра (по умолчанию = 1 и мы его не трогаем)
+    // 3. z - тональная ширина охвата фильтра, т.е. насколько далеко мы восстанавливаем тени от черной точки
+    // 4. w - коэффициент наклона (slope) кривой фильтра, т.е. скорость сниения воздействия в зависимости от
+    //        яркости
+    //
+    float4 shadows(adjustment.shadows);
     
-    float4 screen = blendScreen(source, source);
-    float3 result = blendScreen(source, screen).rgb;
+    float weight = luminance_weight(luminance,
+                                    shadows.y,
+                                    shadows.z,
+                                    shadows.w);
     
-    return blendNormal (source, float4(float3(result),  shadows.x * weight));
+    //
+    // Альфа канал - функция уровня воздействия фильтра и вес от яркости
+    //
+    float  a(shadows.x * weight);
+    
+    //
+    // Функция смешивания в режиме screen 2 раза или
+    // гаммакорекция негатива с гаммой == 4
+    //
+    float3 c(1.0 - pow((1.0 - rgb),4));
+    
+    //
+    // Результат смешиваем в нормальном режиме с учетом композиции в альфа канале
+    //
+    return blendNormal (source, float4 (c , a));
 }
 
 
@@ -75,7 +92,7 @@ kernel void kernel_adjustSHL(
                              texture2d<float, access::write> outTexture [[texture(1)]],
                              constant IMPShadows &adjustment             [[buffer(0)]],
                              uint2 gid [[thread_position_in_grid]]
-                                    )
+                             )
 {
     float4 inColor = inTexture.read(gid);
     outTexture.write(adjustShadows(inColor, adjustment), gid);
