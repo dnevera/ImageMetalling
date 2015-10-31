@@ -1,0 +1,385 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3136B16F1BE4EBA300E08D57 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3136B16E1BE4EBA300E08D57 /* AppDelegate.swift */; };
+		3136B1711BE4EBA300E08D57 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3136B1701BE4EBA300E08D57 /* ViewController.swift */; };
+		3136B1741BE4EBA300E08D57 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3136B1721BE4EBA300E08D57 /* Main.storyboard */; };
+		3136B1761BE4EBA300E08D57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3136B1751BE4EBA300E08D57 /* Assets.xcassets */; };
+		3136B1791BE4EBA300E08D57 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3136B1771BE4EBA300E08D57 /* LaunchScreen.storyboard */; };
+		3136B1811BE4EC2B00E08D57 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 3136B1801BE4EC2B00E08D57 /* Podfile */; };
+		3136B1841BE53B7B00E08D57 /* ImageMetalling-02-mainMetal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3136B1831BE53B7B00E08D57 /* ImageMetalling-02-mainMetal.metal */; };
+		68D5E3D216FCD40A5DDB16CD /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A0B5B66BCEB8B5C50BA9E8 /* libPods.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		251F209DD8262A424050FA7C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		3136B16B1BE4EBA300E08D57 /* ImageMetalling-02.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-02.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3136B16E1BE4EBA300E08D57 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3136B1701BE4EBA300E08D57 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3136B1731BE4EBA300E08D57 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3136B1751BE4EBA300E08D57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3136B1781BE4EBA300E08D57 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3136B17A1BE4EBA300E08D57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3136B1801BE4EC2B00E08D57 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		3136B1821BE5350F00E08D57 /* ImageMetalling-02-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageMetalling-02-Bridging-Header.h"; sourceTree = "<group>"; };
+		3136B1831BE53B7B00E08D57 /* ImageMetalling-02-mainMetal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = "ImageMetalling-02-mainMetal.metal"; sourceTree = "<group>"; };
+		46CC5C230BBB9A3110375E59 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		E1A0B5B66BCEB8B5C50BA9E8 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3136B1681BE4EBA300E08D57 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68D5E3D216FCD40A5DDB16CD /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3136B1621BE4EBA300E08D57 = {
+			isa = PBXGroup;
+			children = (
+				3136B1801BE4EC2B00E08D57 /* Podfile */,
+				3136B16D1BE4EBA300E08D57 /* ImageMetalling-02 */,
+				3136B16C1BE4EBA300E08D57 /* Products */,
+				4C7A77C4D389D62BD65C9DBE /* Pods */,
+				8283988D1C263266FF942F46 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3136B16C1BE4EBA300E08D57 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3136B16B1BE4EBA300E08D57 /* ImageMetalling-02.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3136B16D1BE4EBA300E08D57 /* ImageMetalling-02 */ = {
+			isa = PBXGroup;
+			children = (
+				3136B16E1BE4EBA300E08D57 /* AppDelegate.swift */,
+				3136B1701BE4EBA300E08D57 /* ViewController.swift */,
+				3136B1821BE5350F00E08D57 /* ImageMetalling-02-Bridging-Header.h */,
+				3136B1831BE53B7B00E08D57 /* ImageMetalling-02-mainMetal.metal */,
+				3136B1721BE4EBA300E08D57 /* Main.storyboard */,
+				3136B1751BE4EBA300E08D57 /* Assets.xcassets */,
+				3136B1771BE4EBA300E08D57 /* LaunchScreen.storyboard */,
+				3136B17A1BE4EBA300E08D57 /* Info.plist */,
+			);
+			path = "ImageMetalling-02";
+			sourceTree = "<group>";
+		};
+		4C7A77C4D389D62BD65C9DBE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				46CC5C230BBB9A3110375E59 /* Pods.debug.xcconfig */,
+				251F209DD8262A424050FA7C /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		8283988D1C263266FF942F46 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E1A0B5B66BCEB8B5C50BA9E8 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3136B16A1BE4EBA300E08D57 /* ImageMetalling-02 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3136B17D1BE4EBA300E08D57 /* Build configuration list for PBXNativeTarget "ImageMetalling-02" */;
+			buildPhases = (
+				3E3331BF7F98D82C2FCB6F73 /* Check Pods Manifest.lock */,
+				3136B1671BE4EBA300E08D57 /* Sources */,
+				3136B1681BE4EBA300E08D57 /* Frameworks */,
+				3136B1691BE4EBA300E08D57 /* Resources */,
+				DA3F77B29CA58EDAC9A9FCBB /* Embed Pods Frameworks */,
+				5DD56C170D4EECB068A1CEEE /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ImageMetalling-02";
+			productName = "ImageMetalling-02";
+			productReference = 3136B16B1BE4EBA300E08D57 /* ImageMetalling-02.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3136B1631BE4EBA300E08D57 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = ImageMetalling;
+				TargetAttributes = {
+					3136B16A1BE4EBA300E08D57 = {
+						CreatedOnToolsVersion = 7.1;
+					};
+				};
+			};
+			buildConfigurationList = 3136B1661BE4EBA300E08D57 /* Build configuration list for PBXProject "ImageMetalling-02" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3136B1621BE4EBA300E08D57;
+			productRefGroup = 3136B16C1BE4EBA300E08D57 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3136B16A1BE4EBA300E08D57 /* ImageMetalling-02 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3136B1691BE4EBA300E08D57 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3136B1791BE4EBA300E08D57 /* LaunchScreen.storyboard in Resources */,
+				3136B1761BE4EBA300E08D57 /* Assets.xcassets in Resources */,
+				3136B1811BE4EC2B00E08D57 /* Podfile in Resources */,
+				3136B1741BE4EBA300E08D57 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3E3331BF7F98D82C2FCB6F73 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		5DD56C170D4EECB068A1CEEE /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA3F77B29CA58EDAC9A9FCBB /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3136B1671BE4EBA300E08D57 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3136B1841BE53B7B00E08D57 /* ImageMetalling-02-mainMetal.metal in Sources */,
+				3136B1711BE4EBA300E08D57 /* ViewController.swift in Sources */,
+				3136B16F1BE4EBA300E08D57 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3136B1721BE4EBA300E08D57 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3136B1731BE4EBA300E08D57 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3136B1771BE4EBA300E08D57 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3136B1781BE4EBA300E08D57 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3136B17B1BE4EBA300E08D57 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3136B17C1BE4EBA300E08D57 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3136B17E1BE4EBA300E08D57 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 46CC5C230BBB9A3110375E59 /* Pods.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "ImageMetalling-02/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Public/DegradrCore3";
+				PRODUCT_BUNDLE_IDENTIFIER = "IMetalling.ImageMetalling-02";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-02/ImageMetalling-02-Bridging-Header.h";
+			};
+			name = Debug;
+		};
+		3136B17F1BE4EBA300E08D57 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 251F209DD8262A424050FA7C /* Pods.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "ImageMetalling-02/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Public/DegradrCore3";
+				PRODUCT_BUNDLE_IDENTIFIER = "IMetalling.ImageMetalling-02";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-02/ImageMetalling-02-Bridging-Header.h";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3136B1661BE4EBA300E08D57 /* Build configuration list for PBXProject "ImageMetalling-02" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3136B17B1BE4EBA300E08D57 /* Debug */,
+				3136B17C1BE4EBA300E08D57 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3136B17D1BE4EBA300E08D57 /* Build configuration list for PBXNativeTarget "ImageMetalling-02" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3136B17E1BE4EBA300E08D57 /* Debug */,
+				3136B17F1BE4EBA300E08D57 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3136B1631BE4EBA300E08D57 /* Project object */;
+}
