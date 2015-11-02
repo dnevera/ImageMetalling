@@ -16,7 +16,6 @@
 		31AA3BEB1BE76D4500B1A9F8 /* IMPSHLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AA3BE81BE76D4500B1A9F8 /* IMPSHLView.swift */; };
 		31AA3BEC1BE76D4500B1A9F8 /* IMPSHLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AA3BE91BE76D4500B1A9F8 /* IMPSHLViewController.swift */; };
 		31AA3BEF1BE78B1200B1A9F8 /* shadows_highlights.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 31AA3BEE1BE78B1200B1A9F8 /* shadows_highlights.jpg */; };
-		31AA3BF11BE78DB000B1A9F8 /* shadows1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 31AA3BF01BE78DB000B1A9F8 /* shadows1.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +32,6 @@
 		31AA3BE81BE76D4500B1A9F8 /* IMPSHLView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPSHLView.swift; sourceTree = "<group>"; };
 		31AA3BE91BE76D4500B1A9F8 /* IMPSHLViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPSHLViewController.swift; sourceTree = "<group>"; };
 		31AA3BEE1BE78B1200B1A9F8 /* shadows_highlights.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = shadows_highlights.jpg; path = Images/shadows_highlights.jpg; sourceTree = "<group>"; };
-		31AA3BF01BE78DB000B1A9F8 /* shadows1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = shadows1.jpg; path = Images/shadows1.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +84,6 @@
 			isa = PBXGroup;
 			children = (
 				31AA3BEE1BE78B1200B1A9F8 /* shadows_highlights.jpg */,
-				31AA3BF01BE78DB000B1A9F8 /* shadows1.jpg */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -151,7 +148,6 @@
 			files = (
 				31AA3BEF1BE78B1200B1A9F8 /* shadows_highlights.jpg in Resources */,
 				31AA3BE01BE76CC000B1A9F8 /* LaunchScreen.storyboard in Resources */,
-				31AA3BF11BE78DB000B1A9F8 /* shadows1.jpg in Resources */,
 				31AA3BDD1BE76CC000B1A9F8 /* Assets.xcassets in Resources */,
 				31AA3BDB1BE76CC000B1A9F8 /* Main.storyboard in Resources */,
 			);

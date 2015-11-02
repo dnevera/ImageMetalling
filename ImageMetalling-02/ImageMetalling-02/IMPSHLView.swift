@@ -1,6 +1,6 @@
 //
 //  IMPView.swift
-//  ImageMetalling-00
+//  ImageMetalling-02
 //
 //  Created by denis svinarchuk on 27.10.15.
 //  Copyright © 2015 ImageMetalling. All rights reserved.
