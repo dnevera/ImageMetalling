@@ -38,7 +38,7 @@ typedef struct{
 // Прямое переложение функции расчета веса светов в якростном канале сигнала
 //
 inline float luminance_weight(float Li, float W, float Wt, float Ks){
-    return W / exp( 6 * Ks * Li / Wt) * (Wt * 0.5);
+    return W / exp( 6 * Ks * Li / Wt) * Wt;
 }
 
 //
