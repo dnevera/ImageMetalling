@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3139F94D1BE79EAF00AF8532 /* IMPCurvedSHLFilter.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3139F94C1BE79EAF00AF8532 /* IMPCurvedSHLFilter.metal */; };
+		3139F9691BE8BE8300AF8532 /* shadows_highlights_gray_grad.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3139F9681BE8BE8300AF8532 /* shadows_highlights_gray_grad.jpg */; };
 		31AA3BD61BE76CC000B1A9F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AA3BD51BE76CC000B1A9F8 /* AppDelegate.swift */; };
 		31AA3BDB1BE76CC000B1A9F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 31AA3BD91BE76CC000B1A9F8 /* Main.storyboard */; };
 		31AA3BDD1BE76CC000B1A9F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31AA3BDC1BE76CC000B1A9F8 /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 		3139F94C1BE79EAF00AF8532 /* IMPCurvedSHLFilter.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPCurvedSHLFilter.metal; sourceTree = "<group>"; };
 		3139F94E1BE79F6900AF8532 /* IMPCommonMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMPCommonMetal.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		3139F95A1BE7B0BA00AF8532 /* IMPShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMPShaderTypes.h; sourceTree = "<group>"; };
+		3139F9681BE8BE8300AF8532 /* shadows_highlights_gray_grad.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = shadows_highlights_gray_grad.jpg; path = Images/shadows_highlights_gray_grad.jpg; sourceTree = "<group>"; };
 		31AA3BD21BE76CC000B1A9F8 /* ImageMetalling-02.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-02.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31AA3BD51BE76CC000B1A9F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		31AA3BDA1BE76CC000B1A9F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				31AA3BEE1BE78B1200B1A9F8 /* shadows_highlights.jpg */,
+				3139F9681BE8BE8300AF8532 /* shadows_highlights_gray_grad.jpg */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -148,6 +151,7 @@
 			files = (
 				31AA3BEF1BE78B1200B1A9F8 /* shadows_highlights.jpg in Resources */,
 				31AA3BE01BE76CC000B1A9F8 /* LaunchScreen.storyboard in Resources */,
+				3139F9691BE8BE8300AF8532 /* shadows_highlights_gray_grad.jpg in Resources */,
 				31AA3BDD1BE76CC000B1A9F8 /* Assets.xcassets in Resources */,
 				31AA3BDB1BE76CC000B1A9F8 /* Main.storyboard in Resources */,
 			);

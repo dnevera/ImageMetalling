@@ -12,53 +12,18 @@
 using namespace metal;
 
 //
-// Маска теней для вектора RGB в произвольном числовом формате формате
+// Маска теней для вектора RGB/канала яркости в произвольном числовом формате формате
 //
-template<typename T> inline vec<T, 3>  LsMask(vec<T, 3>  Li, float W, float Wt, float Ks){
-    vec<T, 3> c(1 - pow((1 - Li),4));
-    return c * W / exp( 6 * Ks * Li / Wt) * Wt;
-}
-
-//
-// Маска теней для канала яркости в произвольном числовом формате формате
-//
-template<typename T> inline T  LsMask(T  Li, float W, float Wt, float Ks){
+template<typename T> inline T LsMask(T Li, float W, float Wt, float Ks){
     T c(1 - pow((1 - Li),4));
     return c * W / exp( 6 * Ks * Li / Wt) * Wt;
 }
 
 //
-// Маска светов для вектора RGB в произвольном формате
-//
-template<typename T> inline vec<T, 3> LhMask(vec<T, 3> Li, float W, float Wt, float Ka){
-    return 1 - LsMask(1-Li,W,Wt,Ka);
-}
-
-//
-// Маска светов для канала яркости в произвольном формате
+// Маска светов для вектора RGB/канала яркости в произвольном формате
 //
 template<typename T> inline T LhMask(T Li, float W, float Wt, float Ka){
     return 1 - LsMask(1-Li,W,Wt,Ka);
-}
-
-//
-// Результирующая кривая коррекции в RGB
-//
-template<typename T> inline vec<T, 3> shlCurve(vec<T, 3> rgb, constant IMPShadowsHighLights &adjustment){
-    
-    vec<T, 3> lh = LhMask(rgb,
-                       adjustment.highlights.x,
-                       adjustment.highlights.y,
-                       adjustment.highlights.z
-                       );
-    
-    vec<T, 3> ls = LsMask(rgb,
-                       adjustment.shadows.x,
-                       adjustment.shadows.y,
-                       adjustment.shadows.z
-                       );
-    
-    return vec<T, 3> (rgb + ls) * lh;
 }
 
 //
@@ -67,16 +32,16 @@ template<typename T> inline vec<T, 3> shlCurve(vec<T, 3> rgb, constant IMPShadow
 template<typename T> inline T shlCurve(T Li, constant IMPShadowsHighLights &adjustment){
     
     T lh = LhMask(Li,
-                          adjustment.highlights.x,
-                          adjustment.highlights.y,
-                          adjustment.highlights.z
-                          );
+                  adjustment.highlights.x,
+                  adjustment.highlights.y,
+                  adjustment.highlights.z
+                  );
     
     T ls = LsMask(Li,
-                          adjustment.shadows.x,
-                          adjustment.shadows.y,
-                          adjustment.shadows.z
-                          );
+                  adjustment.shadows.x,
+                  adjustment.shadows.y,
+                  adjustment.shadows.z
+                  );
     
     return T ((Li + ls) * lh);
 }
@@ -99,7 +64,7 @@ inline float4 adjustRgbShadowsHighlights(float4 source, constant IMPShadowsHighL
 inline float4 adjustLumaShadowsHighlights(float4 source, constant IMPShadowsHighLights &adjustment)
 {
     float luminance = dot(source.rgb, luma_factor);
-
+    
     float3 curve = shlCurve(luminance, adjustment);
     //
     // Результат ссмешивае с учетом композиции в альфа канале.
@@ -127,18 +92,6 @@ inline float4 adjustHSVShadowsHighlights(float4 source, constant IMPShadowsHighL
 // Дальше просто конкретные kernel-функции
 //
 kernel void kernel_adjustRgbCurvedSHL(
-                             texture2d<float, access::sample> inTexture [[texture(0)]],
-                             texture2d<float, access::write> outTexture [[texture(1)]],
-                             constant IMPShadowsHighLights &adjustment  [[buffer(0)]],
-                             uint2 gid [[thread_position_in_grid]]
-                             )
-{
-    float4 inColor = inTexture.read(gid);
-    outTexture.write(adjustRgbShadowsHighlights(inColor, adjustment), gid);
-}
-
-
-kernel void kernel_adjustLumaCurvedSHL(
                                       texture2d<float, access::sample> inTexture [[texture(0)]],
                                       texture2d<float, access::write> outTexture [[texture(1)]],
                                       constant IMPShadowsHighLights &adjustment  [[buffer(0)]],
@@ -146,15 +99,27 @@ kernel void kernel_adjustLumaCurvedSHL(
                                       )
 {
     float4 inColor = inTexture.read(gid);
-    outTexture.write(adjustLumaShadowsHighlights(inColor, adjustment), gid);
+    outTexture.write(adjustRgbShadowsHighlights(inColor, adjustment), gid);
 }
 
-kernel void kernel_adjustHSVCurvedSHL(
+
+kernel void kernel_adjustLumaCurvedSHL(
                                        texture2d<float, access::sample> inTexture [[texture(0)]],
                                        texture2d<float, access::write> outTexture [[texture(1)]],
                                        constant IMPShadowsHighLights &adjustment  [[buffer(0)]],
                                        uint2 gid [[thread_position_in_grid]]
                                        )
+{
+    float4 inColor = inTexture.read(gid);
+    outTexture.write(adjustLumaShadowsHighlights(inColor, adjustment), gid);
+}
+
+kernel void kernel_adjustHSVCurvedSHL(
+                                      texture2d<float, access::sample> inTexture [[texture(0)]],
+                                      texture2d<float, access::write> outTexture [[texture(1)]],
+                                      constant IMPShadowsHighLights &adjustment  [[buffer(0)]],
+                                      uint2 gid [[thread_position_in_grid]]
+                                      )
 {
     float4 inColor = inTexture.read(gid);
     outTexture.write(adjustHSVShadowsHighlights(inColor, adjustment), gid);
