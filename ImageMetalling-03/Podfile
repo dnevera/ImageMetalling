@@ -1,10 +1,7 @@
 platform :ios, '8.0'
 
-#pod 'DegradrMath', :git => 'https://bitbucket.org/degrader/degradr-math.git'
-#pod 'DegradrCore3', :git => 'https://bitbucket.org/degrader/degradr-core-3.git'
-
-pod 'DegradrMath', :path =>  '../../degradr/DegradrMath'
-pod 'DegradrCore3', :path => '../../degradr/DegradrCore3'
+pod 'DegradrMath', :git => 'https://bitbucket.org/degrader/degradr-math.git'
+pod 'DegradrCore3', :git => 'https://bitbucket.org/degrader/degradr-core-3.git'
 
 post_install do |installer|
     installer.pods_project.targets.each do |target|

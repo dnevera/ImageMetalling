@@ -54,7 +54,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mj0-N9-1wv">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <animations/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="90" id="3EA-0O-nEc"/>
                                     <constraint firstAttribute="height" constant="120" id="xGR-Pa-W0q"/>
@@ -75,6 +75,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WGf-7V-ErC">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <animations/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="120" id="Aig-G8-RZE"/>
                                     <constraint firstAttribute="width" constant="90" id="tUw-0c-mkg"/>
@@ -153,9 +154,9 @@
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="filter1ViewImage" destination="laF-Vh-5t4" id="Rzu-F0-m6F"/>
-                        <outlet property="filter2ViewImage" destination="mj0-N9-1wv" id="5Bt-wy-5uQ"/>
-                        <outlet property="filter3ViewImage" destination="WGf-7V-ErC" id="sfH-cf-pwW"/>
+                        <outlet property="filter1Icon" destination="laF-Vh-5t4" id="TiF-zO-ksz"/>
+                        <outlet property="filter2Icon" destination="mj0-N9-1wv" id="RKD-fR-eIe"/>
+                        <outlet property="filter3Icon" destination="WGf-7V-ErC" id="m92-gi-WwU"/>
                         <outlet property="opacitySlider" destination="ky7-Zw-m8U" id="xWx-u0-Aup"/>
                     </connections>
                 </viewController>

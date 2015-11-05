@@ -18,6 +18,7 @@
 		3151A4751BEA805500048501 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3151A4731BEA805500048501 /* Main.storyboard */; };
 		3151A4771BEA805500048501 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3151A4761BEA805500048501 /* Assets.xcassets */; };
 		3151A47A1BEA805500048501 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3151A4781BEA805500048501 /* LaunchScreen.storyboard */; };
+		316D7E7B1BEB6AC8009374D2 /* filter4.cube in Resources */ = {isa = PBXBuildFile; fileRef = 316D7E7A1BEB6AC8009374D2 /* filter4.cube */; };
 		A78A4EEB055A0B4D8786EB9D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 123E073117F8673E6D8EFF02 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		3151A4791BEA805500048501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3151A47B1BEA805500048501 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		316D7E791BEA972F009374D2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		316D7E7A1BEB6AC8009374D2 /* filter4.cube */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = filter4.cube; path = Luts/filter4.cube; sourceTree = "<group>"; };
 		D44251561E54994633BC3326 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,6 +70,7 @@
 				3140E6FF1BEA8BDB00E1E05A /* filter1.cube */,
 				3140E7001BEA8BDB00E1E05A /* filter2.cube */,
 				3140E7011BEA8BDB00E1E05A /* filter3.cube */,
+				316D7E7A1BEB6AC8009374D2 /* filter4.cube */,
 			);
 			name = Luts;
 			sourceTree = "<group>";
@@ -191,6 +194,7 @@
 				3140E7021BEA8BDB00E1E05A /* filter1.cube in Resources */,
 				3140E6FA1BEA812800E1E05A /* Podfile in Resources */,
 				3151A4751BEA805500048501 /* Main.storyboard in Resources */,
+				316D7E7B1BEB6AC8009374D2 /* filter4.cube in Resources */,
 				3140E7041BEA8BDB00E1E05A /* filter3.cube in Resources */,
 				3140E7031BEA8BDB00E1E05A /* filter2.cube in Resources */,
 				3140E7061BEA8BE300E1E05A /* template.jpg in Resources */,
