@@ -35,7 +35,7 @@ class IMPMetalaGramFilter: DPFilter {
     // Image provider-ы - абстрактное представление произвольного изображения и его исходных данных
     // этого изображения. Фреймворк содержит начальный набор провайдеров к jpeg-файлам,  UIImage/CGImage,
     // NSData, frame-буферу видео-изображения.
-    // Нам для работы c lookup таблицами нунеж CLUT-провайдер, который, по сути, 
+    // Нам для работы c lookup таблицами нунеж CLUT-провайдер, который, по сути,
     // явлеется таким же изображением (текстурой), и позиция цвета в виде координаты является отображение
     // входного цвета в выходной
     //
@@ -66,6 +66,10 @@ class IMPMetalaGramFilter: DPFilter {
             }
         }
         catch let error as NSError{
+            //
+            // Перед падением программы напишем что пошло не так,
+            // скорее всего в проект не добавили файла или формат файла левый
+            //
             NSLog("%@", error)
         }
         
@@ -82,8 +86,8 @@ class IMPMetalaGramFilter: DPFilter {
                 
                 //
                 // Скажем фильтру, что данные протухли.
-                // Когда пишется свой собственный кастомный фильтр с помощью 
-                // DPCore3 необходимо выставлять флажок протухания (dirty) 
+                // Когда пишется свой собственный кастомный фильтр с помощью
+                // DPCore3 необходимо выставлять флажок протухания (dirty)
                 // при изменении параметров фильтра.
                 //
                 self.dirty = true
@@ -135,21 +139,7 @@ class IMPMetalaGramFilter: DPFilter {
 }
 
 class ViewController: UIViewController {
-
-    //
-    // Управлять будем только прозрачностью фильтра
-    // т.е. его степенью воздействия.
-    //
-    @IBOutlet weak var opacitySlider: UISlider!
-
-    @IBAction func changeSliderValue(sender: UISlider) {
-        let filter:IMPMetalaGramFilter = camera.liveViewFilter as! IMPMetalaGramFilter
-        //
-        // всегда от 0 до 1
-        //
-        filter.opacity=sender.value
-    }
-
+    
     //
     // В примере не будем городить огород, просто накидаем
     // 3 иконки для выбора 3х фильтров.
@@ -157,6 +147,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var filter1Icon: UIImageView!
     @IBOutlet weak var filter2Icon: UIImageView!
     @IBOutlet weak var filter3Icon: UIImageView!
+    
     
     //
     // Названия файлов color lookup table - файлов.
@@ -172,19 +163,19 @@ class ViewController: UIViewController {
     // Иконки фильров на экране для выбора
     //
     private var filterIcons = [String:UIImageView]()
-
+    
     //
     // Для работы с потоком видео создадим неблокирующий контекст.
     //
     private let contextLive   = DPContext.newLazyContext()
-
+    
     //
     // В комплекте с фильтрами из DPCore3 идет класс для управления камерой
     // Менеджер камеры так же дает возможность не писать лишнего кода для связывания
     // окна отображения с потоком видео или фото.
     //
     private var camera:DPCameraManager!
-
+    
     //
     // Окно-контейнер для публикации видео потока, которое связываем мееджером камеры
     //
@@ -195,21 +186,21 @@ class ViewController: UIViewController {
     //
     private var filterLive:IMPMetalaGramFilter!
     
-
+    
     override func viewDidAppear(animated: Bool) {
         
         super.viewDidAppear(animated);
-    
+        
         //
-        // Тут просто инициализируем иконки выбора фильтров 
-        // при нажатии на которые будет выбираться определенный LUT и устанавливаться в качестве 
+        // Тут просто инициализируем иконки выбора фильтров
+        // при нажатии на которые будет выбираться определенный LUT и устанавливаться в качестве
         // источника для фильтра.
         //
         // Для корректной отрисовки выбираем блокирующий контекст (по умолчанию).
         //
         if let filter:IMPMetalaGramFilter! = IMPMetalaGramFilter(context: DPContext.newContext(), initialLUTName: currentLutName) {
             
-            filter.source = DPUIImageProvider.newWithImage(UIImage(named: "template.jpg"), context: filter.context)
+            filter.source = DPUIImageProvider.newWithImage(UIImage(named: "template1x1.jpg"), context: filter.context)
             
             for n in lutNameAt{
                 let iconView = filterIcons[n]! as UIImageView
@@ -218,6 +209,10 @@ class ViewController: UIViewController {
             }
         }
         
+        //
+        // Что бы не сильно раздражали скачки при старте
+        // никакого смысле не несет
+        //
         UIView.animateWithDuration(UIApplication.sharedApplication().statusBarOrientationAnimationDuration,
             animations: {
                 for (name, c) in self.filterIcons{
@@ -232,22 +227,31 @@ class ViewController: UIViewController {
         )
     }
     
-
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        //
+        // При старте стартуем камеру
+        //
         camera.start()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        //
+        // При стопе стопаем камеру
+        //
         camera.stop()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: UIStatusBarAnimation.Slide)
+        
         //
-        // Это пример, да...
+        // Это просто пример, да...
         //
         filterIcons = [
             lutNameAt[0]:filter1Icon,
@@ -256,11 +260,6 @@ class ViewController: UIViewController {
         ]
         
         currentLutName = lutNameAt[0]
-        
-        //
-        // По умолчанию действие выбранного фильтра будет полностью
-        //
-        opacitySlider.value=1
         
         //
         //  Просто настраиваем наш импровизированный чузер фильтров
@@ -273,10 +272,9 @@ class ViewController: UIViewController {
             c.addGestureRecognizer(tapGesture)
         }
         
-        liveView = UIView(frame: CGRectMake( 0, 50,
+        liveView = UIView(frame: CGRectMake( 0, 60,
             self.view.bounds.size.width,
             self.view.bounds.size.width
-            //self.view.bounds.size.height*3/4
             ))
         liveView.backgroundColor = UIColor.clearColor()
         self.view.insertSubview(liveView, atIndex: 0)
@@ -295,16 +293,81 @@ class ViewController: UIViewController {
         //
         filterLive = IMPMetalaGramFilter(context: contextLive, initialLUTName: currentLutName)
         
+        //
+        // Делаем картинку квадратной отрезая слева и справа
+        //    - помним, что нормальная ориентация камеры на левом боку
+        //
         let factor:Float = (1-3/4)/2
         let transform  = DPTransform()
         transform.cropRegion = DPCropRegion(top: 0, right: factor, left: factor, bottom: 0)
         
         filterLive.transform = transform
-
+        
         //
         // Связываем его с live-vew фильтром камеры
         //
         camera.liveViewFilter = filterLive
+        
+        //
+        // Чтобы побыстрее жать жипег используем хардварную компрессию встроенную в iOS
+        //
+        camera.hardwareCompression = true;
+        
+        //
+        // Чтобы еще чуть ускориться
+        //
+        camera.compressionQuality  = 0.9;
+        
+        //
+        // Теперь настраиваем контекст захвата картинки
+        // Он по идее может быть и контекстом live-view камеры, но нам ее не хочется тормозить
+        // на момент работы фильтра по полному разрешению прилетевшего файла
+        //
+        let capturingFilter = IMPMetalaGramFilter(context: DPContext.newContext(), initialLUTName: currentLutName)
+        
+        //
+        // Не забываем отрезать
+        //
+        capturingFilter.transform = transform
+        
+        //
+        // Ловим снепшот и тут же фильтруем с записью в Camera Roll так будет дольше,
+        // но зато сразе и без всяких внутренних галерей. (пример в общем, то)
+        //
+        camera.capturingCompleteBlock = { (finished, file, meta) in
+            
+            if finished {
+                //
+                // если камера успела захватить изображение
+                //
+                
+                //
+                // устанавливаем текущий lut
+                //
+                capturingFilter.name = self.currentLutName
+                
+                //
+                // и прозрачность которую запомнили в live-view фильтре
+                //
+                capturingFilter.opacity = self.filterLive.opacity
+                
+                //
+                // получаем из меты ориентацию картинки
+                //
+                let orientation:UIImageOrientation! = UIImageOrientation(rawValue: (meta[kDP_imageOrientationKey] as! NSNumber).integerValue)
+                
+                //
+                // Читаем из источника jpeg
+                //
+                capturingFilter.source = DPImageFileProvider.newWithImageFile(file, context: capturingFilter.context, maxSize: 0, orientation: orientation)
+                
+                //
+                // Записываем результат в Camera Roll
+                //
+                UIImageWriteToSavedPhotosAlbum(UIImage(imageProvider: capturingFilter.destination), nil, nil, nil)
+            }
+            
+        }
     }
     
     
@@ -312,10 +375,11 @@ class ViewController: UIViewController {
     // Хендлер выбиралки фильтров
     //
     func tapHandler(gesture:UITapGestureRecognizer){
-
+        
         for (name, c) in self.filterIcons{
             if gesture.view == c {
-                filterLive.name = name
+                currentLutName = name
+                filterLive.name = currentLutName
                 c.alpha = 1.0
             }
             else{
@@ -334,6 +398,79 @@ class ViewController: UIViewController {
         else if gesture.state == .Ended {
             camera.filterEnabled = true
         }
+    }
+    
+    
+    //
+    // Управление камерой и фильтром
+    //
+    
+    @IBAction func toggleCamera(sender: UIButton) {
+        camera.toggleCameraPosition()
+    }
+    
+    @IBAction func takePhoto(sender: UIButton) {
+        let tmp    = NSURL.fileURLWithPath(NSTemporaryDirectory(), isDirectory: true)
+        let fileid = NSProcessInfo.processInfo().globallyUniqueString
+        let file = tmp.URLByAppendingPathComponent(fileid).URLByAppendingPathExtension("jpg").path
+        camera.capturePhotoToFile(file)
+    }
+    
+
+    //
+    // Управлять будем только прозрачностью фильтра
+    
+    func changeSliderValue(sender: UISlider) {
+        //
+        // всегда от 0 до 1
+        //
+        self.filterLive.opacity=sender.value
+    }
+    
+    var settingsView:UISlider!
+    var settIngsViewHidden = true;
+    @IBOutlet weak var settingsButton: UIButton!
+
+    //
+    // Немного схалтурим и просто нарисуем слайдер как единственный контрол настроек
+    //
+    @IBAction func settingsHandler(sender: UIButton) {
+        
+        
+        let w = (settingsButton.frame.size.width+settingsButton.frame.origin.x+15)
+        
+        if settingsView==nil {
+            settingsView = UISlider(frame:
+                CGRectMake(w,
+                    settingsButton.frame.origin.y,
+                    self.view.frame.size.width-w*2,
+                    settingsButton.frame.size.height)
+            )
+            settingsView.alpha = 0.0
+            settingsView.value = 1.0
+            settingsView.backgroundColor = UIColor.clearColor()
+            settingsView.tintColor = UIColor.redColor()
+            
+            settingsView.addTarget(self, action: "changeSliderValue:", forControlEvents: UIControlEvents.ValueChanged)
+            
+            self.view.addSubview(settingsView)
+        }
+        
+        
+        let duration = UIApplication.sharedApplication().statusBarOrientationAnimationDuration
+        
+        if settIngsViewHidden {
+            UIView.animateWithDuration(duration, animations: {
+                self.settingsView.alpha = 0.5
+            })
+        }
+        else{
+            UIView.animateWithDuration(duration, animations: {
+                self.settingsView.alpha = 0
+            })
+        }
+        
+        settIngsViewHidden = !settIngsViewHidden;
     }
 }
 
