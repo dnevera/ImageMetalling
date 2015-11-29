@@ -139,10 +139,10 @@ class IMPSHLView: UIView {
             let commandBuffer = commandQueue.commandBuffer()
             let encoder = commandBuffer.computeCommandEncoder()
 
-            //encoder.setComputePipelineState(pipeline)
+            encoder.setComputePipelineState(pipeline)
             encoder.setTexture(actualImageTexture, atIndex: 0)
             encoder.setTexture(metalView.currentDrawable!.texture, atIndex: 1)
-            //encoder.setBuffer(self.shadowsHighlightslUniform, offset: 0, atIndex: 0)
+            encoder.setBuffer(self.shadowsHighlightslUniform, offset: 0, atIndex: 0)
             encoder.dispatchThreadgroups(threadGroups!, threadsPerThreadgroup: threadGroupCount)
             encoder.endEncoding()
 
