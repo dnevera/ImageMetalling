@@ -34,7 +34,7 @@
 ///
 typedef struct {
     uint count;
-    uint channel[4][kIMP_HistogramSize];
+    uint channel[kIMP_HistogramChannels][kIMP_HistogramSize];
 }IMPHistogramBuffer;
 
 

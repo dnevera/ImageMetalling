@@ -130,10 +130,12 @@ class IMPMetalaGramFilter: DPFilter {
             self.addFilter(lutFilter)
         }
         
-        let histogram = IMPHistogramAnalizer(context: self.context)
+        let histogram = IMPHistogramAnalyzer(context: self.context)
         
         self.willStartProcessing = { (DPImageProvider source) in
             histogram.source = source
+            histogram.histogram.cdf(1).channels[3]
+            //print(" cdf=\(histogram.histogram.cdf(1).channels[3]);")
         }
     }
     

@@ -23,13 +23,13 @@ typedef struct {
     // эти операции возможны только для типов atomic_int/atomic_uint.
     //
     atomic_uint count;
-    atomic_uint channel[4][kIMP_HistogramSize];
+    atomic_uint channel[kIMP_HistogramChannels][kIMP_HistogramSize];
 }IMPHistogramBuffer;
 
 ///
 /// Функция счета.
 ///
-kernel void kernel_impHistogramCounter(
+kernel void kernel_impHistogramRGBYCounter(
                                        //
                                        // Исходная текстура интенсивности которой нам нужно посчиать.
                                        //

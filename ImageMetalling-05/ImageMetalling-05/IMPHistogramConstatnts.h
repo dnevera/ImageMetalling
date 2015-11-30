@@ -12,7 +12,8 @@
 ///
 /// Не будем выдумавыть новые размерности цветовых гистограм - остановимся на магическом 256.
 ///
-#define  kIMP_HistogramSize  256
+#define  kIMP_HistogramSize      256
+#define  kIMP_HistogramChannels  4
 
 
 #endif /* IMPHistogramConstatnts_h */
