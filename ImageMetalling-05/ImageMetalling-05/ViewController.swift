@@ -8,7 +8,10 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    
+    @IBOutlet weak var cameraButton: UIButton!    
+    @IBOutlet weak var saveButton: UIButton!
     
     //
     // В примере не будем городить огород, просто накидаем
@@ -17,7 +20,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var filter1Icon: UIImageView!
     @IBOutlet weak var filter2Icon: UIImageView!
     @IBOutlet weak var filter3Icon: UIImageView!
-    
     
     //
     // Названия файлов color lookup table - файлов.
@@ -52,14 +54,38 @@ class ViewController: UIViewController {
     private var liveView: UIView!
     
     //
+    // Окно для просмотра действия фильтра над картинкой из галереи
+    //
+    private var resultView: DPImageView!
+    
+    //
+    // Фильтр для обработки захваченой или картинки из галереи
+    //
+    var capturingFilter:IMPMetalaGramFilter!
+    
+    //
     // Ссылка на фильтр. Фильтр также свежем с менеджером камеры
     //
     private var filterLive:IMPMetalaGramFilter!
     
+    //
+    // Выбор картинки
+    //
+    private var imagePicker:UIImagePickerController!{
+        didSet{
+            self.imagePicker.delegate = self
+            self.imagePicker.allowsEditing = false
+            self.imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            if let actualPicker = self.imagePicker{
+                self.presentViewController(actualPicker, animated:true, completion:nil)
+            }
+        }
+    }
+    
     
     override func viewDidAppear(animated: Bool) {
         
-        super.viewDidAppear(animated);
+        super.viewDidAppear(animated)
         
         //
         // Тут просто инициализируем иконки выбора фильтров
@@ -71,7 +97,6 @@ class ViewController: UIViewController {
         if let filter:IMPMetalaGramFilter! = IMPMetalaGramFilter(context: DPContext.newContext(), initialLUTName: currentLutName) {
             
             filter.source = DPUIImageProvider.newWithImage(UIImage(named: "template1x1.jpg"), context: filter.context)
-            
             for n in lutNameAt{
                 let iconView = filterIcons[n]! as UIImageView
                 filter.name = n
@@ -117,7 +142,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         //
         // Это просто пример, да...
         //
@@ -151,6 +176,7 @@ class ViewController: UIViewController {
         pressGesture.minimumPressDuration = 0.2
         liveView.addGestureRecognizer(pressGesture)
         
+        
         //
         // Создаем менеджер камеры, связываем с контейнером для отображения видео
         //
@@ -179,25 +205,34 @@ class ViewController: UIViewController {
         //
         // Чтобы побыстрее жать жипег используем хардварную компрессию встроенную в iOS
         //
-        camera.hardwareCompression = true;
+        camera.hardwareCompression = true
         
         //
         // Чтобы еще чуть ускориться
         //
-        camera.compressionQuality  = 0.9;
+        camera.compressionQuality  = 0.9
         
         //
         // Теперь настраиваем контекст захвата картинки
         // Он по идее может быть и контекстом live-view камеры, но нам ее не хочется тормозить
         // на момент работы фильтра по полному разрешению прилетевшего файла
         //
-        let capturingFilter = IMPMetalaGramFilter(context: DPContext.newContext(), initialLUTName: currentLutName)
+        capturingFilter = IMPMetalaGramFilter(context: DPContext.newContext(), initialLUTName: currentLutName)
         
         //
         // Не забываем отрезать
         //
         capturingFilter.transform = transform
         
+        resultView = DPImageView(frame: liveView.frame)
+        resultView.filter = capturingFilter
+        resultView.backgroundColor = UIColor.clearColor()
+        resultView.alpha = 0.0
+        resultView.hidden = true
+        self.view.addSubview(resultView)
+        
+        saveButton.userInteractionEnabled = false
+
         //
         // Ловим снепшот и тут же фильтруем с записью в Camera Roll так будет дольше,
         // но зато сразу и без всяких внутренних галерей. (пример в общем, то)
@@ -212,12 +247,12 @@ class ViewController: UIViewController {
                 //
                 // устанавливаем текущий lut
                 //
-                capturingFilter.name = self.currentLutName
+                self.capturingFilter.name = self.currentLutName
                 
                 //
                 // и прозрачность которую запомнили в live-view фильтре
                 //
-                capturingFilter.opacity = self.filterLive.opacity
+                self.capturingFilter.opacity = self.filterLive.opacity
                 
                 //
                 // получаем из меты ориентацию картинки
@@ -227,12 +262,12 @@ class ViewController: UIViewController {
                 //
                 // Читаем из источника jpeg
                 //
-                capturingFilter.source = DPImageFileProvider.newWithImageFile(file, context: capturingFilter.context, maxSize: 0, orientation: orientation)
+                self.capturingFilter.source = DPImageFileProvider.newWithImageFile(file, context: self.capturingFilter.context, maxSize: 0, orientation: orientation)
                 
                 //
                 // Записываем результат в Camera Roll
                 //
-                UIImageWriteToSavedPhotosAlbum(UIImage(imageProvider: capturingFilter.destination), nil, nil, nil)
+                UIImageWriteToSavedPhotosAlbum(UIImage(imageProvider: self.capturingFilter.destination), nil, nil, nil)
             }
             
         }
@@ -248,6 +283,10 @@ class ViewController: UIViewController {
             if gesture.view == c {
                 currentLutName = name
                 filterLive.name = currentLutName
+                capturingFilter.name = currentLutName
+                if resultView.hidden == false {
+                    resultView.redraw()
+                }
                 c.alpha = 1.0
             }
             else{
@@ -257,7 +296,7 @@ class ViewController: UIViewController {
     }
     
     //
-    // Отмена действия фильтра
+    // Отмена действия фильтра камеры
     //
     func disableFilterHandler(gesture:UILongPressGestureRecognizer){
         if gesture.state == .Began {
@@ -268,13 +307,71 @@ class ViewController: UIViewController {
         }
     }
     
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+        picker.dismissViewControllerAnimated(true, completion: nil)
+        
+        let chosenImage:UIImage? = info[UIImagePickerControllerOriginalImage] as? UIImage
+        
+        if let actualImage = chosenImage{
+            saveButton.userInteractionEnabled = true
+            camera.pause()
+            resultView?.source = DPUIImageProvider.newWithImage(actualImage, context: self.resultView.context, maxSize: 1000)
+            cameraButton.setImage(UIImage(named: "camera-back"), forState: UIControlState.Normal)
+            cameraButton.tag = 1
+            resultView.hidden = false
+            UIView.animateWithDuration(0.4, animations: { () -> Void in
+                self.resultView.alpha = 1.0
+                self.saveButton.alpha = 1.0
+                self.liveView.alpha = 0.0
+            })
+        }
+    }
+    
+    @IBAction func imagePickerButton(sender: UIButton) {
+        imagePicker = UIImagePickerController()
+    }
+    
+    func image(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>) {
+        if error == nil {
+            let ac = UIAlertController(title: "Фигак!", message: "Картинка сохранилась в галерее", preferredStyle: .Alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            presentViewController(ac, animated: true, completion: nil)
+        } else {
+            let ac = UIAlertController(title: "Что-то пошло не так", message: error?.localizedDescription, preferredStyle: .Alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            presentViewController(ac, animated: true, completion: nil)
+        }
+        saveButton.userInteractionEnabled = true
+    }
+    
+    @IBAction func imageSaveButton(sender: UIButton) {
+        if cameraButton.tag == 1 {
+            saveButton.userInteractionEnabled = false
+            UIImageWriteToSavedPhotosAlbum(UIImage(imageProvider: self.capturingFilter.destination), self, "image:didFinishSavingWithError:contextInfo:", nil)
+        }
+    }
     
     //
     // Управление камерой и фильтром
     //
-    
     @IBAction func toggleCamera(sender: UIButton) {
-        camera.toggleCameraPosition()
+        if sender.tag == 1 {
+            sender.tag = 0
+            saveButton.userInteractionEnabled = false
+            UIView.animateWithDuration(0.4, animations: { () -> Void in
+                self.resultView.alpha = 0.0
+                self.liveView.alpha = 1.0
+                self.saveButton.alpha = 0.5
+                }, completion: { (finished) -> Void in
+                    self.resultView.hidden = true
+            })
+            camera.resume()
+            self.cameraButton.setImage(UIImage(named: "camera-toggle"), forState: UIControlState.Normal)
+        }
+        else{
+            camera.toggleCameraPosition()
+        }
     }
     
     @IBAction func takePhoto(sender: UIButton) {
@@ -284,7 +381,7 @@ class ViewController: UIViewController {
         camera.capturePhotoToFile(file)
     }
     
-
+    
     //
     // Управлять будем только прозрачностью фильтра
     
@@ -296,9 +393,9 @@ class ViewController: UIViewController {
     }
     
     var settingsView:UISlider!
-    var settIngsViewHidden = true;
+    var settIngsViewHidden = true
     @IBOutlet weak var settingsButton: UIButton!
-
+    
     //
     // Немного схалтурим и просто нарисуем слайдер как единственный контрол настроек
     //
@@ -338,7 +435,9 @@ class ViewController: UIViewController {
             })
         }
         
-        settIngsViewHidden = !settIngsViewHidden;
+        settIngsViewHidden = !settIngsViewHidden
     }
+    
+    
 }
 
