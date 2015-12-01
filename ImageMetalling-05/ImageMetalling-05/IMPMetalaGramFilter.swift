@@ -110,7 +110,33 @@ class IMPMetalaGramFilter: DPFilter {
     
     init(context aContext: DPContext!, initialLUTName:String) {
         super.init(vertex: DP_VERTEX_DEF_FUNCTION, withFragment: DP_FRAGMENT_DEF_FUNCTION, context: aContext)
-                
+        
+        let analizer = IMPHistogramAnalyzer(context: self.context)
+        let average  = IMPHistogramAverageSolver()
+        let range    = IMPHistogramRangeSolver()
+        
+        analizer.solvers.append(average)
+        analizer.solvers.append(range)
+        
+        self.willStartProcessing = { (DPImageProvider source) in
+            analizer.source = source
+        }
+
+        let awbFilter = DPAWBFilter.newWithContext(self.context)
+        let contrastFilter = DPContrastFilter.newWithContext(self.context)
+        
+        self.addFilter(awbFilter)
+        self.addFilter(contrastFilter)
+        
+        analizer.solversDidUpdate = {
+            awbFilter.adjustment.averageColor = average.color
+            var adj = contrastFilter.adjustmentContrast
+            adj.minimum = range.min.w;
+            adj.maximum = range.max.w;
+            adj.blending.opacity = 1.0;
+            contrastFilter.adjustmentContrast = adj;
+        }
+        
         //
         // если CLUT-файл добавлен в проект, формат файла соответствует спекам:
         //
@@ -125,17 +151,11 @@ class IMPMetalaGramFilter: DPFilter {
             // DPHistogramAnalizer,  к которой в свою очередь DPHistogramZonesSolver для решения
             // задачи коррекции экспозиции, к примеру.
             //
-            // Пока просто добавляем фильтра мапинга цветовых пространств через CLUT
+            // Пока просто добавляем фильтр мапинга цветовых пространств через CLUT
             //
             self.addFilter(lutFilter)
-        }
-        
-        let histogram = IMPHistogramAnalyzer(context: self.context)
-        
-        self.willStartProcessing = { (DPImageProvider source) in
-            histogram.source = source
-            histogram.histogram.cdf(1).channels[3]
-            //print(" cdf=\(histogram.histogram.cdf(1).channels[3]);")
+            
+            
         }
     }
     

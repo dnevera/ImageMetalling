@@ -8,6 +8,10 @@
 
 import UIKit
 
+///
+/// В этой версии металаграмма мы уже умеем работать не только с захватом картинки из камеры, но и читаем из галереи и после обработки сохрнаяем назад.
+///
+///
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     @IBOutlet weak var cameraButton: UIButton!    
@@ -121,14 +125,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
         )
     }
-    
-    
+        
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         //
         // При старте стартуем камеру
         //
-        camera.start()
+        if cameraButton.tag != 1 {
+            camera.start()
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -172,7 +177,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         liveView.backgroundColor = UIColor.clearColor()
         self.view.insertSubview(liveView, atIndex: 0)
         
-        let pressGesture = UILongPressGestureRecognizer(target: self, action: "disableFilterHandler:")
+        var pressGesture = UILongPressGestureRecognizer(target: self, action: "disableFilterHandler:")
         pressGesture.minimumPressDuration = 0.2
         liveView.addGestureRecognizer(pressGesture)
         
@@ -231,7 +236,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         resultView.hidden = true
         self.view.addSubview(resultView)
         
+        pressGesture = UILongPressGestureRecognizer(target: self, action: "disableFilterHandler:")
+        pressGesture.minimumPressDuration = 0.2
+        resultView.addGestureRecognizer(pressGesture)
+
         saveButton.userInteractionEnabled = false
+        saveButton.alpha = 0.5;
 
         //
         // Ловим снепшот и тут же фильтруем с записью в Camera Roll так будет дольше,
@@ -299,11 +309,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // Отмена действия фильтра камеры
     //
     func disableFilterHandler(gesture:UILongPressGestureRecognizer){
-        if gesture.state == .Began {
-            camera.filterEnabled = false
+        if gesture.view == liveView{
+            if gesture.state == .Began {
+                camera.filterEnabled = false
+            }
+            else if gesture.state == .Ended {
+                camera.filterEnabled = true
+            }
         }
-        else if gesture.state == .Ended {
-            camera.filterEnabled = true
+        else if gesture.view == resultView {
+            if gesture.state == .Began {
+                resultView.isFilterDisabled = true
+            }
+            else if gesture.state == .Ended {
+                resultView.isFilterDisabled = false
+            }
         }
     }
     
@@ -316,7 +336,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let actualImage = chosenImage{
             saveButton.userInteractionEnabled = true
             camera.pause()
-            resultView?.source = DPUIImageProvider.newWithImage(actualImage, context: self.resultView.context, maxSize: 1000)
+            
+            let image = DPUIImageProvider.newWithImage(actualImage, context: self.resultView.context, maxSize: 1000)
+            image.transformOrientation(UIImageOrientation.Up)
+            
+            resultView?.source = image
+            
             cameraButton.setImage(UIImage(named: "camera-back"), forState: UIControlState.Normal)
             cameraButton.tag = 1
             resultView.hidden = false
@@ -389,7 +414,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         //
         // всегда от 0 до 1
         //
-        self.filterLive.opacity=sender.value
+        filterLive.opacity=sender.value
+        capturingFilter.opacity=sender.value
+        if resultView.hidden == false {
+            resultView.redraw()
+        }
     }
     
     var settingsView:UISlider!
@@ -437,7 +466,5 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         settIngsViewHidden = !settIngsViewHidden
     }
-    
-    
 }
 

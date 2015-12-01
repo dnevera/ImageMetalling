@@ -96,4 +96,6 @@ kernel void kernel_impHistogramRGBYCounter(
     // До кучи считаем сколько бинов содержат каналы.
     //
     atomic_fetch_add_explicit(&out.count, 1, memory_order_relaxed);
+    
+    outTexture.write(inColor,gid);
 }
