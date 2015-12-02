@@ -58,12 +58,12 @@ class IMPMetalaGramFilter: DPFilter {
     // Воспользуемся фильтром автоматического выравнивания баланса белого.
     // Сдвиг настраивается установкой среднего цвета картинки.
     //
-    private var awbFilter:DPAWBFilter!
+    private weak var awbFilter:DPAWBFilter?
     
     //
     // Нормализуем контраст через растягивание гистограммы.
     //
-    var contrastFilter:DPContrastFilter!
+    private weak var contrastFilter:DPContrastFilter?
     
     //
     // Просто сервисная функция для получения CLUT по имени файла. Файл добавляется в проект приложения.
@@ -118,9 +118,7 @@ class IMPMetalaGramFilter: DPFilter {
             return lutFilter.adjustment.blending.opacity
         }
         set(value){
-            //lutFilter.adjustment.blending.opacity = value
-            //contrastFilter.adjustment.blending.opacity = value
-            //awbFilter.adjustment.blending.opacity = value
+            lutFilter.adjustment.blending.opacity = value
         }
     }
     
@@ -137,8 +135,11 @@ class IMPMetalaGramFilter: DPFilter {
         // Начинаем собирать стек фильтров
         //
         
-        awbFilter = DPAWBFilter.newWithContext(self.context)
-        contrastFilter = DPContrastFilter.newWithContext(self.context)
+        let awbFilter = DPAWBFilter.newWithContext(self.context)
+        let contrastFilter = DPContrastFilter.newWithContext(self.context)
+        
+        self.awbFilter = awbFilter
+        self.contrastFilter = contrastFilter
         
         // Приводим картинку к более нейтральному типу
         self.addFilter(awbFilter)
@@ -176,13 +177,12 @@ class IMPMetalaGramFilter: DPFilter {
             // на каждое изменение расчетных значений в солверах
             // обновляем свойства фильтров
             //
-            self.awbFilter.adjustment.averageColor = average.color
+            awbFilter.adjustment.averageColor = average.color
+            awbFilter.adjustment.blending.opacity = self.opacity
             
-            var adj = self.contrastFilter.adjustment
-            adj.minimum = range.min;
-            adj.maximum = range.max;
-            
-            self.contrastFilter.adjustment = adj;
+            contrastFilter.adjustment.minimum = range.min
+            contrastFilter.adjustment.maximum = range.max
+            contrastFilter.adjustment.blending.opacity = self.opacity
         }
         
         //

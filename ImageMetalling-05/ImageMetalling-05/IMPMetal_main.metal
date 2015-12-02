@@ -22,7 +22,6 @@ typedef struct {
     // к одним итем же переменным или объектам памяти из разных потоков. В случае с MSL
     // эти операции возможны только для типов atomic_int/atomic_uint.
     //
-    atomic_int  reserved;
     atomic_uint channel[kIMP_HistogramChannels][kIMP_HistogramSize];
 }IMPHistogramBuffer;
 

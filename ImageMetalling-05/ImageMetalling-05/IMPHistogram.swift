@@ -124,15 +124,10 @@ class IMPHistogram {
     private let dim = sizeof(UInt32)/sizeof(UInt);
     
     //
-    // Заголовок
-    //
-    private let headerSize = sizeof(UInt)
-    
-    //
     // Обновить данные контейнера гистограммы и сконвертировать из UInt во Float
     //
     private func updateChannel(inout channel:[Float], address:UnsafePointer<UInt32>, index:Int){
-        let p = address+headerSize+Int(self.size)*Int(index)
+        let p = address+Int(self.size)*Int(index)
         let dim = self.dim<1 ? 1 : self.dim;
         //
         // ковертим из единственно возможного в текущем MSL (atomic_)[uint] во [float]
