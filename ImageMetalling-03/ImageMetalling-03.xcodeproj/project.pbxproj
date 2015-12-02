@@ -17,6 +17,7 @@
 		3151A4751BEA805500048501 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3151A4731BEA805500048501 /* Main.storyboard */; };
 		3151A4771BEA805500048501 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3151A4761BEA805500048501 /* Assets.xcassets */; };
 		3151A47A1BEA805500048501 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3151A4781BEA805500048501 /* LaunchScreen.storyboard */; };
+		318C795D1C0A320D000918CB /* IMPMetalaGramFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C795C1C0A320D000918CB /* IMPMetalaGramFilter.swift */; };
 		31B8DAEC1BEBC95300A33EDA /* template1x1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 31B8DAEB1BEBC95300A33EDA /* template1x1.jpg */; };
 		31B8DAF11BEBD36900A33EDA /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 31B8DAEE1BEBD36900A33EDA /* settings.png */; };
 		31B8DAF21BEBD36900A33EDA /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31B8DAEF1BEBD36900A33EDA /* settings@2x.png */; };
@@ -47,6 +48,7 @@
 		3151A4791BEA805500048501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3151A47B1BEA805500048501 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		316D7E791BEA972F009374D2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		318C795C1C0A320D000918CB /* IMPMetalaGramFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPMetalaGramFilter.swift; sourceTree = "<group>"; };
 		31B8DAEB1BEBC95300A33EDA /* template1x1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = template1x1.jpg; path = Images/template1x1.jpg; sourceTree = "<group>"; };
 		31B8DAEE1BEBD36900A33EDA /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings.png; path = Icons/settings.png; sourceTree = "<group>"; };
 		31B8DAEF1BEBD36900A33EDA /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "settings@2x.png"; path = "Icons/settings@2x.png"; sourceTree = "<group>"; };
@@ -117,11 +119,12 @@
 				3140E6FE1BEA8B4300E1E05A /* Luts */,
 				3151A46F1BEA805500048501 /* AppDelegate.swift */,
 				3151A4711BEA805500048501 /* ViewController.swift */,
+				318C795C1C0A320D000918CB /* IMPMetalaGramFilter.swift */,
+				3140E6FB1BEA870300E1E05A /* IMPMetal_main.metal */,
 				3151A4731BEA805500048501 /* Main.storyboard */,
 				3151A4761BEA805500048501 /* Assets.xcassets */,
 				3151A4781BEA805500048501 /* LaunchScreen.storyboard */,
 				3151A47B1BEA805500048501 /* Info.plist */,
-				3140E6FB1BEA870300E1E05A /* IMPMetal_main.metal */,
 				3140E7071BEA8CA400E1E05A /* ImageMetalling-03-Bridging-Header.h */,
 			);
 			path = "ImageMetalling-03";
@@ -299,6 +302,7 @@
 				3140E6FC1BEA870300E1E05A /* IMPMetal_main.metal in Sources */,
 				3151A4721BEA805500048501 /* ViewController.swift in Sources */,
 				3151A4701BEA805500048501 /* AppDelegate.swift in Sources */,
+				318C795D1C0A320D000918CB /* IMPMetalaGramFilter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

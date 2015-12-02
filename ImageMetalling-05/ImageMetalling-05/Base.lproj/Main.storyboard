@@ -10,7 +10,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ImageMetalling_03" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ImageMetalling_05" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -26,7 +26,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oKJ-03-4tv">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <animations/>
-                                <state key="normal" image="settings.png" backgroundImage="settings.png"/>
+                                <state key="normal" image="settings"/>
                                 <connections>
                                     <action selector="settingsHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oYd-kf-SVB"/>
                                 </connections>
@@ -34,7 +34,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qoH-qE-8U2">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <animations/>
-                                <state key="normal" image="camera.png" backgroundImage="camera.png"/>
+                                <state key="normal" image="camera-toggle"/>
                                 <connections>
                                     <action selector="toggleCamera:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uCk-gu-hZw"/>
                                 </connections>
@@ -42,7 +42,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1U2-Al-H2r">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <animations/>
-                                <state key="normal" image="trigger.png"/>
+                                <state key="normal" image="trigger"/>
                                 <connections>
                                     <action selector="takePhoto:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ibt-Jh-dND"/>
                                 </connections>
@@ -143,13 +143,38 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x2I-nm-NDz">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <animations/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" image="select-photos"/>
+                                <connections>
+                                    <action selector="imagePickerButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="l3Z-ve-cVo"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE7-I4-jYs">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <animations/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" image="save-photo-small"/>
+                                <connections>
+                                    <action selector="imageSaveButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Y9g-Fa-wBe"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="yE7-I4-jYs" firstAttribute="centerY" secondItem="1U2-Al-H2r" secondAttribute="centerY" id="AQ7-ej-6SQ"/>
                             <constraint firstItem="Xpk-Dd-iZu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BSm-Fl-0Rc"/>
+                            <constraint firstItem="x2I-nm-NDz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="4" id="KjB-QO-T2j">
+                                <variation key="heightClass=regular-widthClass=compact" constant="35"/>
+                            </constraint>
                             <constraint firstItem="qoH-qE-8U2" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="M5e-lf-J8Z">
                                 <variation key="heightClass=regular-widthClass=compact" constant="16"/>
+                            </constraint>
+                            <constraint firstAttribute="trailingMargin" secondItem="yE7-I4-jYs" secondAttribute="trailing" constant="13" id="Uud-Rn-fUD">
+                                <variation key="heightClass=regular-widthClass=compact" constant="34"/>
                             </constraint>
                             <constraint firstAttribute="trailingMargin" secondItem="qoH-qE-8U2" secondAttribute="trailing" id="UxE-t6-oKn"/>
                             <constraint firstItem="oKJ-03-4tv" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="XPq-Hz-mGq">
@@ -162,6 +187,7 @@
                             <constraint firstItem="1U2-Al-H2r" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="qgb-Qf-SRw">
                                 <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                             </constraint>
+                            <constraint firstItem="x2I-nm-NDz" firstAttribute="centerY" secondItem="1U2-Al-H2r" secondAttribute="centerY" id="w3J-Fh-Vbj"/>
                             <constraint firstItem="Xpk-Dd-iZu" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="427" id="yrH-QF-MZp">
                                 <variation key="heightClass=regular-widthClass=compact" constant="446"/>
                             </constraint>
@@ -172,16 +198,22 @@
                                 <exclude reference="qoH-qE-8U2"/>
                                 <exclude reference="1U2-Al-H2r"/>
                                 <exclude reference="Xpk-Dd-iZu"/>
+                                <exclude reference="x2I-nm-NDz"/>
+                                <exclude reference="yE7-I4-jYs"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="hjd-VY-SLp"/>
-                                <exclude reference="qgb-Qf-SRw"/>
                                 <exclude reference="XPq-Hz-mGq"/>
                                 <exclude reference="oZ4-g8-Dij"/>
                                 <exclude reference="M5e-lf-J8Z"/>
                                 <exclude reference="UxE-t6-oKn"/>
                                 <exclude reference="BSm-Fl-0Rc"/>
                                 <exclude reference="yrH-QF-MZp"/>
+                                <exclude reference="hjd-VY-SLp"/>
+                                <exclude reference="qgb-Qf-SRw"/>
+                                <exclude reference="KjB-QO-T2j"/>
+                                <exclude reference="w3J-Fh-Vbj"/>
+                                <exclude reference="AQ7-ej-6SQ"/>
+                                <exclude reference="Uud-Rn-fUD"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -190,23 +222,31 @@
                                 <include reference="qoH-qE-8U2"/>
                                 <include reference="1U2-Al-H2r"/>
                                 <include reference="Xpk-Dd-iZu"/>
+                                <include reference="x2I-nm-NDz"/>
+                                <include reference="yE7-I4-jYs"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="hjd-VY-SLp"/>
-                                <include reference="qgb-Qf-SRw"/>
                                 <include reference="XPq-Hz-mGq"/>
                                 <include reference="oZ4-g8-Dij"/>
                                 <include reference="M5e-lf-J8Z"/>
                                 <include reference="UxE-t6-oKn"/>
                                 <include reference="BSm-Fl-0Rc"/>
                                 <include reference="yrH-QF-MZp"/>
+                                <include reference="hjd-VY-SLp"/>
+                                <include reference="qgb-Qf-SRw"/>
+                                <include reference="KjB-QO-T2j"/>
+                                <include reference="w3J-Fh-Vbj"/>
+                                <include reference="AQ7-ej-6SQ"/>
+                                <include reference="Uud-Rn-fUD"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="cameraButton" destination="qoH-qE-8U2" id="UYu-az-Va6"/>
                         <outlet property="filter1Icon" destination="laF-Vh-5t4" id="TiF-zO-ksz"/>
                         <outlet property="filter2Icon" destination="mj0-N9-1wv" id="RKD-fR-eIe"/>
                         <outlet property="filter3Icon" destination="WGf-7V-ErC" id="m92-gi-WwU"/>
+                        <outlet property="saveButton" destination="yE7-I4-jYs" id="HaO-fy-164"/>
                         <outlet property="settingsButton" destination="oKJ-03-4tv" id="4ZP-bh-5Wt"/>
                     </connections>
                 </viewController>
@@ -216,8 +256,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="camera.png" width="30" height="30"/>
-        <image name="settings.png" width="30" height="30"/>
-        <image name="trigger.png" width="200" height="200"/>
+        <image name="camera-toggle" width="30" height="30"/>
+        <image name="save-photo-small" width="30" height="30"/>
+        <image name="select-photos" width="30" height="30"/>
+        <image name="settings" width="30" height="30"/>
+        <image name="trigger" width="200" height="200"/>
     </resources>
 </document>
