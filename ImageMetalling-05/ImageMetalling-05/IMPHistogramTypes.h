@@ -33,7 +33,6 @@
 /// Для Цветовых пространств HSV/HSL/CIELab/YUV/YCbCr и т.п. будет неопределен.
 ///
 typedef struct {
-    uint count;
     uint channel[kIMP_HistogramChannels][kIMP_HistogramSize];
 }IMPHistogramBuffer;
 

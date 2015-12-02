@@ -15,19 +15,14 @@ import Accelerate
 class IMPHistogram {
     
     ///
-    /// Фиксированная размерность гистограмы
+    /// Фиксированная размерность гистограмы. Всегда будем подразумевать 256.
     ///
     let size = vDSP_Length(kIMP_HistogramSize)
     
     ///
-    /// Количество всех счетов независимо от канала
-    ///
-    var count:Int = 0
-    
-    ///
     /// Поканальная таблица счетов. Используем представление в числах с плавающей точкой.
-    /// Нужно это для упрощения дополнительный акселерированных вычислений на DSP, поскольку все операции выполняются
-    /// либо во float либо в double.
+    /// Нужно это для упрощения выполнения дополнительных акселерированных вычислений на DSP,
+    /// поскольку все операции на DSP выполняются либо во float либо в double.
     ///
     var channels:[[Float]];
     
@@ -39,32 +34,33 @@ class IMPHistogram {
     }
     
     ///
-    /// Конструктор копии
+    /// Конструктор копии.
     ///
-    init(count:Int, channels:[[Float]]){
-        self.count = count
+    init(channels:[[Float]]){
         self.channels = channels
     }
     
     ///
     /// Метод обновления данных котейнера гистограммы.
     ///
+    /// - parameter dataIn: обновить значение интенсивностей по сырым данным. Сарые данные должны быть преставлены в формате IMPHistogramBuffer.
+    ///
     func updateWithData(dataIn: UnsafeMutablePointer<Void>){
-        
         let address = UnsafePointer<UInt32>(dataIn)
-        
-        memcpy(&count, address, headerSize);
-        
         for c in 0..<channels.count{
             self.updateChannel(&channels[c], address: address, index: c)
         }
     }
     
     ///
-    /// Текущий CDF (комулятивная функция распределения) гистограммы
+    /// Текущий CDF (комулятивная функция распределения) гистограммы.
+    ///
+    /// - parameter scale: масштабирование значений, по умолчанию CDF приводится к 1
+    ///
+    /// - returns: контейнер значений гистограммы с комулятивным распределением значений интенсивностей
     ///
     func cdf(scale:Float = 1) ->IMPHistogram{
-        let _cdf = IMPHistogram(count: count, channels:channels);
+        let _cdf = IMPHistogram(channels:channels);
         for c in 0..<_cdf.channels.count{
             integrate(A: &_cdf.channels[c], B: &_cdf.channels[c], size: _cdf.channels[c].count, scale:scale)
         }
@@ -72,8 +68,12 @@ class IMPHistogram {
     }
     
     ///
-    /// Средней значение интенсивностей канала с заданным индексом.
+    /// Среднее значение интенсивностей канала с заданным индексом.
     /// Возвращается значение нормализованное к 1.
+    ///
+    /// - parameter index: индекс канала начиная от 0
+    ///
+    /// - returns: нормализованное значние средней интенсивности канала
     ///
     func mean(channel index:Int) -> Float{
         let m = self.mean(A: &channels[index], size: channels[index].count)
@@ -82,8 +82,12 @@ class IMPHistogram {
     }
     
     ///
-    /// Минимальное значение интенсивности в канале с заданным клипингом. 
-    /// Возвращается значение нормализованное к 1.
+    /// Минимальное значение интенсивности в канале с заданным клипингом.
+    ///
+    /// - parameter index:    индекс канала
+    /// - parameter clipping: значение клиппинга интенсивностей в тенях
+    ///
+    /// - returns: Возвращается значение нормализованное к 1.
     ///
     func low(channel index:Int, clipping:Float) -> Float{
         let size = self.channels[index].count
@@ -95,7 +99,11 @@ class IMPHistogram {
     
     ///
     /// Максимальное значение интенсивности в канале с заданным клипингом.
-    /// Возвращается значение нормализованное к 1.
+    ///
+    /// - parameter index:    индекс канала
+    /// - parameter clipping: значение клиппинга интенсивностей в светах
+    ///
+    /// - returns: Возвращается значение нормализованное к 1.
     ///
     func high(channel index:Int, clipping:Float) -> Float{
         let size = self.channels[index].count
@@ -103,7 +111,7 @@ class IMPHistogram {
         high = high<vDSP_Length(size) ? high+1 : vDSP_Length(size)
         return Float(high)/Float(size)
     }
-
+    
     
     //
     // Утилиты работы с векторными данными на DSP
@@ -150,15 +158,10 @@ class IMPHistogram {
     private let dim = sizeof(UInt32)/sizeof(UInt);
     
     //
-    // Заголовок блока памяти контейнера содержит только клоичество счетов
-    //
-    private let headerSize = sizeofValue(IMPHistogramBuffer().count)
-    
-    //
     // Обновить данные контейнера гистограммы и сконвертировать из UInt во Float
     //
     private func updateChannel(inout channel:[Float], address:UnsafePointer<UInt32>, index:Int){
-        let p = address+headerSize+Int(self.size)*Int(index)
+        let p = address+Int(self.size)*Int(index)
         let dim = self.dim<1 ? 1 : self.dim;
         //
         // ковертим из единственно возможного в текущем MSL (atomic_)[uint] во [float]
@@ -166,7 +169,7 @@ class IMPHistogram {
         vDSP_vfltu32(p, dim, &channel, 1, self.size);
     }
     
-
+    
     //
     // Временные буфер под всякие конвреторы
     //
@@ -190,7 +193,7 @@ class IMPHistogram {
         vDSP_vramp(&zero, &v, &h, 1, vDSP_Length(size))
         return (size,h);
     }
-
+    
     //
     // Вычисление среднего занчения распределния вектора
     //

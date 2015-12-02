@@ -8,6 +8,8 @@
 
 import UIKit
 
+/// Солвер доминантного цвета изображения в пространстве RGB(Y)
+/// Вычисляет среднее значение интенсивностей каждого канала по гистограмме этих каналов
 class IMPHistogramAverageSolver: IMPHistogramSolver {
     var color=DPVector4()
     func analizerDidUpdate(analizer: IMPHistogramAnalyzer, histogram: IMPHistogram, imageSize: CGSize) {

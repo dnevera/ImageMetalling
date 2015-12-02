@@ -72,45 +72,44 @@ class IMPHistogramAnalyzer: DPFilter {
     //
     private var kernel_impHistogramCounter:DPFunction!    
     
-    //
-    // При каждом обращении к GPU для расчета гистограмы нам нужно обресетить данные посчитанные на предыдущем этапе
-    // если объект анализатора постоянно определен.
-    //
+    ///
+    /// При каждом обращении к GPU для расчета гистограмы нам нужно обресетить данные посчитанные на предыдущем этапе
+    /// если объект анализатора постоянно определен.
+    ///
     override func configureBlitUniform(commandEncoder: MTLBlitCommandEncoder!) {
         commandEncoder.fillBuffer(histogramUniformBuffer, range: NSMakeRange(0, sizeof(IMPHistogramBuffer)), value: 0)
     }
     
-    //
-    // Устанавливаем указатель на контейнер счета в буфере команд.
-    //
+    ///
+    /// Устанавливаем указатель на контейнер счета в буфере команд.
+    ///
     override func configureFunction(function: DPFunction!, uniform commandEncoder: MTLComputeCommandEncoder!) {
         commandEncoder.setBuffer(histogramUniformBuffer, offset:0, atIndex:0);
     }
     
-    //
-    // Перегружаем свойство источника: при каждом обновлении нам нужно выполнить подсчет новой статистики.
-    //
+    ///
+    /// Перегружаем свойство источника: при каждом обновлении нам нужно выполнить подсчет новой статистики.
+    ///
     override var source:DPImageProvider!{
         didSet{
             super.source = source
             if source.texture != nil {
                 // выполняем фильтр
                 self.apply()
-                
-                // обновляем структуру гистограммы с которой уже будем работать
-                histogram.updateWithData(histogramUniformBuffer.contents())
-                for s in solvers {
-                    let size = CGSizeMake(CGFloat(self.source.texture.width), CGFloat(self.source.texture.height))
-                    s.analizerDidUpdate(self, histogram: self.histogram, imageSize: size)
-                }
-                if let finishSolver = self.solversDidUpdate {
-                    finishSolver()
-                }
             }
         }
     }
     
-    //override func apply() {
-    //    super.apply()
-    //}
+    override func apply() {
+        super.apply()
+        // обновляем структуру гистограммы с которой уже будем работать
+        histogram.updateWithData(histogramUniformBuffer.contents())
+        for s in solvers {
+            let size = CGSizeMake(CGFloat(self.source.texture.width), CGFloat(self.source.texture.height))
+            s.analizerDidUpdate(self, histogram: self.histogram, imageSize: size)
+        }
+        if let finishSolver = self.solversDidUpdate {
+            finishSolver()
+        }
+    }
 }

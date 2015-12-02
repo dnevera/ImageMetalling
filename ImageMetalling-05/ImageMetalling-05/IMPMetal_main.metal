@@ -22,7 +22,6 @@ typedef struct {
     // к одним итем же переменным или объектам памяти из разных потоков. В случае с MSL
     // эти операции возможны только для типов atomic_int/atomic_uint.
     //
-    atomic_uint count;
     atomic_uint channel[kIMP_HistogramChannels][kIMP_HistogramSize];
 }IMPHistogramBuffer;
 
@@ -93,9 +92,7 @@ kernel void kernel_impHistogramRGBYCounter(
     atomic_fetch_add_explicit(&out.channel[3][Y],     1, memory_order_relaxed);
     
     //
-    // До кучи считаем сколько бинов содержат каналы.
+    // Назад отдаем туже тектсуру.
     //
-    atomic_fetch_add_explicit(&out.count, 1, memory_order_relaxed);
-    
     outTexture.write(inColor,gid);
 }

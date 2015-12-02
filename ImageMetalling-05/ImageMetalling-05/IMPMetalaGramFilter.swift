@@ -20,6 +20,9 @@ import UIKit
 /// хранят заранее подготовленные CLUT - Color LookUp Table.
 /// .cube - это открытая спецификация Adobe, поддерживается кучей генераторов CLUT
 ///
+/// В этой версии программы усложним немного обработку и добавим препроцессинг 
+/// исходной картинки: выарвнеем баланс белого и усилим контраст.
+///
 ///
 class IMPMetalaGramFilter: DPFilter {
     
@@ -52,6 +55,17 @@ class IMPMetalaGramFilter: DPFilter {
     private var lutFilter:DPCLUTFilter!
     
     //
+    // Воспользуемся фильтром автоматического выравнивания баланса белого.
+    // Сдвиг настраивается установкой среднего цвета картинки.
+    //
+    private var awbFilter:DPAWBFilter!
+    
+    //
+    // Нормализуем контраст через растягивание гистограммы.
+    //
+    private var contrastFilter:DPContrastFilter!
+    
+    //
     // Просто сервисная функция для получения CLUT по имени файла. Файл добавляется в проект приложения.
     //
     private func getLUT(name:String) -> DPCubeLUTFileProvider? {
@@ -77,9 +91,9 @@ class IMPMetalaGramFilter: DPFilter {
         return nil
     }
     
-    //
-    // Управление выбором CLUT по имени.
-    //
+    ///
+    /// Управление выбором CLUT по имени. Файл с CLUT должен быть добавлен в проект.
+    ///
     var name:String!{
         didSet(oldValue){
             if oldValue != name {
@@ -96,45 +110,79 @@ class IMPMetalaGramFilter: DPFilter {
         }
     }
     
-    //
-    // Управления степенью воздействия
-    //
+    ///
+    /// Управления степенью воздействия.
+    ///
     var opacity:Float{
         get{
             return lutFilter.adjustment.blending.opacity
         }
         set(value){
-            lutFilter.adjustment.blending.opacity=value
+            lutFilter.adjustment.blending.opacity = value
+            contrastFilter.adjustment.blending.opacity = value
+            awbFilter.adjustment.blending.opacity = value
         }
     }
     
+    ///
+    /// Инициализироваться с умолчательным CLUT.
+    ///
+    /// - parameter aContext:       текущий контекст устройств на котором выполняется фильтрация
+    /// - parameter initialLUTName: имя файла CLUT
+    ///
     init(context aContext: DPContext!, initialLUTName:String) {
         super.init(vertex: DP_VERTEX_DEF_FUNCTION, withFragment: DP_FRAGMENT_DEF_FUNCTION, context: aContext)
         
+        //
+        // Создадим анализатор гистограммы.
+        //
         let analizer = IMPHistogramAnalyzer(context: self.context)
+        
+        //
+        // И два солвера.
+        //
+        
+        // Один вычсиляет доминантный цвет изображения
         let average  = IMPHistogramAverageSolver()
+        // Второй диапазон интенсивностей
         let range    = IMPHistogramRangeSolver()
         
+        // добавляем в анализатор солверы
         analizer.solvers.append(average)
         analizer.solvers.append(range)
         
+        //
+        // Перед исполнением фильтров закидываем в анализатор исходную картинку
+        //
         self.willStartProcessing = { (DPImageProvider source) in
             analizer.source = source
         }
 
-        let awbFilter = DPAWBFilter.newWithContext(self.context)
-        let contrastFilter = DPContrastFilter.newWithContext(self.context)
+        awbFilter = DPAWBFilter.newWithContext(self.context)
+        contrastFilter = DPContrastFilter.newWithContext(self.context)
         
+        //
+        // Начинаем собирать стек фильтров
+        //
+        
+        // Приводим картинку к более нейтральному типу
         self.addFilter(awbFilter)
+        
+        // повышаем контраст
         self.addFilter(contrastFilter)
         
         analizer.solversDidUpdate = {
-            awbFilter.adjustment.averageColor = average.color
-            var adj = contrastFilter.adjustmentContrast
-            adj.minimum = range.min.w;
-            adj.maximum = range.max.w;
-            adj.blending.opacity = 1.0;
-            contrastFilter.adjustmentContrast = adj;
+            //
+            // на каждое изменение расчетных значений в солверах
+            // обновляем свойства фильтров
+            //
+            self.awbFilter.adjustment.averageColor = average.color
+            
+            var adj = self.contrastFilter.adjustment
+            adj.minimum = range.min;
+            adj.maximum = range.max;
+            
+            self.contrastFilter.adjustment = adj;
         }
         
         //
@@ -145,20 +193,18 @@ class IMPMetalaGramFilter: DPFilter {
         if let lut = getLUT(name){
             lutFilter = DPCLUTFilter(context: self.context, lut: lut, type: lut.type)
             //
-            // добавляем в цепочку новый фильтр,
-            // если нам нужна обработка нескольких фильтров можно подцепить несколько
-            // например анализатор гистограммы:
-            // DPHistogramAnalizer,  к которой в свою очередь DPHistogramZonesSolver для решения
-            // задачи коррекции экспозиции, к примеру.
-            //
-            // Пока просто добавляем фильтр мапинга цветовых пространств через CLUT
+            // Добавляем фильтр мапинга цветовых пространств через CLUT
             //
             self.addFilter(lutFilter)
-            
-            
+        
         }
     }
     
+    ///
+    /// Фильтр нельзя создать без умолчательной таблицы.
+    ///
+    /// - parameter aContext: текущий контекст устройства
+    ///
     required init!(context aContext: DPContext!) {
         //
         // Не даем создать фильтр без инициализации таблицей

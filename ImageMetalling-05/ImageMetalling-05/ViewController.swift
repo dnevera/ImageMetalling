@@ -9,12 +9,20 @@
 import UIKit
 
 ///
-/// В этой версии металаграмма мы уже умеем работать не только с захватом картинки из камеры, но и читаем из галереи и после обработки сохрнаяем назад.
+/// В этой версии металаграмма мы уже умеем работать не только с захватом картинки из камеры, 
+/// но и читаем из галереи и после обработки сохрнаяем назад.
 ///
 ///
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
-    @IBOutlet weak var cameraButton: UIButton!    
+    //
+    // Кнопка переключалки камеры и возврата из режима просмотра в камеру
+    //
+    @IBOutlet weak var cameraButton: UIButton!
+    
+    //
+    // Кнопка сохранения в галерею
+    //
     @IBOutlet weak var saveButton: UIButton!
     
     //
@@ -229,6 +237,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         //
         capturingFilter.transform = transform
         
+        //
+        // Создаем дополнительное view для просмотра результатов прикладывания фильтра к картинкам из галереи
+        //
         resultView = DPImageView(frame: liveView.frame)
         resultView.filter = capturingFilter
         resultView.backgroundColor = UIColor.clearColor()
@@ -334,12 +345,26 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let chosenImage:UIImage? = info[UIImagePickerControllerOriginalImage] as? UIImage
         
         if let actualImage = chosenImage{
+            
             saveButton.userInteractionEnabled = true
+            //
+            // Паузим камеру на момент работы с изображением из галереи
+            //
             camera.pause()
             
+            //
+            // Поднимаем картинку в провайдер
+            //
             let image = DPUIImageProvider.newWithImage(actualImage, context: self.resultView.context, maxSize: 1000)
+            
+            //
+            // Поворачиваем в нормальный вид
+            //
             image.transformOrientation(UIImageOrientation.Up)
             
+            //
+            // Выводим в окно результата с приложенным фмильтром
+            //
             resultView?.source = image
             
             cameraButton.setImage(UIImage(named: "camera-back"), forState: UIControlState.Normal)
