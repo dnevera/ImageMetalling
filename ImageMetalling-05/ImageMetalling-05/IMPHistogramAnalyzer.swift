@@ -91,25 +91,25 @@ class IMPHistogramAnalyzer: DPFilter {
     /// Перегружаем свойство источника: при каждом обновлении нам нужно выполнить подсчет новой статистики.
     ///
     override var source:DPImageProvider!{
-        didSet{
+        didSet{            
             super.source = source
             if source.texture != nil {
                 // выполняем фильтр
                 self.apply()
+                // обновляем структуру гистограммы с которой уже будем работать
+                histogram.updateWithData(histogramUniformBuffer.contents())
+                for s in solvers {
+                    let size = CGSizeMake(CGFloat(self.source.texture.width), CGFloat(self.source.texture.height))
+                    s.analizerDidUpdate(self, histogram: self.histogram, imageSize: size)
+                }
+                if let finishSolver = self.solversDidUpdate {
+                    finishSolver()
+                }
             }
         }
     }
     
-    override func apply() {
-        super.apply()
-        // обновляем структуру гистограммы с которой уже будем работать
-        histogram.updateWithData(histogramUniformBuffer.contents())
-        for s in solvers {
-            let size = CGSizeMake(CGFloat(self.source.texture.width), CGFloat(self.source.texture.height))
-            s.analizerDidUpdate(self, histogram: self.histogram, imageSize: size)
-        }
-        if let finishSolver = self.solversDidUpdate {
-            finishSolver()
-        }
-    }
+//    override func apply() {
+//        super.apply()
+//    }
 }

@@ -119,6 +119,28 @@ class IMPHistogram {
     // ..........................................
     
     //
+    // Реальная размерность беззнакового целого. Может отличаться в зависимости от среды исполнения.
+    //
+    private let dim = sizeof(UInt32)/sizeof(UInt);
+    
+    //
+    // Заголовок
+    //
+    private let headerSize = sizeof(UInt)
+    
+    //
+    // Обновить данные контейнера гистограммы и сконвертировать из UInt во Float
+    //
+    private func updateChannel(inout channel:[Float], address:UnsafePointer<UInt32>, index:Int){
+        let p = address+headerSize+Int(self.size)*Int(index)
+        let dim = self.dim<1 ? 1 : self.dim;
+        //
+        // ковертим из единственно возможного в текущем MSL (atomic_)[uint] во [float]
+        //
+        vDSP_vfltu32(p, dim, &channel, 1, self.size);
+    }
+    
+    //
     // Поиск индекса отсечки клипинга
     //
     private func search_clipping(channel index:Int, size:Int, clipping:Float) -> vDSP_Length {
@@ -151,24 +173,6 @@ class IMPHistogram {
         return position;
         
     }
-    
-    //
-    // Реальная размерность беззнакового целого. Может отличаться в зависимости от среды исполнения.
-    //
-    private let dim = sizeof(UInt32)/sizeof(UInt);
-    
-    //
-    // Обновить данные контейнера гистограммы и сконвертировать из UInt во Float
-    //
-    private func updateChannel(inout channel:[Float], address:UnsafePointer<UInt32>, index:Int){
-        let p = address+Int(self.size)*Int(index)
-        let dim = self.dim<1 ? 1 : self.dim;
-        //
-        // ковертим из единственно возможного в текущем MSL (atomic_)[uint] во [float]
-        //
-        vDSP_vfltu32(p, dim, &channel, 1, self.size);
-    }
-    
     
     //
     // Временные буфер под всякие конвреторы

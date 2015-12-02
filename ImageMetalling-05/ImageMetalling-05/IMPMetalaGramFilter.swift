@@ -63,7 +63,7 @@ class IMPMetalaGramFilter: DPFilter {
     //
     // Нормализуем контраст через растягивание гистограммы.
     //
-    private var contrastFilter:DPContrastFilter!
+    var contrastFilter:DPContrastFilter!
     
     //
     // Просто сервисная функция для получения CLUT по имени файла. Файл добавляется в проект приложения.
@@ -118,9 +118,9 @@ class IMPMetalaGramFilter: DPFilter {
             return lutFilter.adjustment.blending.opacity
         }
         set(value){
-            lutFilter.adjustment.blending.opacity = value
-            contrastFilter.adjustment.blending.opacity = value
-            awbFilter.adjustment.blending.opacity = value
+            //lutFilter.adjustment.blending.opacity = value
+            //contrastFilter.adjustment.blending.opacity = value
+            //awbFilter.adjustment.blending.opacity = value
         }
     }
     
@@ -133,6 +133,19 @@ class IMPMetalaGramFilter: DPFilter {
     init(context aContext: DPContext!, initialLUTName:String) {
         super.init(vertex: DP_VERTEX_DEF_FUNCTION, withFragment: DP_FRAGMENT_DEF_FUNCTION, context: aContext)
         
+        //
+        // Начинаем собирать стек фильтров
+        //
+        
+        awbFilter = DPAWBFilter.newWithContext(self.context)
+        contrastFilter = DPContrastFilter.newWithContext(self.context)
+        
+        // Приводим картинку к более нейтральному типу
+        self.addFilter(awbFilter)
+        
+        // повышаем контраст
+        self.addFilter(contrastFilter)
+
         //
         // Создадим анализатор гистограммы.
         //
@@ -157,19 +170,6 @@ class IMPMetalaGramFilter: DPFilter {
         self.willStartProcessing = { (DPImageProvider source) in
             analizer.source = source
         }
-
-        awbFilter = DPAWBFilter.newWithContext(self.context)
-        contrastFilter = DPContrastFilter.newWithContext(self.context)
-        
-        //
-        // Начинаем собирать стек фильтров
-        //
-        
-        // Приводим картинку к более нейтральному типу
-        self.addFilter(awbFilter)
-        
-        // повышаем контраст
-        self.addFilter(contrastFilter)
         
         analizer.solversDidUpdate = {
             //
