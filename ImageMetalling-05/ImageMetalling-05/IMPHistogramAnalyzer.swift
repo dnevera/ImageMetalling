@@ -32,6 +32,8 @@ class IMPHistogramAnalyzer: DPFilter {
     ///
     var solvers:[IMPHistogramSolver] = [IMPHistogramSolver]()
     
+    /// Замыкание выполняющаеся после завершения расчета значений солвера.
+    /// Замыкание можно определить для обновления значений пользовательской цепочки фильтров.
     var solversDidUpdate: (() -> Void)?
     
     ///
