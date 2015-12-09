@@ -154,6 +154,7 @@ class IMPSaturationView: UIView {
         metalView = MTKView(frame: self.bounds, device: self.device)
         metalView.autoResizeDrawable = true
         metalView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
+        metalView.framebufferOnly = false
         
         //
         // Координатная система Metal: ...The origin of the window coordinates is in the upper-left corner...
