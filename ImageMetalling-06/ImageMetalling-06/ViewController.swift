@@ -120,7 +120,7 @@ class ViewController: UIViewController {
                 let t = self.filterTest(filter, provider: provider)
                 let rate = size/(t.time == 0 ? 0 : t.time)/mb
                 print(" \(a.name) = \(filter.analyzer!.histogram.channels[0]);")
-                let s = String(format:" *** скорость расчета гистограммы %@: %.2fMb/s вермя счета = %.4fs общее время фильтра = %.4f", a.title, rate, t.time, t.all)
+                let s = String(format:" *** скорость расчета гистограммы %@: %.2fMb/s время счета = %.4fs общее время фильтра = %.4f", a.title, rate, t.time, t.all)
                 messages.append(s)
                 filter.flush()
             }
