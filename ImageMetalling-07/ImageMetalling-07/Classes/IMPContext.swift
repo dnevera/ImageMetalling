@@ -64,8 +64,10 @@ class IMPContext {
     
     final func execute(closure: IMPContextExecution) {
         if let commandBuffer = commandQueue?.commandBuffer(){
+            
             closure(commandBuffer: commandBuffer)
             commandBuffer.commit()
+            
             if isLasy == false {
                 commandBuffer.waitUntilCompleted()
             }

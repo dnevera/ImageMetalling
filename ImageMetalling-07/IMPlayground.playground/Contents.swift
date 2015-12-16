@@ -77,11 +77,11 @@ let callback = { (
 
 DisplayLinkSetOutputCallback( dl, callback: callback )
 
-CVDisplayLinkStart( dl )
+//CVDisplayLinkStart( dl )
 
 //NSRunLoop.mainRunLoop().run()
 
-sleep(1)
+//sleep(1)
 
-CVDisplayLinkStop( dl )
+//CVDisplayLinkStop( dl )
 

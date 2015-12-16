@@ -356,6 +356,19 @@
                                                 <action selector="runToolbarCustomizationPalette:" target="Ady-hI-5gd" id="pQI-g3-MTW"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="INz-wO-l1n"/>
+                                        <menuItem title="Fit on Screen" tag="3004" keyEquivalent="0" id="eke-tr-KPn" userLabel="Fit on Screen">
+                                            <accessibility identifier="menuZoomFit"/>
+                                            <connections>
+                                                <action selector="menuAction:" target="Voe-Tx-rLC" id="ZI6-c5-p9r"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="100%" tag="3005" keyEquivalent="1" id="eBR-OJ-qxk" userLabel="100 %">
+                                            <accessibility identifier="menuZoom100"/>
+                                            <connections>
+                                                <action selector="menuAction:" target="Voe-Tx-rLC" id="kbT-Tl-aSZ"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -411,6 +424,7 @@
                     </connections>
                 </customObject>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController representsSharedInstance="YES" id="WdV-oY-O7u"/>
             </objects>
             <point key="canvasLocation" x="75" y="0.0"/>
         </scene>

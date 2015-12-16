@@ -33,3 +33,64 @@ kernel void kernel_passthrough(texture2d<float, access::sample> inTexture [[text
     float4 inColor = sampledColor(inTexture,outTexture,gid);
     outTexture.write(inColor, gid);
 }
+
+kernel void kernel_desaturate(texture2d<float, access::sample> inTexture [[texture(0)]],
+                               texture2d<float, access::write> outTexture [[texture(1)]],
+                               uint2 gid [[thread_position_in_grid]])
+{
+    float4 inColor = sampledColor(inTexture,outTexture,gid);
+    inColor.rgb = float3(dot(inColor.rgb,float3(0.3,0.6,0.1)));
+    outTexture.write(inColor, gid);
+}
+
+
+typedef struct {
+    packed_float2 position;
+    packed_float2 texcoord;
+} VertexIn;
+
+typedef struct{
+    uint   width;
+    uint   height;
+    float  resampleFactor;
+} OutputTextureInfo;
+
+typedef struct {
+    float4 position [[position]];
+    float2 texcoord;
+} VertexOut;
+
+/**
+ * View rendering vertex
+ */
+vertex VertexOut vertex_passview(
+                                 device VertexIn*    verticies [[ buffer(0) ]],
+                                 unsigned int        vid       [[ vertex_id ]]
+                                 ) {
+    VertexOut out;
+    
+    device VertexIn& v = verticies[vid];
+    
+    float3 position = float3(float2(v.position) , 0.0);
+    
+    out.position = float4(position, 1.0);
+    
+    out.texcoord = float2(v.texcoord);
+    
+    return out;
+}
+
+
+/**
+ *  Pass through fragment
+ *
+ */
+fragment half4 fragment_passthrough(
+                                    VertexOut in [[ stage_in ]],
+                                    texture2d<float, access::sample> texture [[ texture(0) ]]
+                                    ) {
+    constexpr sampler s(address::clamp_to_edge, filter::linear, coord::normalized);
+    float3 rgb = texture.sample(s, in.texcoord).rgb;
+    return half4(half3(rgb), 1.0);
+}
+

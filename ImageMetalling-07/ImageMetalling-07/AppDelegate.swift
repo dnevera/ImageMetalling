@@ -35,6 +35,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
     
+    
+    @IBAction func menuAction(sender: NSMenuItem) {
+        IMPMenuHandler.sharedInstance.currentMenuItem = sender
+    }
+    
     @IBAction func openFile(sender: AnyObject) {
         
         let openPanel = NSOpenPanel()

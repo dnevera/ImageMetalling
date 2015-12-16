@@ -9,25 +9,8 @@
 import Cocoa
 import Metal
 
-
 extension IMPImage{
-    var CGImage:CGImageRef?{
-        get {
-            var imageRect:CGRect = CGRectMake(0, 0, self.size.width, self.size.height)
-            return self.CGImageForProposedRect(&imageRect, context: nil, hints: nil)
-        }
-    }
-}
-
-extension CGSize{
-    init(width: Float, height: Float){
-        self.width = CGFloat(width)
-        self.height = CGFloat(height)
-    }
-}
-
-extension IMPImage{
-    
+        
     func newTexture(context:IMPContext, maxSize:Float = 0) -> MTLTexture? {
         
         let imageRef  = self.CGImage
