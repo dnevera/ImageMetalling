@@ -234,7 +234,7 @@ class IMPHistogram {
             var denom:Float = 0;
             vDSP_maxv (&B, 1, &denom, rsize);
             
-            denom *= scale
+            denom /= scale
             
             vDSP_vsdiv(&B, 1, &denom, &B, 1, rsize);
         }
