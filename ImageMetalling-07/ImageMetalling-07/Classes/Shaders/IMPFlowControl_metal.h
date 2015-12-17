@@ -16,7 +16,7 @@ using namespace metal;
 
 #ifdef __cplusplus
 
-namespace IMP
+namespace IMProcessing
 {
     
     inline float when_eq(float x, float y) {

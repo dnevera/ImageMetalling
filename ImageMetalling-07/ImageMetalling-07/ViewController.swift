@@ -25,6 +25,7 @@ class ViewController: NSViewController {
             
             super.init(context: context)
             //let kernel = IMPFunction(context: self.context, name: "kernel_desaturate")
+            
             let kernel = IMPFunction(context: self.context, name: "kernel_passthrough")
             self.addFunction(kernel)
             
@@ -34,11 +35,16 @@ class ViewController: NSViewController {
             
             analayzer.analyzerDidUpdate = { (histogram) in
                 
-                //print(" hs = \(histogram.channels[0]);")
-                //print(" hs = \(histogram)")
+                print("\n")
+                print(" hsr = \(histogram.channels[0]);")
+                print(" hsg = \(histogram.channels[1]);")
+                print(" hsb = \(histogram.channels[2]);")
+                print(" hsy = \(histogram.channels[3]);")
+                print("hold on; plot(0:1/255:1, hsr/max(hsr), 'r'); plot(0:1/255:1, hsg/max(hsg), 'g'); plot(0:1/255:1, hsb/max(hsb), 'b'); plot(0:1/255:1, hsy/max(hsy), 'k'); grid on; axis([0 1 0 1]); ")
                 
-                print(" range    = \(self.rangeSolver.min, self.rangeSolver.max)")
-                print(" dominant = \(self.dominantSolver.color*255.0)")
+                print("\n")
+                print(" *** range    = \(self.rangeSolver.min, self.rangeSolver.max)")
+                print(" *** dominant = \(self.dominantSolver.color*255.0), \(self.dominantSolver.color)")
                 
             }
             

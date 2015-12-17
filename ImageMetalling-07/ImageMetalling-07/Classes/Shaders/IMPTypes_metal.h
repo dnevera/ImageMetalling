@@ -11,19 +11,11 @@
 
 #include <simd/simd.h>
 
-#ifdef __cplusplus
-
-namespace IMP
-{
-    struct cropRegion {
-        float top;
-        float right;
-        float left;
-        float bottom;
-    };
-}
-
-#endif
-
+struct IMPCropRegion {
+    float top;
+    float right;
+    float left;
+    float bottom;
+};
 
 #endif /* IMPTypes_h */

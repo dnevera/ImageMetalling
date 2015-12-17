@@ -21,13 +21,13 @@
 
 #ifdef __cplusplus
 
-namespace IMP
+namespace IMProcessing
 {    
     kernel void kernel_passthrough(texture2d<float, access::sample> inTexture [[texture(0)]],
                                    texture2d<float, access::write> outTexture [[texture(1)]],
                                    uint2 gid [[thread_position_in_grid]])
     {
-        float4 inColor = IMP::sampledColor(inTexture,outTexture,gid);
+        float4 inColor = IMProcessing::sampledColor(inTexture,outTexture,gid);
         outTexture.write(inColor, gid);
     }
 }

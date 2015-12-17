@@ -16,7 +16,7 @@
 
 using namespace metal;
 
-namespace IMP
+namespace IMProcessing
 {
     
     static constant float4 cielab_X = 95.047;

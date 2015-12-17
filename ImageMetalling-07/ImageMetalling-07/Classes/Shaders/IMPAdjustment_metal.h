@@ -15,14 +15,14 @@ using namespace metal;
 
 #ifdef __cplusplus
 
-namespace IMP
+namespace IMProcessing
 {
     kernel void kernel_desaturate(texture2d<float, access::sample> inTexture [[texture(0)]],
                                   texture2d<float, access::write> outTexture [[texture(1)]],
                                   uint2 gid [[thread_position_in_grid]])
     {
-        float4 inColor = IMP::sampledColor(inTexture,outTexture,gid);
-        inColor.rgb = float3(dot(inColor.rgb,IMP::Y_mean_factor));
+        float4 inColor = IMProcessing::sampledColor(inTexture,outTexture,gid);
+        inColor.rgb = float3(dot(inColor.rgb,IMProcessing::Y_mean_factor));
         outTexture.write(inColor, gid);
     }
 }

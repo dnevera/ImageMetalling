@@ -9,32 +9,31 @@
 #ifndef IMPHistogramTypes_h
 #define IMPHistogramTypes_h
 
-#include <metal_stdlib>
-#include <simd/simd.h>
-#include "../Histogram/IMPHistogramConstatnts.h"
-
-#ifdef __cplusplus
-
-namespace IMP
-{
-    namespace histogramPreferences {
-        static constant int size     = kIMP_HistogramSize;
-        static constant int channels = kIMP_HistogramChannels;
-        static constant int groups   = kIMP_HistogramGroups;
-    };
-
-    struct histogramBuffer {
-        metal::atomic_uint channels[histogramPreferences::channels][histogramPreferences::size];
-    };
-
-    struct histogramPartialBuffer {
-        metal::uint channels[histogramPreferences::channels][histogramPreferences::size];
-    };
-
-    typedef histogramPartialBuffer histogramPartialBuffers[histogramPreferences::size];
-
-}
-
+#ifdef __METAL_VERSION__
+# include <metal_stdlib>
+# include <simd/simd.h>
+#else
+# include <stdlib.h>
+# define constant const
 #endif
+
+///
+/// Не будем выдумавыть новые размерности цветовых гистограм - остановимся на магическом 256.
+///
+static constant int kIMP_HistogramSize     = 256;
+static constant int kIMP_HistogramChannels = 4;
+static constant int kIMP_HistogramGroups   = 16;
+
+struct IMPHistogramBuffer {
+#ifdef __METAL_VERSION__
+    simd::atomic_uint channels[kIMP_HistogramChannels][kIMP_HistogramSize];
+#else
+    uint channels[kIMP_HistogramChannels][kIMP_HistogramSize];
+#endif
+};
+
+struct IMPHistogramPartialBuffer {
+    uint channels[kIMP_HistogramChannels][kIMP_HistogramSize];
+};
 
 #endif /* IMPHistogramTypes_h */

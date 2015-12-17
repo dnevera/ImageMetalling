@@ -7,6 +7,7 @@
 //
 
 import Accelerate
+import simd
 
 ///
 /// Представление гистограммы для произвольного цветового пространства
@@ -17,7 +18,7 @@ class IMPHistogram {
     ///
     /// Фиксированная размерность гистограмы. Всегда будем подразумевать 256.
     ///
-    let size = vDSP_Length(IMP.histogramPreferences.size)
+    let size = vDSP_Length(kIMP_HistogramSize)
     
     ///
     /// Поканальная таблица счетов. Используем представление в числах с плавающей точкой.
@@ -30,7 +31,7 @@ class IMPHistogram {
     /// Конструктор пустой гистограммы.
     ///
     init(){
-        channels = [[Float]](count: Int(IMP.histogramPreferences.channels), repeatedValue: [Float](count: Int(IMP.histogramPreferences.size), repeatedValue: 0))
+        channels = [[Float]](count: Int(kIMP_HistogramChannels), repeatedValue: [Float](count: Int(kIMP_HistogramSize), repeatedValue: 0))
     }
     
     ///
@@ -45,9 +46,9 @@ class IMPHistogram {
     ///
     /// Метод обновления данных котейнера гистограммы.
     ///
-    /// - parameter dataIn: обновить значение интенсивностей по сырым данным. Сарые данные должны быть преставлены в формате IMPHistogramBuffer.
+    /// - parameter dataIn: обновить значение интенсивностей по сырым данным. Сырые данные должны быть преставлены в формате IMPHistogramBuffer.
     ///
-    func updateWithData(dataIn: UnsafeMutablePointer<Void>){
+    func updateWithData(dataIn: UnsafePointer<Void>){
         clearHistogram()
         let address = UnsafePointer<UInt32>(dataIn)
         for c in 0..<channels.count{
@@ -59,10 +60,10 @@ class IMPHistogram {
     ///
     ///  - parameter dataIn:    <#dataIn description#>
     ///  - parameter dataCount: <#dataCount description#>
-    func updateWithData(dataIn: UnsafeMutablePointer<Void>, dataCount: Int){
+    func updateWithData(dataIn: UnsafePointer<Void>, dataCount: Int){
         self.clearHistogram()
         for i in 0..<dataCount{
-            let dataIn = UnsafePointer<IMP.histogramBuffer>(dataIn)+i
+            let dataIn = UnsafePointer<IMPHistogramBuffer>(dataIn)+i
             let address = UnsafePointer<UInt32>(dataIn)
             for c in 0..<channels.count{
                 var data:[Float] = [Float](count: Int(self.size), repeatedValue: 0)
@@ -141,7 +142,7 @@ class IMPHistogram {
     //
     // Реальная размерность беззнакового целого. Может отличаться в зависимости от среды исполнения.
     //
-    private let dim = sizeof(UInt32)/sizeof(UInt);
+    private let dim = sizeof(UInt32)/sizeof(simd.uint);
     
     //
     // Обновить данные контейнера гистограммы и сконвертировать из UInt во Float
@@ -206,10 +207,16 @@ class IMPHistogram {
         var h:[Float]  = [Float](count: size, repeatedValue: 0)
         var zero:Float = 0
         var v:Float    = 1.0/m
-        //
+        
         // Создает вектор с монотонно возрастающими или убывающими значениями
-        //
+        
         vDSP_vramp(&zero, &v, &h, 1, vDSP_Length(size))
+        
+//        for i in 0..<size{
+//            let v = Float(i)/m;
+//            h[i]=v;
+//        }
+//
         return (size,h);
     }
     
@@ -229,6 +236,9 @@ class IMPHistogram {
         //
         vDSP_vmul(&A, 1, &intensityDistribution.1, 1, &tempBuffer, 1, vDSP_Length(size))
         return sum(A: &tempBuffer, size: size)
+//        var m:Float = 0
+//        vDSP_meanv(&tempBuffer, 1, &m, vDSP_Length(size))
+//        return m*Float(size)
     }
     
     //
@@ -266,8 +276,9 @@ class IMPHistogram {
     
 
     private func clearChannel(inout channel:[Float]){
-        var zero:Float = 0
-        vDSP_vfill(&zero, &channel, 1, vDSP_Length(self.size))
+        //var zero:Float = 0
+        //vDSP_vfill(&zero, &channel, 1, vDSP_Length(self.size))
+        vDSP_vclr(&channel, 1, vDSP_Length(self.size))
     }
     
     private func clearHistogram(){

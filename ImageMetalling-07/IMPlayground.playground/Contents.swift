@@ -5,7 +5,7 @@ import Metal
 import OpenGL.GL
 import QuartzCore
 import Accelerate
-
+//import MetalPerformanceShaders
 
 
 func createIntensityDistribution(size:Int) -> (Int,[Float]){

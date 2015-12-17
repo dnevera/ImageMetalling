@@ -32,7 +32,7 @@ class IMPHistogramAnalyzer: IMPFilter {
     var downScaleFactor:Float!{
         didSet{
             scaleUniformBuffer = scaleUniformBuffer ?? self.context.device.newBufferWithLength(sizeof(Float), options: MTLResourceOptions.CPUCacheModeDefaultCache)
-            memcpy(scaleUniformBuffer.contents(), &downScaleFactor, sizeof(IMP.cropRegion.self))
+            memcpy(scaleUniformBuffer.contents(), &downScaleFactor, sizeof(IMPCropRegion))
         }
     }
     internal var scaleUniformBuffer:MTLBuffer!
@@ -45,10 +45,10 @@ class IMPHistogramAnalyzer: IMPFilter {
     ///
     /// Регион внутри которого вычисляем гистограмму.
     ///
-    var region:IMP.cropRegion!{
+    var region:IMPCropRegion!{
         didSet{
-            regionUniformBuffer = regionUniformBuffer ?? self.context.device.newBufferWithLength(sizeof(IMP.cropRegion.self), options: MTLResourceOptions.CPUCacheModeDefaultCache)
-            memcpy(regionUniformBuffer.contents(), &region, sizeof(IMP.cropRegion.self))
+            regionUniformBuffer = regionUniformBuffer ?? self.context.device.newBufferWithLength(sizeof(IMPCropRegion), options: MTLResourceOptions.CPUCacheModeDefaultCache)
+            memcpy(regionUniformBuffer.contents(), &region, sizeof(IMPCropRegion))
         }
     }
     internal var regionUniformBuffer:MTLBuffer!
@@ -73,10 +73,11 @@ class IMPHistogramAnalyzer: IMPFilter {
         super.init(context: context)
         
         if IMPHistogramAnalyzer.atomicTypesSupport {
-            histogramUniformBuffer = self.context.device.newBufferWithLength(sizeof(IMP.histogramBuffer.self), options: MTLResourceOptions.CPUCacheModeDefaultCache)
+            let sz  = sizeof(IMPHistogramBuffer)
+            histogramUniformBuffer = self.context.device.newBufferWithLength(sz, options: MTLResourceOptions.CPUCacheModeDefaultCache)
         }
         else{
-            histogramUniformBuffer = self.context.device.newBufferWithLength(sizeof(IMP.histogramBuffer.self) * IMP.histogramPreferences.size, options: MTLResourceOptions.CPUCacheModeDefaultCache)
+            histogramUniformBuffer = self.context.device.newBufferWithLength(sizeof(IMPHistogramBuffer) * Int(kIMP_HistogramSize), options: MTLResourceOptions.CPUCacheModeDefaultCache)
         }
         
         // инициализируем счетчик
@@ -86,7 +87,7 @@ class IMPHistogramAnalyzer: IMPFilter {
         self.addFunction(kernel_impHistogramCounter);
         
         defer{
-            region = IMP.cropRegion(top: 0, right: 0, left: 0, bottom: 0)
+            region = IMPCropRegion(top: 0, right: 0, left: 0, bottom: 0)
             downScaleFactor = 1.0
         }
     }
@@ -189,10 +190,10 @@ class IMPHistogramAnalyzer: IMPFilter {
                 
                 apply(
                     texture,
-                    threadgroupCounts: MTLSizeMake(Int(IMP.histogramPreferences.size), Int(1), 1),
+                    threadgroupCounts: MTLSizeMake(Int(kIMP_HistogramSize), Int(1), 1),
                     buffer: histogramUniformBuffer)
 
-                histogram.updateWithData(histogramUniformBuffer.contents(), dataCount: IMP.histogramPreferences.size)
+                histogram.updateWithData(histogramUniformBuffer.contents(), dataCount: Int(kIMP_HistogramSize))
             }
             
             for s in solvers {

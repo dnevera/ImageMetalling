@@ -17,7 +17,7 @@ using namespace metal;
 
 #ifdef __cplusplus
 
-namespace IMP
+namespace IMProcessing
 {
     
     inline float4 sampledColor(
@@ -29,7 +29,7 @@ namespace IMP
         float w = outTexture.get_width();
         return mix(inTexture.sample(s, float2(gid) * float2(1.0/w, 1.0/outTexture.get_height())),
                    inTexture.read(gid),
-                   IMP::when_eq(inTexture.get_width(), w) // whe equal read exact texture color
+                   IMProcessing::when_eq(inTexture.get_width(), w) // whe equal read exact texture color
                    );
     }
 }
