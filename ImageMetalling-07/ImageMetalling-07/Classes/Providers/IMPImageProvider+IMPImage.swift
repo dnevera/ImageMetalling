@@ -9,8 +9,7 @@
 import Foundation
 import Metal
 
-extension IMPImageProvider{
-    
+extension IMPImageProvider{    
     convenience init(context: IMPContext, image: IMPImage, maxSize: Float = 0) {
         self.init(context: context)
         self.update(image)

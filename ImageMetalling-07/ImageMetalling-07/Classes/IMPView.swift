@@ -155,9 +155,7 @@ class IMPView: NSView, IMPContextProvider {
                 layerSizeDidUpdate = false
                 
                 self.context.execute { (commandBuffer) -> Void in
-                    
-                    NSLog(" *** refresh = \(time(nil))")
-                    
+                                        
                     if let actualImageTexture = self.texture {
                 
                         dispatch_semaphore_wait(self.inflightSemaphore, DISPATCH_TIME_FOREVER);

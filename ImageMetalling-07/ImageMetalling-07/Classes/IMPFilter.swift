@@ -9,6 +9,9 @@
 import Cocoa
 import Metal
 
+typealias IMPFilterSorceHandler = ((source:IMPImageProvider) -> Void)
+typealias IMPFilterDestinationHandler = ((destination:IMPImageProvider) -> Void)
+
 class IMPFilter: NSObject,IMPContextProvider {
     
     var context:IMPContext!
@@ -21,19 +24,8 @@ class IMPFilter: NSObject,IMPContextProvider {
     
     var destination:IMPImageProvider?{
         get{
-            
             self.apply()
-            
-            if let t = self.texture{
-                if let d = destinationContainer{
-                    d.texture=t
-                }
-                else{
-                    destinationContainer = IMPImageProvider(context: self.context, texture: t)
-                }
-                return destinationContainer
-            }
-            return nil
+            return getDestination()
         }
     }
     
@@ -44,7 +36,7 @@ class IMPFilter: NSObject,IMPContextProvider {
     }
     
     private var functionList:[IMPFunction] = [IMPFunction]()
-
+    
     func addFunction(function:IMPFunction){
         if functionList.contains(function) == false {
             functionList.append(function)
@@ -57,25 +49,42 @@ class IMPFilter: NSObject,IMPContextProvider {
         }
     }
     
+    var processingWillStart:IMPFilterSorceHandler?
+    var processingDidFinish:IMPFilterDestinationHandler?
+    
     private var texture:MTLTexture?
     private var destinationContainer:IMPImageProvider?
     
+    func getDestination() -> IMPImageProvider? {
+        if let t = self.texture{
+            if let d = destinationContainer{
+                d.texture=t
+            }
+            else{
+                destinationContainer = IMPImageProvider(context: self.context, texture: t)
+            }
+        }
+        return destinationContainer
+    }
+    
     func apply(){
-        if true {
-            
-            dirty = false
+        if dirty {
             
             if  functionList.count > 0 {
                 
                 if self.source?.texture == nil {
+                    dirty = false
                     return
                 }
                 
-
+                if let p = processingWillStart{
+                    p(source: source!)
+                }
+                
                 self.context.execute({ (commandBuffer) -> Void in
-
+                    
                     var inputTexture:MTLTexture! = self.source?.texture
-
+                    
                     for function in self.functionList {
                         
                         let width  = inputTexture.width
@@ -98,7 +107,7 @@ class IMPFilter: NSObject,IMPContextProvider {
                         
                         commandEncoder.setTexture(inputTexture, atIndex:0);
                         commandEncoder.setTexture(self.texture, atIndex:1);
-
+                        
                         
                         commandEncoder.dispatchThreadgroups(threadgroups, threadsPerThreadgroup:threadgroupCounts)
                         commandEncoder.endEncoding()
@@ -106,7 +115,13 @@ class IMPFilter: NSObject,IMPContextProvider {
                         inputTexture = self.texture
                     }
                 })
+                
+                if let p = processingDidFinish {
+                    p(destination: getDestination()!)
+                }
             }
+            
+            dirty = false
         }
     }
 }

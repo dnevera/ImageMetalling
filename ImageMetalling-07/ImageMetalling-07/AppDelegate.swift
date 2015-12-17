@@ -40,6 +40,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         IMPMenuHandler.sharedInstance.currentMenuItem = sender
     }
     
+    @IBAction func clearRecentOpened(sender: AnyObject) {
+    }
+    
     @IBAction func openFile(sender: AnyObject) {
         
         let openPanel = NSOpenPanel()
@@ -76,8 +79,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         let newRecentItem = NSMenuItem(title: file, action: "openRecentHandler:" , keyEquivalent: "");
-        newRecentItem.enabled = true
+        //newRecentItem.enabled = true
         openRecentMenu.addItem(newRecentItem)
+
+        NSLog(" *** new file added to menu: %@", file)
     }
     
     private func openRecentListAdd(file:String){

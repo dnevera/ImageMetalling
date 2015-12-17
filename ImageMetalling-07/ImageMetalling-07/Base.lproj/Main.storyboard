@@ -76,7 +76,7 @@
                                                     <menuItem title="Clear Menu" id="vNY-rz-j42">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
-                                                            <action selector="clearRecentDocuments:" target="Ady-hI-5gd" id="Daa-9d-B3U"/>
+                                                            <action selector="clearRecentOpened:" target="Voe-Tx-rLC" id="xhL-Sj-4EX"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -420,7 +420,7 @@
                 </application>
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="ImageMetalling_07" customModuleProvider="target">
                     <connections>
-                        <outlet property="openRecentMenu" destination="oas-Oc-fiZ" id="zS8-Qc-S3p"/>
+                        <outlet property="openRecentMenu" destination="oas-Oc-fiZ" id="qTv-Tp-9NL"/>
                     </connections>
                 </customObject>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

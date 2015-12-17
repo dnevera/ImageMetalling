@@ -4,6 +4,25 @@ import Cocoa
 import Metal
 import OpenGL.GL
 import QuartzCore
+import Accelerate
+
+
+
+func createIntensityDistribution(size:Int) -> (Int,[Float]){
+    let m:Float    = Float(size-1)
+    var h:[Float]  = [Float](count: size, repeatedValue: 0)
+    var zero:Float = 0
+    var v:Float    = 1.0/m
+    //
+    // Создает вектор с монотонно возрастающими или убывающими значениями
+    //
+    vDSP_vramp(&zero, &v, &h, 1, vDSP_Length(size))
+    return (size,h);
+}
+
+let vh = createIntensityDistribution(256)
+vh.0
+vh.1
 
 var str = "Hello, playground"
 
