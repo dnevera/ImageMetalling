@@ -53,13 +53,14 @@ class ViewController: NSViewController {
             }
             
             self.processingWillStart = { (source) in
-                let t  = 10
+                let t  = 1
                 let t1 = NSDate .timeIntervalSinceReferenceDate()
                 for _ in 0..<t{
                     self.analayzer.source = source
                 }
                 let t2 = NSDate .timeIntervalSinceReferenceDate()
-                let s = (source.texture?.width)!*(source.texture?.height)!*4*t*Int(kIMP_HistogramChannels)
+                let size = Float((source.texture?.width)!*(source.texture?.height)!)*self.analayzer.downScaleFactor
+                let s = size*Float(4*t*Int(kIMP_HistogramChannels))
                 print(" *** wil start process: \(source) tm = \(t2-t1) rate=\(Float(s)/Float(t2-t1)/1024/1024)Mb/s")
             }
             

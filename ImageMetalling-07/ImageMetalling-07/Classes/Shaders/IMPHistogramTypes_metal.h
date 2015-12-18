@@ -22,7 +22,6 @@
 ///
 static constant int kIMP_HistogramSize     = 256;
 static constant int kIMP_HistogramChannels = 4;
-static constant int kIMP_HistogramGroups   = 16;
 
 struct IMPHistogramBuffer {
 #ifdef __METAL_VERSION__

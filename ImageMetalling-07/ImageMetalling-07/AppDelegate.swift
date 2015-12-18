@@ -12,24 +12,63 @@ import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     
+    
     private let openRecentKey = "imageMetalling-open-recent"
+    
+    private var openRecentMenuItems = Dictionary<String,NSMenuItem>()
+    
+    private func addOpenRecentMenuItemMenu(file:String){
+        let menuItem = openRecentMenu.insertItemWithTitle(file, action: "openRecentHandler:", keyEquivalent: "", atIndex: 0)
+        openRecentMenuItems[file]=menuItem
+    }
+    
     private var openRecentList:[String]?{
         get {
             return NSUserDefaults.standardUserDefaults().objectForKey(openRecentKey) as? [String]
         }
     }
+
+    
+    private func addOpenRecentFileMenuItem(file:String){
+
+        var list = removeOpenRecentFileMenuItem(file)
+        
+        list.insert(file, atIndex: 0)
+        
+        NSUserDefaults.standardUserDefaults().setObject(list, forKey: openRecentKey)
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        addOpenRecentMenuItemMenu(file)
+    }
+    
+    private func removeOpenRecentFileMenuItem(file:String) -> [String] {
+
+        var list = openRecentList ?? [String]()
+        
+        if let index = list.indexOf(file){
+            list.removeAtIndex(index)
+            if let menuItem = openRecentMenuItems[file] {
+                openRecentMenu.removeItem(menuItem)
+            }
+        }
+        
+        NSUserDefaults.standardUserDefaults().setObject(list, forKey: openRecentKey)
+        NSUserDefaults.standardUserDefaults().synchronize()
+
+        return list
+    }
+    
+    private var recentListMenuItems:[NSMenuItem] = [NSMenuItem]()
     
     @IBOutlet weak var openRecentMenu: NSMenu!
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        // Insert code here to initialize your application
-        //NSUserDefaults.standardUserDefaults().removeObjectForKey(openRecentKey)
-        //NSUserDefaults.standardUserDefaults().synchronize()
-        if let list = self.openRecentList{
-            for file in list{
-                self.appendOpenRecent(file)
+        if let list = openRecentList {
+            for file in list.reverse() {
+                addOpenRecentMenuItemMenu(file)
             }
-            self.openFilePath(list[0])
+            
+            IMPDocument.sharedInstance.currentFile = list[0]
         }
     }
     
@@ -42,7 +81,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         IMPMenuHandler.sharedInstance.currentMenuItem = sender
     }
     
+    
     @IBAction func clearRecentOpened(sender: AnyObject) {
+        if let list = openRecentList {
+            for file in list {
+                removeOpenRecentFileMenuItem(file)
+            }
+        }
     }
     
     @IBAction func openFile(sender: AnyObject) {
@@ -67,28 +112,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func openFilePath(filePath: String){
         IMPDocument.sharedInstance.currentFile = filePath
-    }
-    
-    private func appendOpenRecent(file:String){
-        
-        var list = self.openRecentList ?? [String]()
-        
-        if list.contains(file) == false {
-            list.append(file)
-            
-            NSUserDefaults.standardUserDefaults().setObject(list as NSArray, forKey: openRecentKey)
-            NSUserDefaults.standardUserDefaults().synchronize()
-        }
-        
-        let newRecentItem = NSMenuItem(title: file, action: "openRecentHandler:" , keyEquivalent: "");
-        //newRecentItem.enabled = true
-        openRecentMenu.addItem(newRecentItem)
-
-        NSLog(" *** new file added to menu: %@", file)
+        addOpenRecentFileMenuItem(filePath)
     }
     
     private func openRecentListAdd(file:String){
-        self.appendOpenRecent(file)
         self.openFilePath(file)
     }
     

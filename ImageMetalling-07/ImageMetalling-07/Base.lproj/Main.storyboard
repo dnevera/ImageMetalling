@@ -69,26 +69,21 @@
                                                 <action selector="openFile:" target="Voe-Tx-rLC" id="X1L-dd-AP1"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Open Recent" id="tXI-mr-wws">
+                                        <menuItem title="Open Recent" id="bej-TY-9L7" userLabel="Open Recent">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="oas-Oc-fiZ">
+                                            <menu key="submenu" title="Open Recent" id="mgF-w6-uMD">
                                                 <items>
-                                                    <menuItem title="Clear Menu" id="vNY-rz-j42">
+                                                    <menuItem title="Clear Menu" id="gsS-aW-LkP" userLabel="Clear Menu">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
-                                                            <action selector="clearRecentOpened:" target="Voe-Tx-rLC" id="xhL-Sj-4EX"/>
+                                                            <action selector="clearRecentOpened:" target="Voe-Tx-rLC" id="zfI-lZ-dnt"/>
                                                         </connections>
                                                     </menuItem>
+                                                    <menuItem isSeparatorItem="YES" id="0g0-gR-oxD"/>
                                                 </items>
                                             </menu>
-                                            <accessibility identifier="OpenRecentID"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
-                                        <menuItem title="Close" hidden="YES" enabled="NO" keyEquivalent="w" id="DVo-aG-piG">
-                                            <connections>
-                                                <action selector="performClose:" target="Ady-hI-5gd" id="HmO-Ls-i7Q"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
                                             <connections>
                                                 <action selector="saveDocument:" target="Ady-hI-5gd" id="teZ-XB-qJY"/>
@@ -420,7 +415,7 @@
                 </application>
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="ImageMetalling_07" customModuleProvider="target">
                     <connections>
-                        <outlet property="openRecentMenu" destination="oas-Oc-fiZ" id="qTv-Tp-9NL"/>
+                        <outlet property="openRecentMenu" destination="mgF-w6-uMD" id="ktP-MQ-Q2R"/>
                     </connections>
                 </customObject>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -470,7 +465,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="35z-k3-Jns">
-                                    <rect key="frame" x="719" y="1" width="16" height="672"/>
+                                    <rect key="frame" x="720" y="1" width="15" height="672"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
