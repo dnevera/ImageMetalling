@@ -18,7 +18,7 @@ class IMPHistogram {
     ///
     /// Фиксированная размерность гистограмы. Всегда будем подразумевать 256.
     ///
-    let size = vDSP_Length(kIMP_HistogramSize)
+    let size = Int(kIMP_HistogramSize)
     
     ///
     /// Поканальная таблица счетов. Используем представление в числах с плавающей точкой.
@@ -153,7 +153,7 @@ class IMPHistogram {
         //
         // ковертим из единственно возможного в текущем MSL (atomic_)[uint] во [float]
         //
-        vDSP_vfltu32(p, dim, &channel, 1, self.size);
+        vDSP_vfltu32(p, dim, &channel, 1, vDSP_Length(self.size));
     }
     
     //
@@ -208,15 +208,8 @@ class IMPHistogram {
         var zero:Float = 0
         var v:Float    = 1.0/m
         
-        // Создает вектор с монотонно возрастающими или убывающими значениями
-        
+        // Создает вектор с монотонно возрастающими или убывающими значениями        
         vDSP_vramp(&zero, &v, &h, 1, vDSP_Length(size))
-        
-//        for i in 0..<size{
-//            let v = Float(i)/m;
-//            h[i]=v;
-//        }
-//
         return (size,h);
     }
     
@@ -236,9 +229,6 @@ class IMPHistogram {
         //
         vDSP_vmul(&A, 1, &intensityDistribution.1, 1, &tempBuffer, 1, vDSP_Length(size))
         return sum(A: &tempBuffer, size: size)
-//        var m:Float = 0
-//        vDSP_meanv(&tempBuffer, 1, &m, vDSP_Length(size))
-//        return m*Float(size)
     }
     
     //
@@ -246,7 +236,7 @@ class IMPHistogram {
     //
     private func sum(inout A A:[Float], size:Int) -> Float {
         var sum:Float = 0
-        vDSP_sve(&A, 1, &sum, self.size);
+        vDSP_sve(&A, 1, &sum, vDSP_Length(self.size));
         return sum
     }
     
@@ -271,13 +261,10 @@ class IMPHistogram {
     }
     
     private func addFromData(inout data:[Float], inout toChannel:[Float]){
-        vDSP_vadd(&toChannel, 1, &data, 1, &toChannel, 1, self.size)
+        vDSP_vadd(&toChannel, 1, &data, 1, &toChannel, 1, vDSP_Length(self.size))
     }
     
-
     private func clearChannel(inout channel:[Float]){
-        //var zero:Float = 0
-        //vDSP_vfill(&zero, &channel, 1, vDSP_Length(self.size))
         vDSP_vclr(&channel, 1, vDSP_Length(self.size))
     }
     

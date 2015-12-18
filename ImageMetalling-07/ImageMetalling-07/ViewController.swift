@@ -31,7 +31,7 @@ class ViewController: NSViewController {
             
             analayzer = IMPHistogramAnalyzer(context: self.context)
             
-            analayzer.downScaleFactor = 1
+            analayzer.downScaleFactor = 0.5
             analayzer.region = IMPCropRegion(top: 0.0, right: 0.0, left: 0.0, bottom: 0.0)
             
             analayzer.solvers.append(dominantSolver)
@@ -53,7 +53,7 @@ class ViewController: NSViewController {
             }
             
             self.processingWillStart = { (source) in
-                let t  = 1
+                let t  = 10
                 let t1 = NSDate .timeIntervalSinceReferenceDate()
                 for _ in 0..<t{
                     self.analayzer.source = source

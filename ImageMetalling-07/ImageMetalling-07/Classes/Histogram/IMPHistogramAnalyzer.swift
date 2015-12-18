@@ -37,6 +37,8 @@ class IMPHistogramAnalyzer: IMPFilter {
     }
     internal var scaleUniformBuffer:MTLBuffer!
     
+    private var threadgroups = MTLSizeMake(1,1,1)
+    
     ///
     /// Солверы анализирующие гистограмму в текущем инстансе
     ///.
@@ -71,17 +73,14 @@ class IMPHistogramAnalyzer: IMPFilter {
     ///
     init(context: IMPContext, function: String) {
         super.init(context: context)
-        
-        if IMPHistogramAnalyzer.atomicTypesSupport {
-            let sz  = sizeof(IMPHistogramBuffer)
-            histogramUniformBuffer = self.context.device.newBufferWithLength(sz, options: MTLResourceOptions.CPUCacheModeDefaultCache)
-        }
-        else{
-            histogramUniformBuffer = self.context.device.newBufferWithLength(sizeof(IMPHistogramBuffer) * Int(kIMP_HistogramSize), options: MTLResourceOptions.CPUCacheModeDefaultCache)
-        }
-        
+
         // инициализируем счетчик
         kernel_impHistogramCounter = IMPFunction(context: self.context, name:function)
+        
+        let groups = kernel_impHistogramCounter.pipeline!.maxTotalThreadsPerThreadgroup/histogram.size
+
+        threadgroups = MTLSizeMake(groups,1,1)
+            histogramUniformBuffer = self.context.device.newBufferWithLength(sizeof(IMPHistogramBuffer) * Int(groups), options: MTLResourceOptions.CPUCacheModeDefaultCache)
         
         // добавляем счетчик как метод фильтра
         self.addFunction(kernel_impHistogramCounter);
@@ -93,15 +92,7 @@ class IMPHistogramAnalyzer: IMPFilter {
     }
     
     convenience required init(context: IMPContext) {
-        let kernel_name:String
-        if IMPHistogramAnalyzer.atomicTypesSupport {
-            //kernel_name = "kernel_impHistogramRGBYCounter"
-            kernel_name = "kernel_impHistogramCuda"
-        }
-        else{
-            kernel_name = "kernel_impPartialRGBYHistogram"
-        }
-        self.init(context:context, function: kernel_name)
+        self.init(context:context, function: "kernel_impHistogramPartial")
     }
     
     ///
@@ -133,19 +124,6 @@ class IMPHistogramAnalyzer: IMPFilter {
     
     internal func apply(texture:MTLTexture, threadgroupCounts: MTLSize, buffer:MTLBuffer!) {
         
-        let width  = Int(floor(Float(texture.width) * self.downScaleFactor))
-        let height = Int(floor(Float(texture.height) * self.downScaleFactor))
-        
-        //
-        // Вычисляем количество групп вычислительных ядер
-        //
-//        let threadgroups = MTLSizeMake(
-//            (width  + threadgroupCounts.width ) / threadgroupCounts.width ,
-//            (height + threadgroupCounts.height) / threadgroupCounts.height,
-//            1)
-
-        let threadgroups = MTLSizeMake(1,1,1)
-
         self.context.execute { (commandBuffer) -> Void in
             //
             // Обнуляем входной буфер
@@ -168,38 +146,22 @@ class IMPHistogramAnalyzer: IMPFilter {
             //
             // Запускаем вычисления
             //
-            commandEncoder.dispatchThreadgroups(threadgroups, threadsPerThreadgroup:threadgroupCounts);
+            commandEncoder.dispatchThreadgroups(self.threadgroups, threadsPerThreadgroup:threadgroupCounts);
             commandEncoder.endEncoding()
         }
-        
     }
     
     override func apply() {
         
         if let texture = source?.texture{
             
-            if IMPHistogramAnalyzer.atomicTypesSupport {
-                apply(
-                    texture,
-                    //threadgroupCounts: MTLSizeMake(kernel_impHistogramCounter.groupSize.width, kernel_impHistogramCounter.groupSize.height, 1),
-                    threadgroupCounts: MTLSizeMake(Int(kIMP_HistogramSize), Int(1), 1),
-                    buffer: histogramUniformBuffer)
-                
-                //
-                // обновляем структуру гистограммы с которой уже будем работать
-                //
-                histogram.updateWithData(histogramUniformBuffer.contents())
-            }
-            else {
-                
-                apply(
-                    texture,
-                    threadgroupCounts: MTLSizeMake(Int(kIMP_HistogramSize), Int(1), 1),
-                    buffer: histogramUniformBuffer)
+            apply(
+                texture,
+                threadgroupCounts: MTLSizeMake(histogram.size, 1, 1),
+                buffer: histogramUniformBuffer)
 
-                histogram.updateWithData(histogramUniformBuffer.contents(), dataCount: Int(kIMP_HistogramSize))
-            }
-            
+            histogram.updateWithData(histogramUniformBuffer.contents(), dataCount: threadgroups.width)
+
             for s in solvers {
                 let size = CGSizeMake(CGFloat(texture.width), CGFloat(texture.height))
                 s.analizerDidUpdate(self, histogram: self.histogram, imageSize: size)
@@ -209,12 +171,6 @@ class IMPHistogramAnalyzer: IMPFilter {
                 p(histogram: histogram)
             }
             
-        }
-    }
-    
-    static var atomicTypesSupport:Bool{
-        get{
-            return true
         }
     }
 }
