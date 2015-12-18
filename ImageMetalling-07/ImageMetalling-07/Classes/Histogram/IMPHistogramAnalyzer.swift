@@ -95,7 +95,8 @@ class IMPHistogramAnalyzer: IMPFilter {
     convenience required init(context: IMPContext) {
         let kernel_name:String
         if IMPHistogramAnalyzer.atomicTypesSupport {
-            kernel_name = "kernel_impHistogramRGBYCounter"
+            //kernel_name = "kernel_impHistogramRGBYCounter"
+            kernel_name = "kernel_impHistogramCuda"
         }
         else{
             kernel_name = "kernel_impPartialRGBYHistogram"
@@ -138,11 +139,13 @@ class IMPHistogramAnalyzer: IMPFilter {
         //
         // Вычисляем количество групп вычислительных ядер
         //
-        let threadgroups = MTLSizeMake(
-            (width  + threadgroupCounts.width ) / threadgroupCounts.width ,
-            (height + threadgroupCounts.height) / threadgroupCounts.height,
-            1)
-        
+//        let threadgroups = MTLSizeMake(
+//            (width  + threadgroupCounts.width ) / threadgroupCounts.width ,
+//            (height + threadgroupCounts.height) / threadgroupCounts.height,
+//            1)
+
+        let threadgroups = MTLSizeMake(1,1,1)
+
         self.context.execute { (commandBuffer) -> Void in
             //
             // Обнуляем входной буфер
@@ -178,7 +181,8 @@ class IMPHistogramAnalyzer: IMPFilter {
             if IMPHistogramAnalyzer.atomicTypesSupport {
                 apply(
                     texture,
-                    threadgroupCounts: MTLSizeMake(kernel_impHistogramCounter.groupSize.width, kernel_impHistogramCounter.groupSize.height, 1),
+                    //threadgroupCounts: MTLSizeMake(kernel_impHistogramCounter.groupSize.width, kernel_impHistogramCounter.groupSize.height, 1),
+                    threadgroupCounts: MTLSizeMake(Int(kIMP_HistogramSize), Int(1), 1),
                     buffer: histogramUniformBuffer)
                 
                 //

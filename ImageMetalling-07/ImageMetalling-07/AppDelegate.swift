@@ -23,6 +23,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
+        //NSUserDefaults.standardUserDefaults().removeObjectForKey(openRecentKey)
+        //NSUserDefaults.standardUserDefaults().synchronize()
         if let list = self.openRecentList{
             for file in list{
                 self.appendOpenRecent(file)
