@@ -11,28 +11,46 @@
 
 #ifdef __METAL_VERSION__
 # include <metal_stdlib>
-# include <simd/simd.h>
 #else
 # include <stdlib.h>
 # define constant const
 #endif
 
+# include <simd/simd.h>
+
+#ifdef __METAL_VERSION__
+#else
+#endif
+
 ///
 /// Не будем выдумавыть новые размерности цветовых гистограм - остановимся на магическом 256.
 ///
-static constant int kIMP_HistogramSize     = 256;
-static constant int kIMP_HistogramChannels = 4;
+static constant uint kIMP_HistogramSize        = 256;
+static constant uint kIMP_HistogramMaxChannels = 4;
 
+///
+/// Буфер бинов гистограммы
+///
 struct IMPHistogramBuffer {
-#ifdef __METAL_VERSION__
-    simd::atomic_uint channels[kIMP_HistogramChannels][kIMP_HistogramSize];
-#else
-    uint channels[kIMP_HistogramChannels][kIMP_HistogramSize];
-#endif
+    uint channels[kIMP_HistogramMaxChannels][kIMP_HistogramSize];
 };
 
-struct IMPHistogramPartialBuffer {
-    uint channels[kIMP_HistogramChannels][kIMP_HistogramSize];
+typedef struct {
+    float  bins[kIMP_HistogramSize];
+    packed_float4 color;
+}IMPHistogramLayerComponents;
+
+typedef struct {
+    float x;
+    float y;
+    float width;
+    float height;
+}IMPHistogramLayerFrame;
+
+struct IMPHistogramLayer {
+    IMPHistogramLayerComponents channels[kIMP_HistogramMaxChannels];
+    IMPHistogramLayerFrame frame;
+    float maxPerChannel;
 };
 
 #endif /* IMPHistogramTypes_h */

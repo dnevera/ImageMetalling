@@ -11,11 +11,13 @@ import simd
 
 class ViewController: NSViewController {
     
-    
-    @IBOutlet weak var imageView: IMPView!
+    @IBOutlet weak var histogramContainerView: NSView!
     @IBOutlet weak var scrollView: NSScrollView!
     
-    class IMPDesaturateFilter:IMPFilter {
+    var imageView: IMPView!
+    var histogramView: IMPView!
+    
+    class viewFilter:IMPFilter {
         
         var analayzer:IMPHistogramAnalyzer!
         let dominantSolver = IMPHistogramDominantColorSolver()
@@ -24,14 +26,14 @@ class ViewController: NSViewController {
         required init(context: IMPContext) {
             
             super.init(context: context)
-            //let kernel = IMPFunction(context: self.context, name: "kernel_desaturate")
             
-            let kernel = IMPFunction(context: self.context, name: "kernel_passthrough")
-            self.addFunction(kernel)
+            self.addFunction(IMPFunction(context: self.context, name: "kernel_passthrough"))
             
             analayzer = IMPHistogramAnalyzer(context: self.context)
             
-            analayzer.downScaleFactor = 0.5
+            analayzer.histogram = IMPHistogram(channels: 4)
+            
+            analayzer.downScaleFactor = 1
             analayzer.region = IMPCropRegion(top: 0.0, right: 0.0, left: 0.0, bottom: 0.0)
             
             analayzer.solvers.append(dominantSolver)
@@ -53,14 +55,14 @@ class ViewController: NSViewController {
             }
             
             self.processingWillStart = { (source) in
-                let t  = 1
+                let t  = 10
                 let t1 = NSDate .timeIntervalSinceReferenceDate()
                 for _ in 0..<t{
                     self.analayzer.source = source
                 }
                 let t2 = NSDate .timeIntervalSinceReferenceDate()
                 let size = Float((source.texture?.width)!*(source.texture?.height)!)*self.analayzer.downScaleFactor
-                let s = size*Float(4*t*Int(kIMP_HistogramChannels))
+                let s = size*Float(4*t*self.analayzer.histogram.channels.count)
                 print(" *** wil start process: \(source) tm = \(t2-t1) rate=\(Float(s)/Float(t2-t1)/1024/1024)Mb/s")
             }
             
@@ -76,10 +78,21 @@ class ViewController: NSViewController {
         
         // Do any additional setup after loading the view.
         
+        self.view.wantsLayer = true
+        self.view.layer?.backgroundColor = IMPColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1).CGColor
+        
+        histogramContainerView.wantsLayer = true
+        histogramContainerView.layer?.backgroundColor = IMPColor.redColor().CGColor
+        
+        histogramView = IMPView(frame: histogramContainerView.bounds)
+        histogramView.backgroundColor = IMPColor.blueColor()
+        histogramContainerView.addSubview(histogramView)
+        
         imageView = IMPView(frame: scrollView.bounds)
         
-        imageView.filter = IMPDesaturateFilter(context: IMPContext())
-        
+        imageView.filter = viewFilter(context: IMPContext())
+
+        scrollView.drawsBackground = false
         scrollView.documentView = imageView
         scrollView.allowsMagnification = true
         scrollView.acceptsTouchEvents = true

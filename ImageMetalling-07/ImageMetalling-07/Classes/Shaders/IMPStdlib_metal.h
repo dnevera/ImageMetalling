@@ -15,6 +15,7 @@
 #include "IMPTypes_metal.h"
 #include "IMPConstants_metal.h"
 #include "IMPHistogram_metal.h"
+#include "IMPHistogramLayer_metal.h"
 #include "IMPFlowControl_metal.h"
 #include "IMPCommon_metal.h"
 #include "IMPAdjustment_metal.h"

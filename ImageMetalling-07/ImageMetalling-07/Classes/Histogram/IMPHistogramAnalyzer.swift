@@ -24,18 +24,30 @@ class IMPHistogramAnalyzer: IMPFilter {
     ///
     /// Тут храним наши вычисленные распределения поканальных интенсивностей.
     ///
-    var histogram = IMPHistogram()
+    var histogram = IMPHistogram(){
+        didSet{
+            channelsToCompute = UInt(histogram.channels.count)
+        }
+    }
     
     ///
     /// На сколько уменьшаем картинку перед вычисления гистограммы.
     ///
     var downScaleFactor:Float!{
         didSet{
-            scaleUniformBuffer = scaleUniformBuffer ?? self.context.device.newBufferWithLength(sizeof(Float), options: MTLResourceOptions.CPUCacheModeDefaultCache)
-            memcpy(scaleUniformBuffer.contents(), &downScaleFactor, sizeof(IMPCropRegion))
+            scaleUniformBuffer = scaleUniformBuffer ?? self.context.device.newBufferWithLength(sizeof(Float), options: .CPUCacheModeDefaultCache)
+            memcpy(scaleUniformBuffer.contents(), &downScaleFactor, sizeof(Float))
         }
     }
-    internal var scaleUniformBuffer:MTLBuffer!
+    private var scaleUniformBuffer:MTLBuffer!
+    
+    private var channelsToCompute:UInt?{
+        didSet{
+            channelsToComputeBuffer = channelsToComputeBuffer ?? self.context.device.newBufferWithLength(sizeof(UInt), options: .CPUCacheModeDefaultCache)
+            memcpy(channelsToComputeBuffer.contents(), &channelsToCompute, sizeof(UInt))
+        }
+    }
+    private var channelsToComputeBuffer:MTLBuffer!
     
     ///
     /// Солверы анализирующие гистограмму в текущем инстансе
@@ -47,7 +59,7 @@ class IMPHistogramAnalyzer: IMPFilter {
     ///
     var region:IMPCropRegion!{
         didSet{
-            regionUniformBuffer = regionUniformBuffer ?? self.context.device.newBufferWithLength(sizeof(IMPCropRegion), options: MTLResourceOptions.CPUCacheModeDefaultCache)
+            regionUniformBuffer = regionUniformBuffer ?? self.context.device.newBufferWithLength(sizeof(IMPCropRegion), options: .CPUCacheModeDefaultCache)
             memcpy(regionUniformBuffer.contents(), &region, sizeof(IMPCropRegion))
         }
     }
@@ -81,14 +93,15 @@ class IMPHistogramAnalyzer: IMPFilter {
     ///
     init(context: IMPContext, function: String) {
         super.init(context: context)
-
+        
         // инициализируем счетчик
         kernel_impHistogramCounter = IMPFunction(context: self.context, name:function)
         
         let groups = kernel_impHistogramCounter.pipeline!.maxTotalThreadsPerThreadgroup/histogram.size
-
+        
         threadgroups = MTLSizeMake(groups,1,1)
-            histogramUniformBuffer = self.context.device.newBufferWithLength(sizeof(IMPHistogramBuffer) * Int(groups), options: MTLResourceOptions.CPUCacheModeDefaultCache)
+        
+        histogramUniformBuffer = self.context.device.newBufferWithLength(sizeof(IMPHistogramBuffer) * Int(groups), options: MTLResourceOptions.CPUCacheModeDefaultCache)
         
         // добавляем счетчик как метод фильтра
         self.addFunction(kernel_impHistogramCounter);
@@ -96,6 +109,7 @@ class IMPHistogramAnalyzer: IMPFilter {
         defer{
             region = IMPCropRegion(top: 0, right: 0, left: 0, bottom: 0)
             downScaleFactor = 1.0
+            channelsToCompute = UInt(histogram.channels.count)
         }
     }
     
@@ -148,8 +162,9 @@ class IMPHistogramAnalyzer: IMPFilter {
             commandEncoder.setComputePipelineState(self.kernel_impHistogramCounter.pipeline!);
             commandEncoder.setTexture(texture, atIndex:0)
             commandEncoder.setBuffer(buffer, offset:0, atIndex:0)
-            commandEncoder.setBuffer(self.regionUniformBuffer,    offset:0, atIndex:1)
-            commandEncoder.setBuffer(self.scaleUniformBuffer,     offset:0, atIndex:2)
+            commandEncoder.setBuffer(self.channelsToComputeBuffer,offset:0, atIndex:1)
+            commandEncoder.setBuffer(self.regionUniformBuffer,    offset:0, atIndex:2)
+            commandEncoder.setBuffer(self.scaleUniformBuffer,     offset:0, atIndex:3)
             
             //
             // Запускаем вычисления
@@ -167,9 +182,9 @@ class IMPHistogramAnalyzer: IMPFilter {
                 texture,
                 threadgroupCounts: MTLSizeMake(histogram.size, 1, 1),
                 buffer: histogramUniformBuffer)
-
+            
             histogram.updateWithData(histogramUniformBuffer.contents(), dataCount: threadgroups.width)
-
+            
             for s in solvers {
                 let size = CGSizeMake(CGFloat(texture.width), CGFloat(texture.height))
                 s.analizerDidUpdate(self, histogram: self.histogram, imageSize: size)

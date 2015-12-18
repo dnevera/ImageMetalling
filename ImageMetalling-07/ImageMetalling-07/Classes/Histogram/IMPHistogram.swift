@@ -31,7 +31,14 @@ class IMPHistogram {
     /// Конструктор пустой гистограммы.
     ///
     init(){
-        channels = [[Float]](count: Int(kIMP_HistogramChannels), repeatedValue: [Float](count: Int(kIMP_HistogramSize), repeatedValue: 0))
+        channels = [[Float]](count: Int(kIMP_HistogramMaxChannels), repeatedValue: [Float](count: Int(kIMP_HistogramSize), repeatedValue: 0))
+    }
+    
+    init(channels number:UInt){
+        if number > UInt(kIMP_HistogramMaxChannels){
+            fatalError("IMPHistogram could not be created with channels number great then \(kIMP_HistogramMaxChannels)")
+        }
+        channels = [[Float]](count: Int(number), repeatedValue: [Float](count: Int(kIMP_HistogramSize), repeatedValue: 0))
     }
     
     ///

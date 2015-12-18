@@ -455,29 +455,45 @@
                                     <rect key="frame" x="1" y="1" width="734" height="672"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <view fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qrm-Od-Yhx">
-                                            <rect key="frame" x="0.0" y="578" width="181" height="94"/>
+                                        <view translatesAutoresizingMaskIntoConstraints="NO" id="qrm-Od-Yhx">
+                                            <rect key="frame" x="0.0" y="0.0" width="181" height="94"/>
                                         </view>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="qrm-Od-Yhx" firstAttribute="leading" secondItem="DYk-Db-VEI" secondAttribute="leading" id="1YX-vl-vvo"/>
+                                        <constraint firstAttribute="trailing" secondItem="qrm-Od-Yhx" secondAttribute="trailing" constant="553" id="Y6n-TW-Zvf"/>
+                                        <constraint firstItem="qrm-Od-Yhx" firstAttribute="top" secondItem="DYk-Db-VEI" secondAttribute="top" constant="578" id="fyQ-yj-GPk"/>
+                                        <constraint firstAttribute="bottom" secondItem="qrm-Od-Yhx" secondAttribute="bottom" id="ul5-p3-w97"/>
+                                    </constraints>
                                 </clipView>
-                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="Nmq-yN-Fia">
+                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Nmq-yN-Fia">
                                     <rect key="frame" x="1" y="657" width="734" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="35z-k3-Jns">
-                                    <rect key="frame" x="720" y="1" width="15" height="672"/>
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="35z-k3-Jns">
+                                    <rect key="frame" x="719" y="1" width="16" height="672"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="kyT-YL-oTA">
+                                <rect key="frame" x="744" y="498" width="278" height="171"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="171" id="Y0d-AJ-WDA"/>
+                                </constraints>
+                            </customView>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="kyT-YL-oTA" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="5" id="6m8-Mq-Iwr"/>
                             <constraint firstItem="8IY-iL-6bR" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="a41-Dw-bt5"/>
                             <constraint firstItem="8IY-iL-6bR" firstAttribute="centerY" secondItem="m2S-Jp-Qdl" secondAttribute="centerY" id="cGH-EK-tTo"/>
                             <constraint firstItem="8IY-iL-6bR" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="eQS-yl-cFD"/>
+                            <constraint firstItem="kyT-YL-oTA" firstAttribute="leading" secondItem="8IY-iL-6bR" secondAttribute="trailing" constant="8" id="qhb-yw-Z9d"/>
                             <constraint firstAttribute="trailing" secondItem="8IY-iL-6bR" secondAttribute="trailing" constant="291" id="zlV-50-3Zj"/>
+                            <constraint firstAttribute="trailing" secondItem="kyT-YL-oTA" secondAttribute="trailing" constant="5" id="zyp-76-fVN"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="histogramContainerView" destination="kyT-YL-oTA" id="7hB-ag-u9H"/>
                         <outlet property="scrollView" destination="8IY-iL-6bR" id="cwb-9E-EZS"/>
                     </connections>
                 </viewController>
