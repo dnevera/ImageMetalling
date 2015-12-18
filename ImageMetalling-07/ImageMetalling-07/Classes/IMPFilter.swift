@@ -36,19 +36,32 @@ class IMPFilter: NSObject,IMPContextProvider {
     }
     
     private var functionList:[IMPFunction] = [IMPFunction]()
+    private var filterList:[IMPFilter] = [IMPFilter]()
     
-    func addFunction(function:IMPFunction){
+    final func addFunction(function:IMPFunction){
         if functionList.contains(function) == false {
             functionList.append(function)
         }
     }
     
-    func removeFunction(function:IMPFunction){
+    final func removeFunction(function:IMPFunction){
         if let index = functionList.indexOf(function) {
             functionList.removeAtIndex(index)
         }
     }
     
+    final func addFilter(filter:IMPFilter){
+        if filterList.contains(filter) == false {
+            filterList.append(filter)
+        }
+    }
+    
+    final func removeFilter(filter:IMPFilter){
+        if let index = filterList.indexOf(filter) {
+            filterList.removeAtIndex(index)
+        }
+    }
+
     var processingWillStart:IMPFilterSorceHandler?
     var processingDidFinish:IMPFilterDestinationHandler?
     
@@ -67,15 +80,18 @@ class IMPFilter: NSObject,IMPContextProvider {
         return destinationContainer
     }
     
+    func configure(function:IMPFunction, command:MTLComputeCommandEncoder){}
+    
     func apply(){
+        
         if dirty {
-            
+
+            if self.source?.texture == nil {
+                dirty = false
+                return
+            }
+
             if  functionList.count > 0 {
-                
-                if self.source?.texture == nil {
-                    dirty = false
-                    return
-                }
                 
                 if let p = processingWillStart{
                     p(source: source!)
@@ -84,7 +100,7 @@ class IMPFilter: NSObject,IMPContextProvider {
                 self.context.execute({ (commandBuffer) -> Void in
                     
                     var inputTexture:MTLTexture! = self.source?.texture
-                    
+
                     for function in self.functionList {
                         
                         let width  = inputTexture.width
@@ -105,9 +121,10 @@ class IMPFilter: NSObject,IMPContextProvider {
                         
                         commandEncoder.setComputePipelineState(function.pipeline!)
                         
-                        commandEncoder.setTexture(inputTexture, atIndex:0);
-                        commandEncoder.setTexture(self.texture, atIndex:1);
+                        commandEncoder.setTexture(inputTexture, atIndex:0)
+                        commandEncoder.setTexture(self.texture, atIndex:1)
                         
+                        self.configure(function, command: commandEncoder)
                         
                         commandEncoder.dispatchThreadgroups(threadgroups, threadsPerThreadgroup:threadgroupCounts)
                         commandEncoder.endEncoding()
@@ -115,7 +132,35 @@ class IMPFilter: NSObject,IMPContextProvider {
                         inputTexture = self.texture
                     }
                 })
+            }
+            else if filterList.count > 0 {
+                if let p = processingWillStart{
+                    p(source: source!)
+                }
+            }
+            
+            if self.texture == nil{
+                self.texture = self.source?.texture
+            }
+            
+            if filterList.count > 0 {
                 
+                for filter in self.filterList {
+
+                    filter.source = self.getDestination()
+                    self.texture  = filter.destination?.texture
+                    
+                    if self.texture == nil {
+                        fatalError("IMPFilter \(filter) did not return valid texture...")
+                    }
+                }
+                
+                if let p = processingDidFinish {
+                    p(destination: getDestination()!)
+                }
+                
+            }
+            else if functionList.count > 0 {
                 if let p = processingDidFinish {
                     p(destination: getDestination()!)
                 }

@@ -10,6 +10,7 @@
 		3132992B1C21E094008928CA /* IMPImageProvider+IMPImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3132992A1C21E094008928CA /* IMPImageProvider+IMPImage.swift */; };
 		313299311C21E0C5008928CA /* IMPHistogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3132992D1C21E0C5008928CA /* IMPHistogram.swift */; };
 		313299321C21E0C5008928CA /* IMPHistogramAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3132992E1C21E0C5008928CA /* IMPHistogramAnalyzer.swift */; };
+		313BA0FC1C244B730082502E /* IMPHistogramLayerSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313BA0FB1C244B730082502E /* IMPHistogramLayerSolver.swift */; };
 		3157FF921C22F5BC00AA57D4 /* IMPHistogramAverageSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3157FF901C22F5BC00AA57D4 /* IMPHistogramAverageSolver.swift */; };
 		3157FF931C22F5BC00AA57D4 /* IMPHistogramRangeSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3157FF911C22F5BC00AA57D4 /* IMPHistogramRangeSolver.swift */; };
 		3157FF951C22FA2B00AA57D4 /* IMPHistogram_metal.h in Sources */ = {isa = PBXBuildFile; fileRef = 3157FF941C22FA2B00AA57D4 /* IMPHistogram_metal.h */; };
@@ -42,6 +43,8 @@
 		3132992D1C21E0C5008928CA /* IMPHistogram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMPHistogram.swift; path = Classes/Histogram/IMPHistogram.swift; sourceTree = "<group>"; };
 		3132992E1C21E0C5008928CA /* IMPHistogramAnalyzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMPHistogramAnalyzer.swift; path = Classes/Histogram/IMPHistogramAnalyzer.swift; sourceTree = "<group>"; };
 		313BA0F91C243D1B0082502E /* IMPHistogramLayer_metal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IMPHistogramLayer_metal.h; path = Classes/Shaders/IMPHistogramLayer_metal.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
+		313BA0FB1C244B730082502E /* IMPHistogramLayerSolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMPHistogramLayerSolver.swift; path = Classes/Histogram/Solvers/IMPHistogramLayerSolver.swift; sourceTree = "<group>"; };
+		313BA0FD1C245D730082502E /* IMPBlending_metal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IMPBlending_metal.h; path = Classes/Shaders/IMPBlending_metal.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		3157FF901C22F5BC00AA57D4 /* IMPHistogramAverageSolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMPHistogramAverageSolver.swift; path = Classes/Histogram/Solvers/IMPHistogramAverageSolver.swift; sourceTree = "<group>"; };
 		3157FF911C22F5BC00AA57D4 /* IMPHistogramRangeSolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMPHistogramRangeSolver.swift; path = Classes/Histogram/Solvers/IMPHistogramRangeSolver.swift; sourceTree = "<group>"; };
 		3157FF941C22FA2B00AA57D4 /* IMPHistogram_metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IMPHistogram_metal.h; path = Classes/Shaders/IMPHistogram_metal.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
@@ -99,6 +102,7 @@
 			children = (
 				3157FF901C22F5BC00AA57D4 /* IMPHistogramAverageSolver.swift */,
 				3157FF911C22F5BC00AA57D4 /* IMPHistogramRangeSolver.swift */,
+				313BA0FB1C244B730082502E /* IMPHistogramLayerSolver.swift */,
 			);
 			name = Solvers;
 			sourceTree = "<group>";
@@ -111,6 +115,7 @@
 				3157FF991C22FCFC00AA57D4 /* IMPFlowControl_metal.h */,
 				3157FF9B1C23078E00AA57D4 /* IMPCommon_metal.h */,
 				3157FF9D1C230A8C00AA57D4 /* IMPAdjustment_metal.h */,
+				313BA0FD1C245D730082502E /* IMPBlending_metal.h */,
 				3157FF981C22FB7C00AA57D4 /* IMPStdlib_metal.h */,
 			);
 			name = Stdlib;
@@ -304,6 +309,7 @@
 				31D9BD431C1F89650068E094 /* IMPContext.swift in Sources */,
 				316D07B01C2031A400E4E311 /* IMPImage+MTLTexture.swift in Sources */,
 				319F0D5E1C217F3600B5C844 /* CGSize+IMProcessing.swift in Sources */,
+				313BA0FC1C244B730082502E /* IMPHistogramLayerSolver.swift in Sources */,
 				316D07AB1C2030FE00E4E311 /* IMPImageProvider.swift in Sources */,
 				319F0D5C1C217C4900B5C844 /* IMPFunction.swift in Sources */,
 				319F0D561C217A0B00B5C844 /* IMPImage+CGImage.swift in Sources */,

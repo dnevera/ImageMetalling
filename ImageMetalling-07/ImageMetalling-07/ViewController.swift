@@ -9,6 +9,12 @@
 import Cocoa
 import simd
 
+enum IMPPrefs{
+    struct colors {
+        static let background = float4(x:0.1,y:0.1,z:0.1,w:1.0)
+    }
+}
+
 class ViewController: NSViewController {
     
     @IBOutlet weak var histogramContainerView: NSView!
@@ -17,18 +23,40 @@ class ViewController: NSViewController {
     var imageView: IMPView!
     var histogramView: IMPView!
     
+    class histogramLayer: IMPFilter {
+        
+        var analayzer:IMPHistogramAnalyzer!
+        var histogram:IMPHistogramLayerSolver!
+        
+        required init(context: IMPContext) {
+            
+            super.init(context: context)
+            
+            histogram = IMPHistogramLayerSolver(context: self.context)
+            histogram.layer.backgroundColor = IMPPrefs.colors.background
+            
+            self.addFilter(histogram)
+            
+            analayzer = IMPHistogramAnalyzer(context: self.context)
+            analayzer.solvers.append(histogram)
+                        
+            self.processingWillStart = { (source) in
+                self.analayzer.source = source
+            }
+        }
+    }
+    
     class viewFilter:IMPFilter {
         
         var analayzer:IMPHistogramAnalyzer!
         let dominantSolver = IMPHistogramDominantColorSolver()
         let rangeSolver = IMPHistogramRangeSolver()
         
-        required init(context: IMPContext) {
+        required init(context: IMPContext, histogram:histogramLayer) {
             
             super.init(context: context)
             
             self.addFunction(IMPFunction(context: self.context, name: "kernel_passthrough"))
-            
             analayzer = IMPHistogramAnalyzer(context: self.context)
             
             analayzer.histogram = IMPHistogram(channels: 4)
@@ -41,35 +69,22 @@ class ViewController: NSViewController {
             
             analayzer.analyzerDidUpdate = { (histogram) in
                 
-//                print("\n")
-//                print(" hsr = \(histogram.channels[0]);")
-//                print(" hsg = \(histogram.channels[1]);")
-//                print(" hsb = \(histogram.channels[2]);")
-//                print(" hsy = \(histogram.channels[3]);")
-//                print("hold on; plot(0:1/255:1, hsr/max(hsr), 'r'); plot(0:1/255:1, hsg/max(hsg), 'g'); plot(0:1/255:1, hsb/max(hsb), 'b'); plot(0:1/255:1, hsy/max(hsy), 'k'); grid on; axis([0 1 0 1]); ")
-//                
-//                print("\n")
                 print(" *** range    = \(self.rangeSolver.min, self.rangeSolver.max)")
                 print(" *** dominant = \(self.dominantSolver.color*255.0), \(self.dominantSolver.color)")
                 
             }
             
             self.processingWillStart = { (source) in
-                let t  = 10
-                let t1 = NSDate .timeIntervalSinceReferenceDate()
-                for _ in 0..<t{
-                    self.analayzer.source = source
-                }
-                let t2 = NSDate .timeIntervalSinceReferenceDate()
-                let size = Float((source.texture?.width)!*(source.texture?.height)!)*self.analayzer.downScaleFactor
-                let s = size*Float(4*t*self.analayzer.histogram.channels.count)
-                print(" *** wil start process: \(source) tm = \(t2-t1) rate=\(Float(s)/Float(t2-t1)/1024/1024)Mb/s")
-            }
-            
-            self.processingDidFinish = { (destination) in
-                print(" *** did finish process: \(destination)")
+                self.analayzer.source = source
+                //histogram.source = source
             }
         }
+
+        required init(context: IMPContext) {
+            fatalError("init(context:) has not been implemented")
+        }
+        
+        var redraw: (()->Void)?
     }
     
     override func viewDidLoad() {
@@ -79,19 +94,26 @@ class ViewController: NSViewController {
         // Do any additional setup after loading the view.
         
         self.view.wantsLayer = true
-        self.view.layer?.backgroundColor = IMPColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1).CGColor
+        self.view.layer?.backgroundColor = IMPColor(color: IMPPrefs.colors.background).CGColor
         
         histogramContainerView.wantsLayer = true
         histogramContainerView.layer?.backgroundColor = IMPColor.redColor().CGColor
         
+        
         histogramView = IMPView(frame: histogramContainerView.bounds)
         histogramView.backgroundColor = IMPColor.blueColor()
+        
+        let hfilter = histogramLayer(context: IMPContext())
+        
+        histogramView.filter = hfilter
+
         histogramContainerView.addSubview(histogramView)
+
         
         imageView = IMPView(frame: scrollView.bounds)
         
-        imageView.filter = viewFilter(context: IMPContext())
-
+        imageView.filter = viewFilter(context: IMPContext(), histogram: hfilter)
+        
         scrollView.drawsBackground = false
         scrollView.documentView = imageView
         scrollView.allowsMagnification = true
@@ -103,7 +125,7 @@ class ViewController: NSViewController {
                 NSLog(" *** View controller: file %@, %@", file, image)
                 self.imageView.frame = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
                 self.imageView.source = IMPImageProvider(context: self.imageView.context, image: image)
-                
+                self.histogramView.source = self.imageView.source
             }
         }
         

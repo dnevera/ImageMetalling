@@ -32,3 +32,4 @@ for var tid = 0; tid<hsize; tid++ {
 let device = MTLCreateSystemDefaultDevice()
 
 print(" max threads \(device?.maxThreadsPerThreadgroup) ")
+

@@ -80,6 +80,7 @@ class IMPHistogram {
         }
     }
     
+    
     ///
     /// Текущий CDF (комулятивная функция распределения) гистограммы.
     ///
@@ -93,6 +94,20 @@ class IMPHistogram {
             integrate(A: &_cdf.channels[c], B: &_cdf.channels[c], size: _cdf.channels[c].count, scale:scale)
         }
         return _cdf;
+    }
+
+    ///  Текущий PDF (распределенией плотностей) гистограммы.
+    ///
+    ///  - parameter scale: <#scale description#>
+    ///
+    ///  - returns: <#return value description#>
+    ///
+    func pdf(scale:Float = 1) -> IMPHistogram{
+        let _pdf = IMPHistogram(channels:channels);
+        for c in 0..<_pdf.channels.count{
+            self.scale(A: &_pdf.channels[c], size: _pdf.channels[c].count, scale:scale)
+        }
+        return _pdf;
     }
     
     ///
@@ -266,6 +281,18 @@ class IMPHistogram {
             vDSP_vsdiv(&B, 1, &denom, &B, 1, rsize);
         }
     }
+ 
+    private func scale(inout A A:[Float], size:Int, scale:Float){
+        let rsize = vDSP_Length(size)
+        if scale > 0 {
+            var denom:Float = 0;
+            vDSP_maxv (&A, 1, &denom, rsize);
+            
+            denom /= scale
+            
+            vDSP_vsdiv(&A, 1, &denom, &A, 1, rsize);
+        }
+    }
     
     private func addFromData(inout data:[Float], inout toChannel:[Float]){
         vDSP_vadd(&toChannel, 1, &data, 1, &toChannel, 1, vDSP_Length(self.size))
@@ -274,7 +301,7 @@ class IMPHistogram {
     private func clearChannel(inout channel:[Float]){
         vDSP_vclr(&channel, 1, vDSP_Length(self.size))
     }
-    
+        
     private func clearHistogram(){
         for c in 0..<channels.count{
             clearChannel(&channels[c]);

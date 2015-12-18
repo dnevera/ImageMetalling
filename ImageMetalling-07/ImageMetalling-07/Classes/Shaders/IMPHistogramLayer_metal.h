@@ -14,6 +14,7 @@
 #include "IMPHistogramTypes_metal.h"
 #include "IMPFlowControl_metal.h"
 #include "IMPConstants_metal.h"
+#include "IMPBlending_metal.h"
 
 using namespace metal;
 

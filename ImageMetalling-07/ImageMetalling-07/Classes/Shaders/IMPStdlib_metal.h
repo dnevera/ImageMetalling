@@ -18,6 +18,7 @@
 #include "IMPHistogramLayer_metal.h"
 #include "IMPFlowControl_metal.h"
 #include "IMPCommon_metal.h"
+#include "IMPBlending_metal.h"
 #include "IMPAdjustment_metal.h"
 
 #ifdef __cplusplus
@@ -29,6 +30,7 @@ namespace IMProcessing
                                    uint2 gid [[thread_position_in_grid]])
     {
         float4 inColor = IMProcessing::sampledColor(inTexture,outTexture,gid);
+        //inColor.rgb.r = 0.5;
         outTexture.write(inColor, gid);
     }
 }

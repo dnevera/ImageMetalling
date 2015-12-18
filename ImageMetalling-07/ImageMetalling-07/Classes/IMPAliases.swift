@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import simd
 
 #if os(iOS)
     typealias IMPImage = UIImage
@@ -15,3 +16,10 @@ import Cocoa
     typealias IMPImage = NSImage
     typealias IMPColor = NSColor
 #endif
+
+
+extension IMPColor{
+    convenience init(color:float4) {
+        self.init(red: CGFloat(color.x), green: CGFloat(color.y), blue: CGFloat(color.z), alpha: CGFloat(color.w))
+    }
+}

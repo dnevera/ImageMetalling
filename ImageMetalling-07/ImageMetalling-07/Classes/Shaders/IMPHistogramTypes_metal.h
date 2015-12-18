@@ -31,26 +31,28 @@ static constant uint kIMP_HistogramMaxChannels = 4;
 ///
 /// Буфер бинов гистограммы
 ///
-struct IMPHistogramBuffer {
+typedef struct IMPHistogramBuffer {
     uint channels[kIMP_HistogramMaxChannels][kIMP_HistogramSize];
-};
+}IMPHistogramBuffer;
+
 
 typedef struct {
-    float  bins[kIMP_HistogramSize];
-    packed_float4 color;
-}IMPHistogramLayerComponents;
+    float channels[kIMP_HistogramMaxChannels][kIMP_HistogramSize];
+}IMPHistogramFloatBuffer;
 
 typedef struct {
-    float x;
-    float y;
-    float width;
-    float height;
-}IMPHistogramLayerFrame;
+    float r,g,b,a;
+}IMPHistogramLayerComponent;
 
 struct IMPHistogramLayer {
-    IMPHistogramLayerComponents channels[kIMP_HistogramMaxChannels];
-    IMPHistogramLayerFrame frame;
-    float maxPerChannel;
+#ifdef __METAL_VERSION__
+    float4                      components[kIMP_HistogramMaxChannels];;
+    float4                      backgroundColor;
+#else
+    packed_float4               components[kIMP_HistogramMaxChannels];;
+    packed_float4               backgroundColor;
+#endif
+    bool                        backgroundSource;
 };
 
 #endif /* IMPHistogramTypes_h */

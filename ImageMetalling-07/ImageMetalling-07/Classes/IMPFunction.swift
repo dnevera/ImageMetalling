@@ -34,6 +34,9 @@ class IMPFunction: NSObject, IMPContextProvider {
         
         if let l = library {
             kernel = l.newFunctionWithName(self.name)
+            if kernel == nil {
+                fatalError(" *** IMPFunction: \(name) has not foumd...")
+            }
             do{
                 pipeline = try self.context.device.newComputePipelineStateWithFunction(kernel!)
             }
