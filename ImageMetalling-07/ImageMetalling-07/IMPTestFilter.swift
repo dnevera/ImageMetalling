@@ -10,37 +10,52 @@ import Cocoa
 
 class IMPTestFilter:IMPFilter {
     
-    var analayzer:IMPHistogramAnalyzer!
+    var sourceAnalayzer:IMPHistogramAnalyzer!
+    var dominantAnalayzer:IMPHistogramAnalyzer!
+    
     let dominantSolver = IMPHistogramDominantColorSolver()
     let rangeSolver = IMPHistogramRangeSolver()
+    
+    var wbFilter:IMPWBFilter!
+    var contrastFilter:IMPContrastFilter!
     
     required init(context: IMPContext, histogramView:IMPView, histogramCDFView:IMPView) {
         
         super.init(context: context)
         
-        self.addFunction(IMPFunction(context: self.context, name: IMPSTD_PASS_KERNEL))
-        analayzer = IMPHistogramAnalyzer(context: self.context)
+        addFunction(IMPFunction(context: self.context, name: IMPSTD_PASS_KERNEL))
         
-        analayzer.histogram = IMPHistogram(channels: 4)
+        wbFilter = IMPWBFilter(context: self.context)
+        contrastFilter = IMPContrastFilter(context: self.context)
         
-        analayzer.downScaleFactor = 1
-        analayzer.region = IMPCropRegion(top: 0.0, right: 0.0, left: 0.0, bottom: 0.0)
+        addFilter(contrastFilter)
+        addFilter(wbFilter)
+
+        dominantAnalayzer = IMPHistogramAnalyzer(context: self.context)
+        dominantAnalayzer.solvers.append(dominantSolver)
         
-        analayzer.solvers.append(dominantSolver)
-        analayzer.solvers.append(rangeSolver)
+        sourceAnalayzer = IMPHistogramAnalyzer(context: self.context)
+        sourceAnalayzer.solvers.append(rangeSolver)
         
-        analayzer.analyzerDidUpdate = { (histogram) in
-            
-            print(" *** range    = \(self.rangeSolver.min, self.rangeSolver.max)")
-            print(" *** dominant = \(self.dominantSolver.color*255.0), \(self.dominantSolver.color)")
-            
+        sourceAnalayzer.addUpdateObserver({ (histogram) -> Void in
+            self.contrastFilter.adjustment.minimum = self.rangeSolver.minimum
+            self.contrastFilter.adjustment.maximum = self.rangeSolver.maximum
+        })
+        
+        dominantAnalayzer.addUpdateObserver { (histogram) -> Void in
+            self.wbFilter.adjustment.dominantColor = self.dominantSolver.color
+            print(" *** dominant \(self.dominantSolver.color)")
         }
         
-        self.addSourceObserver { (source) -> Void in
-            self.analayzer.source = source
+        contrastFilter.addDestinationObserver { (destination) -> Void in
+            self.dominantAnalayzer.source = destination
         }
         
-        self.addDestinationObserver { (destination) -> Void in
+        addSourceObserver { (source) -> Void in
+            self.sourceAnalayzer.source = source
+        }        
+        
+        addDestinationObserver { (destination) -> Void in
             histogramView.source = destination
             histogramCDFView.source = destination
         }

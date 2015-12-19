@@ -47,4 +47,9 @@ func == (left:MTLSize,right:MTLSize) ->Bool {
     return !(left != right)
 }
 
+extension IMPBlendingMode{
+    static let LUMNINOSITY = IMPBlendingMode(0)
+    static let NORMAL      = IMPBlendingMode(1)
+}
+
 

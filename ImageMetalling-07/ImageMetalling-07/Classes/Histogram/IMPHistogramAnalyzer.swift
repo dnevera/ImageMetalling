@@ -8,6 +8,7 @@
 
 import Cocoa
 
+typealias IMPAnalyzerUpdateHandler =  ((histogram:IMPHistogram) -> Void)
 
 ///
 /// Протокол солверов статистики гистограммы. Солверами будем решать конкретные задачи обработки данных прилетевших в контейнер.
@@ -121,7 +122,13 @@ class IMPHistogramAnalyzer: IMPFilter {
     /// Замыкание выполняющаеся после завершения расчета значений солвера.
     /// Замыкание можно определить для обновления значений пользовательской цепочки фильтров.
     ///
-    var analyzerDidUpdate: ((histogram:IMPHistogram) -> Void)?
+    //var analyzerDidUpdate: ((histogram:IMPHistogram) -> Void)?
+    
+    func addUpdateObserver(observer:IMPAnalyzerUpdateHandler){
+        analizerUpdateHandlers.append(observer)
+    }
+    
+    private var analizerUpdateHandlers:[IMPAnalyzerUpdateHandler] = [IMPAnalyzerUpdateHandler]()
     
     ///
     /// Перегружаем свойство источника: при каждом обновлении нам нужно выполнить подсчет новой статистики.
@@ -190,8 +197,8 @@ class IMPHistogramAnalyzer: IMPFilter {
                 s.analizerDidUpdate(self, histogram: self.histogram, imageSize: size)
             }
             
-            if let p = self.analyzerDidUpdate {
-                p(histogram: histogram)
+            for o in analizerUpdateHandlers{
+                o(histogram: histogram)
             }
             
         }

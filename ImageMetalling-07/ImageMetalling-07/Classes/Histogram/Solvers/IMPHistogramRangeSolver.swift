@@ -30,16 +30,16 @@ class IMPHistogramRangeSolver: IMPHistogramSolver {
     ///
     /// Минимальная интенсивность в пространстве RGB(Y)
     ///
-    var min = float4()
+    var minimum = float4()
     ///
     /// Максимальная интенсивность в пространстве RGB(Y)
     ///
-    var max = float4()
+    var maximum = float4()
     
     func analizerDidUpdate(analizer: IMPHistogramAnalyzer, histogram: IMPHistogram, imageSize: CGSize) {
         for i in 0..<histogram.channels.count{
-            min[i] = histogram.low(channel: i, clipping: clipping.shadows)
-            max[i] = histogram.high(channel: i, clipping: clipping.highlights)
+            minimum[i] = histogram.low(channel: i, clipping: clipping.shadows)
+            maximum[i] = histogram.high(channel: i, clipping: clipping.highlights)
         }
    }
 }

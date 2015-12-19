@@ -19,9 +19,9 @@ using namespace metal;
 namespace IMProcessing
 {
     
-    static constant float4 cielab_X = 95.047;
-    static constant float4 cielab_Y = 100.000;
-    static constant float4 cielab_Z = 108.883;
+    static constant float cielab_X = 95.047;
+    static constant float cielab_Y = 100.000;
+    static constant float cielab_Z = 108.883;
     
     // YCbCr luminance(Y) values
     static constant float3 Y_YCbCr_factor = float3(0.299, 0.587, 0.114);

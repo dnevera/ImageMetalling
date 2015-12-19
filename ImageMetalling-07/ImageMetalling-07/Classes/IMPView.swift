@@ -147,9 +147,7 @@ class IMPView: NSView, IMPContextProvider {
         if layerNeedUpdate {
             
             layerNeedUpdate = false
-
-            NSLog(" **** refresh \(time(nil))")
-        
+            
             autoreleasepool({ () -> () in
                 
                 var drawableSize = self.bounds.size

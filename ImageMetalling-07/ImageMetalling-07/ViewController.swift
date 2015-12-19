@@ -17,11 +17,15 @@ enum IMPPrefs{
 
 class ViewController: NSViewController {
     
+    @IBOutlet weak var minRangeLabel: NSTextField!
+    @IBOutlet weak var maxRangeLabel: NSTextField!
     @IBOutlet weak var valueSlider1: NSSlider!
     @IBOutlet weak var textValueLabel: NSTextField!
     @IBOutlet weak var histogramCDFContainerView: NSView!
     @IBOutlet weak var histogramContainerView: NSView!
     @IBOutlet weak var scrollView: NSScrollView!
+    
+    var mainFilter:IMPTestFilter!
     
     var imageView: IMPView!
     var histogramView: IMPHistogramView!
@@ -36,6 +40,15 @@ class ViewController: NSViewController {
     
     
     @IBAction func changeValue2(sender: NSSlider) {
+        dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
+            self.mainFilter.wbFilter.adjustment.blending.opacity = sender.floatValue/100
+        }
+    }
+    
+    @IBAction func changeValue3(sender: NSSlider) {
+        dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
+            self.mainFilter.contrastFilter.adjustment.blending.opacity = sender.floatValue/100
+        }
     }
     
     override func viewDidLoad() {
@@ -59,7 +72,15 @@ class ViewController: NSViewController {
         
         imageView = IMPView(frame: scrollView.bounds)
         
-        imageView.filter = IMPTestFilter(context: IMPContext(), histogramView: histogramView, histogramCDFView: histogramCDFView)
+        mainFilter = IMPTestFilter(context: IMPContext(), histogramView: histogramView, histogramCDFView: histogramCDFView)
+        imageView.filter = mainFilter
+        
+        mainFilter.sourceAnalayzer.addUpdateObserver { (histogram) -> Void in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.minRangeLabel.stringValue = String(format: "%2.3f", self.mainFilter.rangeSolver.minimum.z)
+                self.maxRangeLabel.stringValue = String(format: "%2.3f", self.mainFilter.rangeSolver.maximum.z)
+            })
+        }
         
         scrollView.drawsBackground = false
         scrollView.documentView = imageView
