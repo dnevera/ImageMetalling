@@ -17,6 +17,7 @@ enum IMPPrefs{
 
 class ViewController: NSViewController {
     
+    @IBOutlet weak var dominantColorLabel: NSTextField!
     @IBOutlet weak var minRangeLabel: NSTextField!
     @IBOutlet weak var maxRangeLabel: NSTextField!
     @IBOutlet weak var valueSlider1: NSSlider!
@@ -79,6 +80,14 @@ class ViewController: NSViewController {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.minRangeLabel.stringValue = String(format: "%2.3f", self.mainFilter.rangeSolver.minimum.z)
                 self.maxRangeLabel.stringValue = String(format: "%2.3f", self.mainFilter.rangeSolver.maximum.z)
+            })
+        }
+        
+        mainFilter.dominantAnalayzer.addUpdateObserver { (histogram) -> Void in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                let c = self.mainFilter.dominantSolver.color*255
+                self.dominantColorLabel.stringValue = String(format: "%3.0f,%3.0f,%3.0f:%3.0f", c.x, c.y, c.z, c.w)
+
             })
         }
         

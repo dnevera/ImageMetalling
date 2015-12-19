@@ -10,6 +10,10 @@ import Cocoa
 
 typealias IMPMenuObserver = ((item:NSMenuItem)->Void)
 
+enum IMPMenuTag{
+    case zoom100(Int) = 3005
+}
+
 class IMPMenuHandler:NSObject {
     
     private override init() {}

@@ -44,7 +44,6 @@ class IMPTestFilter:IMPFilter {
         
         dominantAnalayzer.addUpdateObserver { (histogram) -> Void in
             self.wbFilter.adjustment.dominantColor = self.dominantSolver.color
-            print(" *** dominant \(self.dominantSolver.color)")
         }
         
         contrastFilter.addDestinationObserver { (destination) -> Void in
