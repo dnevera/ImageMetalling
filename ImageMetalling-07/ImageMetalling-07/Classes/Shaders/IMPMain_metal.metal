@@ -8,7 +8,7 @@
 
 #include "IMPStdlib_metal.h"
 
-kernel void kernel_histogramLayer(texture2d<float, access::read>    inTexture   [[texture(0)]],
+kernel void kernel_histogramLayer(texture2d<float, access::sample>    inTexture   [[texture(0)]],
                                   texture2d<float, access::write>   outTexture  [[texture(1)]],
                                   constant IMPHistogramFloatBuffer  &histogram  [[buffer(0)]],
                                   constant uint                     &channels   [[buffer(1)]],
@@ -18,7 +18,7 @@ kernel void kernel_histogramLayer(texture2d<float, access::read>    inTexture   
 
     constexpr uint Im(kIMP_HistogramSize - 1);
 
-    float4 inColor   = inTexture.read(gid);
+    float4 inColor = IMProcessing::sampledColor(inTexture,outTexture,gid);
 
     float  width             = float(outTexture.get_width());
     float  height            = float(outTexture.get_height());

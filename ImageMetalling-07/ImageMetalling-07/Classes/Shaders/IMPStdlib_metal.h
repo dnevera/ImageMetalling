@@ -30,7 +30,6 @@ namespace IMProcessing
                                    uint2 gid [[thread_position_in_grid]])
     {
         float4 inColor = IMProcessing::sampledColor(inTexture,outTexture,gid);
-        //inColor.rgb.r = 0.5;
         outTexture.write(inColor, gid);
     }
 }

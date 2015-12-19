@@ -9,8 +9,9 @@
 import Cocoa
 import Metal
 
-typealias IMPFilterSorceHandler = ((source:IMPImageProvider) -> Void)
+typealias IMPFilterSourceHandler = ((source:IMPImageProvider) -> Void)
 typealias IMPFilterDestinationHandler = ((destination:IMPImageProvider) -> Void)
+typealias IMPFilterDirtyHandler = (() -> Void)
 
 class IMPFilter: NSObject,IMPContextProvider {
     
@@ -29,7 +30,33 @@ class IMPFilter: NSObject,IMPContextProvider {
         }
     }
     
-    var dirty:Bool = true
+    var destinationSize:MTLSize?{
+        didSet{
+            if let ov = destinationSize{
+                if ov != destinationSize! {
+                    dirty = true
+                }
+            }
+        }
+    }
+
+    
+    var dirty:Bool{
+        set(newDirty){
+            self.context.dirty = newDirty
+            for f in filterList{
+                f.dirty = newDirty
+            }
+            if newDirty == true {
+                for o in dirtyHandlers{
+                    o()
+                }
+            }
+        }
+        get{
+            return  self.context.dirty
+        }
+    }
     
     required init(context: IMPContext) {
         self.context = context
@@ -37,6 +64,9 @@ class IMPFilter: NSObject,IMPContextProvider {
     
     private var functionList:[IMPFunction] = [IMPFunction]()
     private var filterList:[IMPFilter] = [IMPFilter]()
+    private var sourceObservers:[IMPFilterSourceHandler] = [IMPFilterSourceHandler]()
+    private var destinationObservers:[IMPFilterDestinationHandler] = [IMPFilterDestinationHandler]()
+    private var dirtyHandlers:[IMPFilterDirtyHandler] = [IMPFilterDirtyHandler]()
     
     final func addFunction(function:IMPFunction){
         if functionList.contains(function) == false {
@@ -53,6 +83,9 @@ class IMPFilter: NSObject,IMPContextProvider {
     final func addFilter(filter:IMPFilter){
         if filterList.contains(filter) == false {
             filterList.append(filter)
+            for o in dirtyHandlers{
+                filter.addDirtyObserver(o)
+            }
         }
     }
     
@@ -62,8 +95,20 @@ class IMPFilter: NSObject,IMPContextProvider {
         }
     }
 
-    var processingWillStart:IMPFilterSorceHandler?
-    var processingDidFinish:IMPFilterDestinationHandler?
+    final func addSourceObserver(source observer:IMPFilterSourceHandler){
+        sourceObservers.append(observer)
+    }
+    
+    final func addDestinationObserver(destination observer:IMPFilterDestinationHandler){
+        destinationObservers.append(observer)
+    }
+
+    final func addDirtyObserver(observer:IMPFilterDirtyHandler){
+        dirtyHandlers.append(observer)
+        for f in filterList{
+            f.addDirtyObserver(observer)
+        }
+    }
     
     private var texture:MTLTexture?
     private var destinationContainer:IMPImageProvider?
@@ -82,6 +127,22 @@ class IMPFilter: NSObject,IMPContextProvider {
     
     func configure(function:IMPFunction, command:MTLComputeCommandEncoder){}
     
+    private func executeSourceObservers(source:IMPImageProvider?){
+        if let s = source{
+            for o in sourceObservers {
+                o(source: s)
+            }
+        }
+    }
+    
+    private func executeDestinationObservers(destination:IMPImageProvider?){
+        if let d = destination {
+            for o in destinationObservers {
+                o(destination: d)
+            }
+        }
+    }
+    
     func apply(){
         
         if dirty {
@@ -92,10 +153,8 @@ class IMPFilter: NSObject,IMPContextProvider {
             }
 
             if  functionList.count > 0 {
-                
-                if let p = processingWillStart{
-                    p(source: source!)
-                }
+
+                executeSourceObservers(source)
                 
                 self.context.execute({ (commandBuffer) -> Void in
                     
@@ -103,8 +162,13 @@ class IMPFilter: NSObject,IMPContextProvider {
 
                     for function in self.functionList {
                         
-                        let width  = inputTexture.width
-                        let height = inputTexture.height
+                        var width  = inputTexture.width
+                        var height = inputTexture.height
+                        
+                        if let s = self.destinationSize {
+                            width = s.width
+                            height = s.height
+                        }
                         
                         let threadgroupCounts = MTLSizeMake(function.groupSize.width, function.groupSize.height, 1);
                         let threadgroups = MTLSizeMake(
@@ -134,9 +198,7 @@ class IMPFilter: NSObject,IMPContextProvider {
                 })
             }
             else if filterList.count > 0 {
-                if let p = processingWillStart{
-                    p(source: source!)
-                }
+                executeSourceObservers(source)
             }
             
             if self.texture == nil{
@@ -155,15 +217,11 @@ class IMPFilter: NSObject,IMPContextProvider {
                     }
                 }
                 
-                if let p = processingDidFinish {
-                    p(destination: getDestination()!)
-                }
+                executeDestinationObservers(getDestination())
                 
             }
             else if functionList.count > 0 {
-                if let p = processingDidFinish {
-                    p(destination: getDestination()!)
-                }
+                executeDestinationObservers(getDestination())
             }
             
             dirty = false

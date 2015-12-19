@@ -10,17 +10,28 @@ import Cocoa
 
 class IMPHistogramLayerSolver: IMPFilter, IMPHistogramSolver {
     
+    enum IMPHistogramType{
+        case PDF
+        case CDF
+    }
+    
     var layer = IMPHistogramLayer(
         components: (
             float4(x: 1, y: 0, z: 0, w: 0.5),
             float4(x: 0, y: 1, z: 0, w: 0.5),
             float4(x: 0, y: 0, z: 1, w: 0.5),
-            float4(x: 1, y: 1, z: 1, w: 0.5)),
+            float4(x: 1, y: 1, z: 1, w: 0.3)),
         backgroundColor: float4(x:0.1,y:0.1,z:0.1,w:1),
         backgroundSource: false
         ){
         didSet{
             memcpy(layerUniformBiffer.contents(), &layer, layerUniformBiffer.length)
+            self.dirty = true;
+        }
+    }
+    
+    var histogramType:(type:IMPHistogramType,power:Float) = (type:.PDF,power:1){
+        didSet{
             self.dirty = true;
         }
     }
@@ -37,7 +48,14 @@ class IMPHistogramLayerSolver: IMPFilter, IMPHistogramSolver {
     
     func analizerDidUpdate(analizer: IMPHistogramAnalyzer, histogram: IMPHistogram, imageSize: CGSize) {
         
-        let pdf = histogram.pdf()
+        var pdf:IMPHistogram;
+        
+        switch(histogramType.type){
+        case .PDF:
+            pdf = histogram.pdf()
+        case .CDF:
+            pdf = histogram.cdf(1, power: histogramType.power)
+        }
         
         for c in 0..<pdf.channels.count{
             let address =  UnsafeMutablePointer<Float>(histogramUniformBuffer.contents())+c*pdf.size

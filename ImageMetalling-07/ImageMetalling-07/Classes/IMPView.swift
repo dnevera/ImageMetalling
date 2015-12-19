@@ -22,6 +22,9 @@ class IMPView: NSView, IMPContextProvider {
             if let s = self.source{
                 self.filter?.source = s
             }
+            filter?.addDirtyObserver({ () -> Void in
+                self.layerNeedUpdate = true
+            })
         }
     }
     
@@ -29,7 +32,7 @@ class IMPView: NSView, IMPContextProvider {
         didSet{
             if let texture = source?.texture{
                 
-                layerSizeDidUpdate = true
+                layerNeedUpdate = true
                 
                 self.threadGroups = MTLSizeMake(
                     (texture.width+threadGroupCount.width)/threadGroupCount.width,
@@ -98,7 +101,7 @@ class IMPView: NSView, IMPContextProvider {
         //
         // Функция которую мы будем использовать в качестве функции фильтра из библиотеки шейдеров.
         //
-        let function:MTLFunction! = library.newFunctionWithName("kernel_passthrough")
+        let function:MTLFunction! = library.newFunctionWithName(IMPSTD_PASS_KERNEL)
         
         //
         // Теперь создаем основной объект который будет ссылаться на исполняемый код нашего фильтра.
@@ -123,7 +126,7 @@ class IMPView: NSView, IMPContextProvider {
             metalLayer.backgroundColor = self.backgroundColor.CGColor
             timer = IMPDisplayLink(selector: refresh)
             timer?.paused = self.isPaused
-            layerSizeDidUpdate = true
+            layerNeedUpdate = true
         }
     }
     
@@ -131,28 +134,30 @@ class IMPView: NSView, IMPContextProvider {
     private var threadGroups : MTLSize!
     private let inflightSemaphore = dispatch_semaphore_create(3)
     
-    private var scaleFactor:CGFloat{
+    var scaleFactor:Float{
         get {
             let screen = self.window?.screen ?? NSScreen.mainScreen()
             let scaleFactor = screen?.backingScaleFactor ?? 1.0
-            return scaleFactor
+            return Float(scaleFactor)
         }
     }
-
+    
     private func refresh() {
-        
-        if layerSizeDidUpdate {
+                
+        if layerNeedUpdate {
             
+            layerNeedUpdate = false
+
+            NSLog(" **** refresh \(time(nil))")
+        
             autoreleasepool({ () -> () in
                 
                 var drawableSize = self.bounds.size
                 
-                drawableSize.width *= self.scaleFactor
-                drawableSize.height *= self.scaleFactor
+                drawableSize.width *= CGFloat(self.scaleFactor)
+                drawableSize.height *= CGFloat(self.scaleFactor)
                 
                 metalLayer.drawableSize = drawableSize
-                
-                layerSizeDidUpdate = false
                 
                 self.context.execute { (commandBuffer) -> Void in
                                         
@@ -192,20 +197,20 @@ class IMPView: NSView, IMPContextProvider {
         self.refresh()
     }
     
-    var layerSizeDidUpdate:Bool = true
+    internal var layerNeedUpdate:Bool = true
     
     override func setFrameSize(newSize: NSSize) {
-        super.setFrameSize(CGSize(width: newSize.width/self.scaleFactor, height: newSize.height/self.scaleFactor))
-        layerSizeDidUpdate = true
+        super.setFrameSize(CGSize(width: newSize.width/CGFloat(self.scaleFactor), height: newSize.height/CGFloat(self.scaleFactor)))
+        layerNeedUpdate = true
     }
     
     override func setBoundsSize(newSize: NSSize) {
         super.setBoundsSize(newSize)
-        layerSizeDidUpdate = true
+        layerNeedUpdate = true
     }
     override func viewDidChangeBackingProperties() {
         super.viewDidChangeBackingProperties()
-        layerSizeDidUpdate = true
+        layerNeedUpdate = true
     }
 }
 

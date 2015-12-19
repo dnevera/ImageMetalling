@@ -14,7 +14,7 @@ let size    = Int(grid.x*grid.y)
 
 
 for var tid = 0; tid<hsize; tid++ {
-    print("\(tid)")
+    //print("\(tid)")
     var s = ""
     for var i=0; i<size; i+=hsize {
         let gid = i+tid
@@ -25,11 +25,20 @@ for var tid = 0; tid<hsize; tid++ {
             s+="\n"
         }
     }
-    print(s)
+    //print(s)
 }
 
 
 let device = MTLCreateSystemDefaultDevice()
 
-print(" max threads \(device?.maxThreadsPerThreadgroup) ")
+//print(" max threads \(device?.maxThreadsPerThreadgroup) ")
 
+var v:[Float] = [Float](arrayLiteral: 1,2,3,4,5,6)
+
+v
+var y:Float = 2
+var sz = Int32(v.count)
+var vv = [Float](count: v.count, repeatedValue: 0)
+vvpowsf(&vv, &y, &v, &sz);
+
+vv

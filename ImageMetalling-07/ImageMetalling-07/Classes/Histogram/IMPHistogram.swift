@@ -88,9 +88,10 @@ class IMPHistogram {
     ///
     /// - returns: контейнер значений гистограммы с комулятивным распределением значений интенсивностей
     ///
-    func cdf(scale:Float = 1) ->IMPHistogram{
+    func cdf(scale:Float = 1, power pow:Float=1) ->IMPHistogram{
         let _cdf = IMPHistogram(channels:channels);
         for c in 0..<_cdf.channels.count{
+            power(pow: pow, A: &_cdf.channels[c], B: &_cdf.channels[c])
             integrate(A: &_cdf.channels[c], B: &_cdf.channels[c], size: _cdf.channels[c].count, scale:scale)
         }
         return _cdf;
@@ -261,6 +262,17 @@ class IMPHistogram {
         vDSP_sve(&A, 1, &sum, vDSP_Length(self.size));
         return sum
     }
+    
+    private func power(pow pow:Float, inout A:[Float], inout B:[Float]){
+        var y = pow;
+        var sz:Int32 = Int32(size);
+        // Set z[i] to pow(x[i],y) for i=0,..,n-1
+        // void vvpowsf (float * /* z */, const float * /* y */, const float * /* x */, const int * /* n */)
+        var b = [Float](count: B.count, repeatedValue: 0)
+        vvpowsf(&b, &y, &A, &sz);
+        B=b
+    }
+    
     
     //
     // Вычисление интегральной суммы вектора приведенной к определенной размерности задаваймой

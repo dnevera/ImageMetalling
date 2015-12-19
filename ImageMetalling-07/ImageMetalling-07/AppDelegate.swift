@@ -63,11 +63,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var openRecentMenu: NSMenu!
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
+        
+        for w in NSApp.windows{
+            w.backgroundColor = IMPColor(color: IMPPrefs.colors.background)
+        }
+        
         if let list = openRecentList {
             for file in list.reverse() {
                 addOpenRecentMenuItemMenu(file)
             }
-            
             IMPDocument.sharedInstance.currentFile = list[0]
         }
     }

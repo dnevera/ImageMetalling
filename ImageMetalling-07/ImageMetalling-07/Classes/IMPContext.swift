@@ -114,5 +114,6 @@ class IMPContext {
         return adjustedSize;
     }
     
+    var dirty:Bool = true
     
 }
