@@ -42,7 +42,7 @@ namespace IMProcessing
         
         float4 result = float4(awb.rgb, adjustment.blending.opacity);
         
-        if (adjustment.blending.mode == 0)
+        if (adjustment.blending.mode == LUMINOSITY)
             return blendLuminosity(inColor, result);
         else
             return blendNormal(inColor, result);
@@ -56,11 +56,55 @@ namespace IMProcessing
         
         result.rgb  = clamp((result.rgb - alow)/(ahigh-alow), float3(0.0), float3(1.0));
         
-        if (adjustment.blending.mode == 0) {
+        if (adjustment.blending.mode == LUMINOSITY) {
             result = blendLuminosity(inColor, float4(result.rgb, adjustment.blending.opacity));
         }
         else {// only two modes yet
             result = blendNormal(inColor, float4(result.rgb, adjustment.blending.opacity));
+        }
+        
+        return result;
+    }
+    
+    inline  float4 adjustLutD3D(
+                                   float4 inColor,
+                                   texture3d<float, access::sample>  lut,
+                                   constant IMPAdjustment            &adjustment
+                                   ){
+        
+        constexpr sampler s(address::clamp_to_edge, filter::linear, coord::normalized);
+        
+        float4 result = lut.sample(s, inColor.rgb);
+        result.rgba.a = adjustment.blending.opacity;
+        
+        if (adjustment.blending.mode == LUMINOSITY) {
+            result = blendLuminosity(inColor, result);
+        }
+        else {// only two modes yet
+            result = blendNormal(inColor, result);
+        }
+        
+        return result;
+    }
+        
+    inline float4 adjustLutD1D(
+                                   float4 inColor,
+                                   texture2d<float, access::sample>  lut,
+                                   constant IMPAdjustment            &adjustment
+                                   ){
+        constexpr sampler s(address::clamp_to_edge, filter::linear, coord::normalized);
+        
+        half red   = lut.sample(s, float2(inColor.r, 0.0)).r;
+        half green = lut.sample(s, float2(inColor.g, 0.0)).g;
+        half blue  = lut.sample(s, float2(inColor.b, 0.0)).b;
+        
+        float4 result = float4(red, green, blue, adjustment.blending.opacity);
+        
+        if (adjustment.blending.mode == LUMINOSITY) {
+            result = blendLuminosity(inColor, result);
+        }
+        else {// only two modes yet
+            result = blendNormal(inColor, result);
         }
         
         return result;

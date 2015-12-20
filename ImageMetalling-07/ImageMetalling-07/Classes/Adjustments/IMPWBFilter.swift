@@ -7,9 +7,8 @@
 //
 
 import Cocoa
-import simd
 
-class IMPWBFilter:IMPFilter,IMPAdjustment{
+class IMPWBFilter:IMPFilter,IMPAdjustmentProtocol{
     
     static let defaultAdjustment = IMPWBAdjustment(
         dominantColor: float4([0.5, 0.5, 0.5, 0.5]),

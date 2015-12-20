@@ -10,8 +10,10 @@ import Cocoa
 
 typealias IMPMenuObserver = ((item:NSMenuItem)->Void)
 
-enum IMPMenuTag{
-    case zoom100(Int) = 3005
+enum IMPMenuTag:Int{
+    case zoomOne  = 3004
+    case zoom100  = 3005
+    case resetLut = 3011
 }
 
 class IMPMenuHandler:NSObject {

@@ -38,6 +38,11 @@ typedef struct {
 } IMPBlending;
 
 typedef struct{
+    IMPBlending    blending;
+} IMPAdjustment;
+
+
+typedef struct{
     packed_float4  dominantColor;
     IMPBlending    blending;
 } IMPWBAdjustment;

@@ -7,9 +7,8 @@
 //
 
 import Cocoa
-import simd
 
-class IMPContrastFilter:IMPFilter,IMPAdjustment{
+class IMPContrastFilter:IMPFilter,IMPAdjustmentProtocol{
     
     static let defaultAdjustment = IMPContrastAdjustment(
         minimum: float4([0,0,0,0]),

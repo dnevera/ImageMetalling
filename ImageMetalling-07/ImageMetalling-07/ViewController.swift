@@ -26,7 +26,10 @@ class ViewController: NSViewController {
     @IBOutlet weak var histogramContainerView: NSView!
     @IBOutlet weak var scrollView: NSScrollView!
     
+    let context = IMPContext()
+    
     var mainFilter:IMPTestFilter!
+    var lutFilter:IMPLutFilter?
     
     var imageView: IMPView!
     var histogramView: IMPHistogramView!
@@ -42,15 +45,22 @@ class ViewController: NSViewController {
     
     @IBAction func changeValue2(sender: NSSlider) {
         dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
-            self.mainFilter.wbFilter.adjustment.blending.opacity = sender.floatValue/100
+            self.mainFilter.contrastFilter.adjustment.blending.opacity = sender.floatValue/100
         }
     }
     
     @IBAction func changeValue3(sender: NSSlider) {
         dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
-            self.mainFilter.contrastFilter.adjustment.blending.opacity = sender.floatValue/100
+            self.mainFilter.wbFilter.adjustment.blending.opacity = sender.floatValue/100
         }
     }
+    
+    @IBAction func changeValue4(sender: NSSlider) {
+        dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
+            self.lutFilter?.adjustment.blending.opacity = sender.floatValue/100
+        }
+    }
+
     
     override func viewDidLoad() {
         
@@ -73,7 +83,7 @@ class ViewController: NSViewController {
         
         imageView = IMPView(frame: scrollView.bounds)
         
-        mainFilter = IMPTestFilter(context: IMPContext(), histogramView: histogramView, histogramCDFView: histogramCDFView)
+        mainFilter = IMPTestFilter(context: self.context, histogramView: histogramView, histogramCDFView: histogramCDFView)
         imageView.filter = mainFilter
         
         mainFilter.sourceAnalayzer.addUpdateObserver { (histogram) -> Void in
@@ -87,7 +97,7 @@ class ViewController: NSViewController {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 let c = self.mainFilter.dominantSolver.color*255
                 self.dominantColorLabel.stringValue = String(format: "%3.0f,%3.0f,%3.0f:%3.0f", c.x, c.y, c.z, c.w)
-
+                
             })
         }
         
@@ -102,23 +112,49 @@ class ViewController: NSViewController {
             name: NSScrollViewWillStartLiveMagnifyNotification,
             object: nil)
         
-        IMPDocument.sharedInstance.addDocumentObserver { (file) -> Void in
-            if let image = IMPImage(contentsOfFile: file){
-                self.imageView.frame = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
-                self.imageView.source = IMPImageProvider(context: self.imageView.context, image: image)
-                dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
-                    self.zoomOne()
+        IMPDocument.sharedInstance.addDocumentObserver { (file, type) -> Void in
+            if type == .Image {
+                if let image = IMPImage(contentsOfFile: file){
+                    self.imageView.frame = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+                    self.imageView.source = IMPImageProvider(context: self.imageView.context, image: image)
+                    dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
+                        self.zoomOne()
+                    }
+                }
+            }
+            else if type == .LUT {
+                do {
+                    var description = IMPImageProvider.lutDescription()
+                    let lutProvider = try IMPImageProvider(context: self.context, cubeFile: file, description: &description)
+                    
+                    if let lut = self.lutFilter{
+                        lut.updateLut(lutProvider, description:description)
+                    }
+                    else{
+                        self.lutFilter = IMPLutFilter(context: self.context, lut: lutProvider, description: description)
+                    }
+                    self.mainFilter.addFilter(self.lutFilter!)
+                }
+                catch let error as NSError {
+                    let alert = NSAlert(error: error)
+                    alert.runModal()
                 }
             }
         }
         
         IMPMenuHandler.sharedInstance.addMenuObserver { (item) -> Void in
-            switch(item.tag){
-            case 3004:
-                self.zoomOne()
-            case 3005:
-                self.zoom100()
-            default: break
+            if let tag = IMPMenuTag(rawValue: item.tag) {
+                switch tag {
+                case .zoomOne:
+                    self.zoomOne()
+                case .zoom100:
+                    self.zoom100()
+                case .resetLut:
+                    if let l = self.lutFilter {
+                        self.mainFilter.removeFilter(l)
+                    }
+                    break
+                }
             }
         }
     }

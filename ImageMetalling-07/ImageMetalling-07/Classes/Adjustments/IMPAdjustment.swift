@@ -9,14 +9,14 @@
 import Foundation
 import Metal
 
-protocol IMPAdjustment{
+protocol IMPAdjustmentProtocol{
     
     var adjustmentBuffer:MTLBuffer? {get set}
     var kernel:IMPFunction! {get set}
     
 }
 
-extension IMPAdjustment{    
+extension IMPAdjustmentProtocol{    
     func updateBuffer(inout buffer:MTLBuffer?, context:IMPContext, adjustment:UnsafePointer<Void>, size:Int){
         buffer = buffer ?? context.device.newBufferWithLength(size, options: .CPUCacheModeDefaultCache)
         if let b = buffer {

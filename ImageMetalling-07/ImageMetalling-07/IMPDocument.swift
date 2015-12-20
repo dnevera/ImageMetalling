@@ -8,7 +8,12 @@
 
 import Cocoa
 
-typealias IMPDocumentObserver = ((file:String) -> Void)
+enum IMPDocumentType{
+    case Image
+    case LUT
+}
+
+typealias IMPDocumentObserver = ((file:String, type:IMPDocumentType) -> Void)
 
 class IMPDocument: NSObject {
     
@@ -20,7 +25,15 @@ class IMPDocument: NSObject {
     var currentFile:String?{
         didSet{
             for o in self.didUpdateDocumnetHandlers{
-                o(file: currentFile!)
+                o(file: currentFile!, type: .Image)
+            }
+        }
+    }
+    
+    var currentLutFile:String?{
+        didSet{
+            for o in self.didUpdateDocumnetHandlers{
+                o(file: currentLutFile!, type: .LUT)
             }
         }
     }
@@ -28,5 +41,7 @@ class IMPDocument: NSObject {
     func addDocumentObserver(observer:IMPDocumentObserver){
         didUpdateDocumnetHandlers.append(observer)
     }
+    
+    
 }
 

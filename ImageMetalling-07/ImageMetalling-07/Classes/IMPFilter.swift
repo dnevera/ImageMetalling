@@ -71,12 +71,14 @@ class IMPFilter: NSObject,IMPContextProvider {
     final func addFunction(function:IMPFunction){
         if functionList.contains(function) == false {
             functionList.append(function)
+            self.dirty = true
         }
     }
     
     final func removeFunction(function:IMPFunction){
         if let index = functionList.indexOf(function) {
             functionList.removeAtIndex(index)
+            self.dirty = true
         }
     }
     
@@ -86,12 +88,14 @@ class IMPFilter: NSObject,IMPContextProvider {
             for o in dirtyHandlers{
                 filter.addDirtyObserver(o)
             }
+            self.dirty = true
         }
     }
     
     final func removeFilter(filter:IMPFilter){
         if let index = filterList.indexOf(filter) {
             filterList.removeAtIndex(index)
+            self.dirty = true
         }
     }
 
