@@ -8,6 +8,7 @@
 
 import Cocoa
 import simd
+import IMProcessing
 
 enum IMPPrefs{
     struct colors {
@@ -136,11 +137,11 @@ class ViewController: NSViewController {
             }
             else if type == .LUT {
                 do {
-                    var description = IMPImageProvider.lutDescription()
+                    var description = IMPImageProvider.Description()
                     let lutProvider = try IMPImageProvider(context: self.context, cubeFile: file, description: &description)
                     
                     if let lut = self.lutFilter{
-                        lut.updateLut(lutProvider, description:description)
+                        lut.update(lutProvider, description:description)
                     }
                     else{
                         self.lutFilter = IMPLutFilter(context: self.context, lut: lutProvider, description: description)

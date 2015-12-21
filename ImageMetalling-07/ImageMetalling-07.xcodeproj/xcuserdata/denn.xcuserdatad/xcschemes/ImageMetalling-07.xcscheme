@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "31F082D01C1F49A50009E8B3"
+               BlueprintIdentifier = "3127DF791C285B74007C6883"
                BuildableName = "ImageMetalling-07.app"
                BlueprintName = "ImageMetalling-07"
                ReferencedContainer = "container:ImageMetalling-07.xcodeproj">
@@ -32,7 +32,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "31F082D01C1F49A50009E8B3"
+            BlueprintIdentifier = "3127DF791C285B74007C6883"
             BuildableName = "ImageMetalling-07.app"
             BlueprintName = "ImageMetalling-07"
             ReferencedContainer = "container:ImageMetalling-07.xcodeproj">
@@ -50,13 +50,12 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      enableGPUValidationMode = "1"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "31F082D01C1F49A50009E8B3"
+            BlueprintIdentifier = "3127DF791C285B74007C6883"
             BuildableName = "ImageMetalling-07.app"
             BlueprintName = "ImageMetalling-07"
             ReferencedContainer = "container:ImageMetalling-07.xcodeproj">
@@ -75,7 +74,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "31F082D01C1F49A50009E8B3"
+            BlueprintIdentifier = "3127DF791C285B74007C6883"
             BuildableName = "ImageMetalling-07.app"
             BlueprintName = "ImageMetalling-07"
             ReferencedContainer = "container:ImageMetalling-07.xcodeproj">

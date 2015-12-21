@@ -7,6 +7,8 @@
 //
 
 import Cocoa
+import IMProcessing
+
 
 class IMPTestFilter:IMPFilter {
     
