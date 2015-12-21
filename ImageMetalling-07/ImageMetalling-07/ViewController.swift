@@ -36,27 +36,40 @@ class ViewController: NSViewController {
     var histogramCDFView: IMPHistogramView!
     
     
+    private func asyncChanges(block:()->Void) {
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            //
+            // немного того, но... :)
+            //
+            dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
+                block()
+            }
+        })
+    }
+    
     @IBAction func changeValue1(sender: NSSlider) {
         let value = sender.floatValue/100
-        histogramCDFView.histogram.solver.histogramType = (type:.CDF,power:value)
-        textValueLabel.stringValue = String(format: "%2.5f", value);
+        asyncChanges { () -> Void in
+            self.histogramCDFView.histogram.solver.histogramType = (type:.CDF,power:value)
+            self.textValueLabel.stringValue = String(format: "%2.5f", value);
+        }
     }
     
     
     @IBAction func changeValue2(sender: NSSlider) {
-        dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
+        asyncChanges { () -> Void in
             self.mainFilter.contrastFilter.adjustment.blending.opacity = sender.floatValue/100
         }
     }
     
     @IBAction func changeValue3(sender: NSSlider) {
-        dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
+        asyncChanges { () -> Void in
             self.mainFilter.wbFilter.adjustment.blending.opacity = sender.floatValue/100
         }
     }
     
     @IBAction func changeValue4(sender: NSSlider) {
-        dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
+        asyncChanges { () -> Void in
             self.lutFilter?.adjustment.blending.opacity = sender.floatValue/100
         }
     }
@@ -87,17 +100,16 @@ class ViewController: NSViewController {
         imageView.filter = mainFilter
         
         mainFilter.sourceAnalayzer.addUpdateObserver { (histogram) -> Void in
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.asyncChanges({ () -> Void in
                 self.minRangeLabel.stringValue = String(format: "%2.3f", self.mainFilter.rangeSolver.minimum.z)
                 self.maxRangeLabel.stringValue = String(format: "%2.3f", self.mainFilter.rangeSolver.maximum.z)
             })
         }
         
         mainFilter.dominantAnalayzer.addUpdateObserver { (histogram) -> Void in
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.asyncChanges({ () -> Void in
                 let c = self.mainFilter.dominantSolver.color*255
                 self.dominantColorLabel.stringValue = String(format: "%3.0f,%3.0f,%3.0f:%3.0f", c.x, c.y, c.z, c.w)
-                
             })
         }
         
@@ -117,9 +129,9 @@ class ViewController: NSViewController {
                 if let image = IMPImage(contentsOfFile: file){
                     self.imageView.frame = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
                     self.imageView.source = IMPImageProvider(context: self.imageView.context, image: image)
-                    dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
-                        self.zoomOne()
-                    }
+                    self.asyncChanges({ () -> Void in
+                        self.zoomOne()                        
+                    })
                 }
             }
             else if type == .LUT {
@@ -136,8 +148,10 @@ class ViewController: NSViewController {
                     self.mainFilter.addFilter(self.lutFilter!)
                 }
                 catch let error as NSError {
-                    let alert = NSAlert(error: error)
-                    alert.runModal()
+                    self.asyncChanges({ () -> Void in
+                        let alert = NSAlert(error: error)
+                        alert.runModal()
+                    })
                 }
             }
         }
@@ -166,28 +180,28 @@ class ViewController: NSViewController {
     var is100 = false
     
     private func zoomOne(){
-        self.scrollView.magnifyToFitRect(self.scrollView.bounds)
         is100 = false
+        asyncChanges { () -> Void in
+            self.scrollView.magnifyToFitRect(self.scrollView.bounds)
+        }
     }
     
     private func zoom100(){
-        self.scrollView.magnifyToFitRect(self.imageView.bounds)
         is100 = true
+        asyncChanges { () -> Void in
+            self.scrollView.magnifyToFitRect(self.imageView.bounds)
+        }
     }
     
     override func viewDidAppear() {
         super.viewDidAppear()
-        dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
-            self.zoom100()
-        }
+        self.zoom100()
     }
     
     override func viewDidLayout() {
         super.viewDidLayout()
         if is100 {
-            dispatch_after(2, dispatch_get_main_queue()) { () -> Void in
-                self.zoom100()
-            }
+            self.zoom100()
         }
     }
     
