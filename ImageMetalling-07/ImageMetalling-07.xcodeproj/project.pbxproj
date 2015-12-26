@@ -16,6 +16,7 @@
 		3127DF921C285C57007C6883 /* IMPScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3127DF8E1C285C57007C6883 /* IMPScrollView.swift */; };
 		3127DF931C285C57007C6883 /* IMPTestFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3127DF8F1C285C57007C6883 /* IMPTestFilter.swift */; };
 		3127DF961C285C77007C6883 /* IMPMain_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3127DF951C285C77007C6883 /* IMPMain_metal.metal */; };
+		31F62CA81C2F2669004204C7 /* IMPHSVExampleFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F62CA71C2F2669004204C7 /* IMPHSVExampleFilter.swift */; };
 		CF7917874D7FDBB246F2CF4F /* Pods_ImageMetalling_07.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B512C1A3ACB7BA907AB837E4 /* Pods_ImageMetalling_07.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,8 @@
 		3127DF8E1C285C57007C6883 /* IMPScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPScrollView.swift; sourceTree = "<group>"; };
 		3127DF8F1C285C57007C6883 /* IMPTestFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPTestFilter.swift; sourceTree = "<group>"; };
 		3127DF951C285C77007C6883 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = IMPMain_metal.metal; path = Shaders/IMPMain_metal.metal; sourceTree = "<group>"; };
+		31D329CD1C2F29C900C713EB /* IMPAdjustmentHSV_metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IMPAdjustmentHSV_metal.h; path = Shaders/IMPAdjustmentHSV_metal.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
+		31F62CA71C2F2669004204C7 /* IMPHSVExampleFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPHSVExampleFilter.swift; sourceTree = "<group>"; };
 		578D7200DB7B8A8E83B8B53E /* Pods-ImageMetalling-07.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-07.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-07/Pods-ImageMetalling-07.debug.xcconfig"; sourceTree = "<group>"; };
 		7A262C66D3F578000909AEF4 /* Pods-ImageMetalling-07.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-07.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-07/Pods-ImageMetalling-07.release.xcconfig"; sourceTree = "<group>"; };
 		B512C1A3ACB7BA907AB837E4 /* Pods_ImageMetalling_07.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_07.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +84,7 @@
 				3127DF941C285C6D007C6883 /* Shaders */,
 				3127DF7D1C285B74007C6883 /* AppDelegate.swift */,
 				3127DF7F1C285B74007C6883 /* ViewController.swift */,
+				31F62CA71C2F2669004204C7 /* IMPHSVExampleFilter.swift */,
 				3127DF8C1C285C57007C6883 /* IMPDocument.swift */,
 				3127DF8D1C285C57007C6883 /* IMPMenuHandler.swift */,
 				3127DF8E1C285C57007C6883 /* IMPScrollView.swift */,
@@ -96,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				3127DF951C285C77007C6883 /* IMPMain_metal.metal */,
+				31D329CD1C2F29C900C713EB /* IMPAdjustmentHSV_metal.h */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -231,6 +236,7 @@
 			files = (
 				3127DF931C285C57007C6883 /* IMPTestFilter.swift in Sources */,
 				3127DF911C285C57007C6883 /* IMPMenuHandler.swift in Sources */,
+				31F62CA81C2F2669004204C7 /* IMPHSVExampleFilter.swift in Sources */,
 				3127DF961C285C77007C6883 /* IMPMain_metal.metal in Sources */,
 				3127DF921C285C57007C6883 /* IMPScrollView.swift in Sources */,
 				3127DF901C285C57007C6883 /* IMPDocument.swift in Sources */,

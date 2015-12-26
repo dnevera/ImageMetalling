@@ -6,4 +6,5 @@
 //  Copyright © 2015 IMetalling. All rights reserved.
 //
 
+#include "IMPAdjustmentHSV_metal.h"
 #include "IMPStdlib_metal.h"

@@ -31,6 +31,7 @@ class ViewController: NSViewController {
     var mainFilter:IMPTestFilter!
     
     var imageView: IMPView!
+    
     var histogramView: IMPHistogramView!
     var histogramCDFView: IMPHistogramView!
     
