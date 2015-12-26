@@ -25,8 +25,10 @@ class IMPTestFilter:IMPFilter {
         addDestinationObserver { (destination) -> Void in
             histogramView.source = destination
             histogramCDFView.source = destination
+            
+            IMPDocument.sharedInstance.currentImageProvider = destination
+            
         }
-        
     }
     
     required init(context: IMPContext) {

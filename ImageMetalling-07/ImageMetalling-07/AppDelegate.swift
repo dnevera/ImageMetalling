@@ -111,7 +111,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    
+    @IBAction func safeFile(sender: NSMenuItem) {
+        let savePanel = NSSavePanel()
+        savePanel.extensionHidden = false;
+        savePanel.allowedFileTypes = ["jpg"]
         
+        let result = savePanel.runModal()
+        
+        if result == NSModalResponseOK {
+            IMPDocument.sharedInstance.saveCurrent((savePanel.URL?.path)!)
+        }
+    }
+    
+    
     func openRecentHandler(sender:NSMenuItem){
         self.openFilePath(sender.title)
     }

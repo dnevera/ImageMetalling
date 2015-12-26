@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import IMProcessing
 
 enum IMPDocumentType{
     case Image
@@ -33,6 +34,16 @@ class IMPDocument: NSObject {
         didUpdateDocumnetHandlers.append(observer)
     }
     
+    
+    var currentImageProvider:IMPImageProvider?
+    
+    func saveCurrent(filename:String){
+        if let provider = currentImageProvider{
+            let image = IMPImage(provider: provider)
+            image.saveAsJpeg(fileName:filename)
+            NSLog(" save tooo : %@ \(IMPDocument.sharedInstance.currentImageProvider)", filename)
+        }
+    }
     
 }
 
