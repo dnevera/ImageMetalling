@@ -21,7 +21,6 @@ class ViewController: NSViewController {
     @IBOutlet weak var dominantColorLabel: NSTextField!
     @IBOutlet weak var minRangeLabel: NSTextField!
     @IBOutlet weak var maxRangeLabel: NSTextField!
-    @IBOutlet weak var valueSlider1: NSSlider!
     @IBOutlet weak var textValueLabel: NSTextField!
     @IBOutlet weak var histogramCDFContainerView: NSView!
     @IBOutlet weak var histogramContainerView: NSView!
@@ -30,12 +29,10 @@ class ViewController: NSViewController {
     let context = IMPContext()
     
     var mainFilter:IMPTestFilter!
-    var lutFilter:IMPLutFilter?
     
     var imageView: IMPView!
     var histogramView: IMPHistogramView!
     var histogramCDFView: IMPHistogramView!
-    
     
     private func asyncChanges(block:()->Void) {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -48,30 +45,65 @@ class ViewController: NSViewController {
         })
     }
     
-    @IBAction func changeValue1(sender: NSSlider) {
-        let value = sender.floatValue/100
+    var currentCollors = 1000
+    @IBOutlet weak var circlePopUpButton: NSPopUpButtonCell!
+    @IBAction func chooseColors(sender: NSMenuItem) {
         asyncChanges { () -> Void in
-            self.histogramCDFView.histogram.solver.histogramType = (type:.CDF,power:value)
-            self.textValueLabel.stringValue = String(format: "%2.5f", value);
+            self.circlePopUpButton.setTitle(sender.title)
+            self.currentCollors = sender.tag
+            self.updateSliders(self.currentCollors)
         }
     }
     
     
-    @IBAction func changeValue2(sender: NSSlider) {
+    
+    @IBOutlet weak var hueSlider: NSSlider!
+    @IBOutlet weak var saturationSlider: NSSlider!
+    @IBOutlet weak var valueSlider: NSSlider!
+    @IBOutlet weak var overlapSlider: NSSlider!
+    
+    func updateSliders(colorsIndex:Int){
+        
+        let l = mainFilter.hsvFilter.adjustment[colorsIndex]
+        
+        hueSlider.floatValue = (l.hue/2 + 0.5) * 100
+        saturationSlider.floatValue = (l.saturation/2+0.5) * 100
+        valueSlider.floatValue = (l.value/2+0.5) * 100
+        overlapSlider.floatValue = mainFilter.hsvFilter.overlap * 100
+    }
+    
+    @IBAction func resetHsv(sender: NSButton) {
+        mainFilter.hsvFilter.adjustment = IMPHSVFilter.defaultAdjustment
+        for i in 0...6 {
+            updateSliders(i)
+        }
+    }
+    
+    @IBAction func changeValue1(sender: NSSlider) {
+        let value = sender.floatValue/100
         asyncChanges { () -> Void in
-            self.mainFilter.contrastFilter.adjustment.blending.opacity = sender.floatValue/100
+            self.mainFilter.hsvFilter.overlap = value
+        }
+    }
+    
+    @IBAction func changeValue2(sender: NSSlider) {
+        let value = (sender.floatValue/100 - 0.5 ) * 2
+        asyncChanges { () -> Void in
+            self.mainFilter.hsvFilter.adjustment.hue(index:self.currentCollors, value:value)
         }
     }
     
     @IBAction func changeValue3(sender: NSSlider) {
+        let value = (sender.floatValue/100 - 0.5 ) * 2
         asyncChanges { () -> Void in
-            self.mainFilter.wbFilter.adjustment.blending.opacity = sender.floatValue/100
+            self.mainFilter.hsvFilter.adjustment.saturation(index:self.currentCollors, value:value)
         }
     }
     
     @IBAction func changeValue4(sender: NSSlider) {
+        let value = (sender.floatValue/100 - 0.5 ) * 2
         asyncChanges { () -> Void in
-            self.lutFilter?.adjustment.blending.opacity = sender.floatValue/100
+            self.mainFilter.hsvFilter.adjustment.value(index:self.currentCollors, value:value)
         }
     }
 
@@ -82,6 +114,8 @@ class ViewController: NSViewController {
         
         // Do any additional setup after loading the view.
         
+        circlePopUpButton.setTitle("Master")
+
         histogramContainerView.wantsLayer = true
         histogramContainerView.layer?.backgroundColor = IMPColor.redColor().CGColor
         
@@ -90,7 +124,7 @@ class ViewController: NSViewController {
         
         histogramCDFView = IMPHistogramView(frame: histogramContainerView.bounds)
         histogramCDFView.histogram.solver.layer.backgroundColor = IMPPrefs.colors.background
-        histogramCDFView.histogram.solver.histogramType = (type:.CDF,power:self.valueSlider1.floatValue/100)
+        histogramCDFView.histogram.solver.histogramType = (type:.CDF,power:1)
         
         histogramContainerView.addSubview(histogramView)
         histogramCDFContainerView.addSubview(histogramCDFView)
@@ -99,21 +133,7 @@ class ViewController: NSViewController {
         
         mainFilter = IMPTestFilter(context: self.context, histogramView: histogramView, histogramCDFView: histogramCDFView)
         imageView.filter = mainFilter
-        
-        mainFilter.sourceAnalayzer.addUpdateObserver { (histogram) -> Void in
-            self.asyncChanges({ () -> Void in
-                self.minRangeLabel.stringValue = String(format: "%2.3f", self.mainFilter.rangeSolver.minimum.z)
-                self.maxRangeLabel.stringValue = String(format: "%2.3f", self.mainFilter.rangeSolver.maximum.z)
-            })
-        }
-        
-        mainFilter.dominantAnalayzer.addUpdateObserver { (histogram) -> Void in
-            self.asyncChanges({ () -> Void in
-                let c = self.mainFilter.dominantSolver.color*255
-                self.dominantColorLabel.stringValue = String(format: "%3.0f,%3.0f,%3.0f:%3.0f", c.x, c.y, c.z, c.w)
-            })
-        }
-        
+                
         scrollView.drawsBackground = false
         scrollView.documentView = imageView
         scrollView.allowsMagnification = true
@@ -135,26 +155,6 @@ class ViewController: NSViewController {
                     })
                 }
             }
-            else if type == .LUT {
-                do {
-                    var description = IMPImageProvider.Description()
-                    let lutProvider = try IMPImageProvider(context: self.context, cubeFile: file, description: &description)
-                    
-                    if let lut = self.lutFilter{
-                        lut.update(lutProvider, description:description)
-                    }
-                    else{
-                        self.lutFilter = IMPLutFilter(context: self.context, lut: lutProvider, description: description)
-                    }
-                    self.mainFilter.addFilter(self.lutFilter!)
-                }
-                catch let error as NSError {
-                    self.asyncChanges({ () -> Void in
-                        let alert = NSAlert(error: error)
-                        alert.runModal()
-                    })
-                }
-            }
         }
         
         IMPMenuHandler.sharedInstance.addMenuObserver { (item) -> Void in
@@ -164,11 +164,7 @@ class ViewController: NSViewController {
                     self.zoomOne()
                 case .zoom100:
                     self.zoom100()
-                case .resetLut:
-                    if let l = self.lutFilter {
-                        self.mainFilter.removeFilter(l)
-                    }
-                    break
+                default: break
                 }
             }
         }

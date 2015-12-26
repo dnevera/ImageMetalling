@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -25,7 +25,6 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oKJ-03-4tv">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <animations/>
                                 <state key="normal" image="settings"/>
                                 <connections>
                                     <action selector="settingsHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oYd-kf-SVB"/>
@@ -33,7 +32,6 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qoH-qE-8U2">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <animations/>
                                 <state key="normal" image="camera-toggle"/>
                                 <connections>
                                     <action selector="toggleCamera:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uCk-gu-hZw"/>
@@ -41,7 +39,6 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1U2-Al-H2r">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <animations/>
                                 <state key="normal" image="trigger"/>
                                 <connections>
                                     <action selector="takePhoto:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ibt-Jh-dND"/>
@@ -52,7 +49,6 @@
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="laF-Vh-5t4">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                        <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="90" id="MGR-vo-4iG"/>
@@ -73,16 +69,13 @@
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mj0-N9-1wv">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                        <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WGf-7V-ErC">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                        <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </imageView>
                                 </subviews>
-                                <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="laF-Vh-5t4" firstAttribute="centerY" secondItem="Xpk-Dd-iZu" secondAttribute="centerY" id="7QS-84-Udk"/>
@@ -145,7 +138,6 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x2I-nm-NDz">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <animations/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" image="select-photos"/>
                                 <connections>
@@ -154,7 +146,6 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yE7-I4-jYs">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <animations/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" image="save-photo-small"/>
                                 <connections>
@@ -162,7 +153,6 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <animations/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="yE7-I4-jYs" firstAttribute="centerY" secondItem="1U2-Al-H2r" secondAttribute="centerY" id="AQ7-ej-6SQ"/>
@@ -202,18 +192,18 @@
                                 <exclude reference="yE7-I4-jYs"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="hjd-VY-SLp"/>
+                                <exclude reference="qgb-Qf-SRw"/>
                                 <exclude reference="XPq-Hz-mGq"/>
                                 <exclude reference="oZ4-g8-Dij"/>
                                 <exclude reference="M5e-lf-J8Z"/>
                                 <exclude reference="UxE-t6-oKn"/>
-                                <exclude reference="BSm-Fl-0Rc"/>
-                                <exclude reference="yrH-QF-MZp"/>
-                                <exclude reference="hjd-VY-SLp"/>
-                                <exclude reference="qgb-Qf-SRw"/>
                                 <exclude reference="KjB-QO-T2j"/>
                                 <exclude reference="w3J-Fh-Vbj"/>
                                 <exclude reference="AQ7-ej-6SQ"/>
                                 <exclude reference="Uud-Rn-fUD"/>
+                                <exclude reference="BSm-Fl-0Rc"/>
+                                <exclude reference="yrH-QF-MZp"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -226,18 +216,18 @@
                                 <include reference="yE7-I4-jYs"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="hjd-VY-SLp"/>
+                                <include reference="qgb-Qf-SRw"/>
                                 <include reference="XPq-Hz-mGq"/>
                                 <include reference="oZ4-g8-Dij"/>
                                 <include reference="M5e-lf-J8Z"/>
                                 <include reference="UxE-t6-oKn"/>
-                                <include reference="BSm-Fl-0Rc"/>
-                                <include reference="yrH-QF-MZp"/>
-                                <include reference="hjd-VY-SLp"/>
-                                <include reference="qgb-Qf-SRw"/>
                                 <include reference="KjB-QO-T2j"/>
                                 <include reference="w3J-Fh-Vbj"/>
                                 <include reference="AQ7-ej-6SQ"/>
                                 <include reference="Uud-Rn-fUD"/>
+                                <include reference="BSm-Fl-0Rc"/>
+                                <include reference="yrH-QF-MZp"/>
                             </mask>
                         </variation>
                     </view>

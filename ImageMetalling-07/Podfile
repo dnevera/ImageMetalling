@@ -8,6 +8,6 @@ use_frameworks!
 
 target 'ImageMetalling-07' do
     pod 'IMProcessing', :path => '../../degradr/IMProcessing'
-    #pod 'IMProcessing', :git => 'https://github.com/dnevera/IMProcessing.git'
+    #pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
 end
 

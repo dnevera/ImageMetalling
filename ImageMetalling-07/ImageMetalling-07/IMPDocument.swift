@@ -10,7 +10,6 @@ import Cocoa
 
 enum IMPDocumentType{
     case Image
-    case LUT
 }
 
 typealias IMPDocumentObserver = ((file:String, type:IMPDocumentType) -> Void)
@@ -29,15 +28,7 @@ class IMPDocument: NSObject {
             }
         }
     }
-    
-    var currentLutFile:String?{
-        didSet{
-            for o in self.didUpdateDocumnetHandlers{
-                o(file: currentLutFile!, type: .LUT)
-            }
-        }
-    }
-    
+        
     func addDocumentObserver(observer:IMPDocumentObserver){
         didUpdateDocumnetHandlers.append(observer)
     }
