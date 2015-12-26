@@ -131,9 +131,19 @@ class ViewController: NSViewController {
         
         imageView = IMPView(frame: scrollView.bounds)
         
-        mainFilter = IMPTestFilter(context: self.context, histogramView: histogramView, histogramCDFView: histogramCDFView)
+        mainFilter = IMPTestFilter(context: self.context)
         imageView.filter = mainFilter
-                
+        
+        IMPDocument.sharedInstance.filter = mainFilter
+        
+        mainFilter.addDestinationObserver { (destination) -> Void in
+            self.asyncChanges { () -> Void in
+                self.histogramView.source = destination
+                self.histogramCDFView.source = destination
+            }
+        }
+
+        
         scrollView.drawsBackground = false
         scrollView.documentView = imageView
         scrollView.allowsMagnification = true

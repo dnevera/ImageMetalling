@@ -32,16 +32,23 @@ class IMPDocument: NSObject {
         
     func addDocumentObserver(observer:IMPDocumentObserver){
         didUpdateDocumnetHandlers.append(observer)
-    }
+    }    
     
+    var filter:IMPTestFilter?
     
-    var currentImageProvider:IMPImageProvider?
+    var resultilter = IMPTestFilter(context: IMPContext())
     
     func saveCurrent(filename:String){
-        if let provider = currentImageProvider{
-            let image = IMPImage(provider: provider)
-            image.saveAsJpeg(fileName:filename)
-            NSLog(" save tooo : %@ \(IMPDocument.sharedInstance.currentImageProvider)", filename)
+        if let cf = currentFile{
+            
+            if let filter = self.filter {
+                
+                resultilter.hsvFilter.adjustment = filter.hsvFilter.adjustment
+                
+                resultilter.source = IMPImageProvider(context: filter.context, image: IMPImage(contentsOfFile: cf)!)
+                let im = IMPImage(provider: resultilter.destination!)
+                im.saveAsJpeg(fileName: filename)
+            }
         }
     }
     
