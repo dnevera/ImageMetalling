@@ -36,7 +36,7 @@ namespace IMProcessingExample
     ///
     ///  @return вес перекрытия пиксела в цветовом пространстве hsv для заданного hue
     ///
-    inline float weightOf(float hue, texture1d_array<float, access::sample>  weights, uint index){
+    inline float overlapWeight(float hue, texture1d_array<float, access::sample>  weights, uint index){
         constexpr sampler s(address::clamp_to_edge, filter::linear, coord::normalized);
         return weights.sample(s, hue, index).x;
     }
@@ -59,7 +59,7 @@ namespace IMProcessingExample
         // рассматриваем не только как функцию значения сдвига но и функцию значениея каналы
         // насыщенности.
         //
-        float v = 1.0 + levelOut * weightOf(hue,weights,index) * hsv.y;
+        float v = 1.0 + levelOut * overlapWeight(hue,weights,index) * hsv.y;
         hsv.z = clamp(hsv.z * v, 0.0, 1.0);
         return hsv;
     }
@@ -76,7 +76,7 @@ namespace IMProcessingExample
     ///
     inline float3 adjust_saturation(float3 hsv, float levelOut, float hue, texture1d_array<float, access::sample>  weights, uint index)
     {
-        float v = 1.0 + levelOut * weightOf(hue,weights,index);
+        float v = 1.0 + levelOut * overlapWeight(hue,weights,index);
         hsv.y = clamp(hsv.y * v, 0.0, 1.0);
         return hsv;
     }
@@ -96,7 +96,7 @@ namespace IMProcessingExample
         //
         // hue rotates with overlap ranages
         //
-        hsv.x  = hsv.x + 0.5 * levelOut * weightOf(hue,weights,index);
+        hsv.x  = hsv.x + 0.5 * levelOut * overlapWeight(hue,weights,index);
         return hsv;
     }
     

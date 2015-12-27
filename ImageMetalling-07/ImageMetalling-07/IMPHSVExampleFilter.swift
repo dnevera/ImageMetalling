@@ -238,7 +238,7 @@ public class IMPHSVExampleFilter:IMPFilter,IMPAdjustmentProtocol{
             }
             
             //
-            // обнволяем буфер обмена с ядром заполненой структурой корректировок
+            // обнвоыляем буфер обмена с ядром заполненной структурой корректировок
             //
             updateBuffer(&adjustmentBuffer, context:context, adjustment:&adjustment, size:sizeof(IMPHSVAdjustment))
             

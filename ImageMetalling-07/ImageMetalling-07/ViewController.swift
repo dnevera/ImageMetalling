@@ -26,13 +26,29 @@ class ViewController: NSViewController {
     @IBOutlet weak var histogramContainerView: NSView!
     @IBOutlet weak var scrollView: NSScrollView!
     
+    //
+    // Создания контекста GPU устройства
+    //
     let context = IMPContext()
     
+    //
+    // Основной фильтр
+    //
     var mainFilter:IMPTestFilter!
     
+    //
+    // Превью изображения
+    //
     var imageView: IMPView!
     
+    //
+    // Небольшие справочные окна гистограммы изображения
+    //
     var histogramView: IMPHistogramView!
+    //
+    // И окна комулятивной гистограммы изображения
+    // Окна реализованы как солверы IMPHistogramAnalizer
+    //
     var histogramCDFView: IMPHistogramView!
     
     private func asyncChanges(block:()->Void) {
@@ -130,9 +146,19 @@ class ViewController: NSViewController {
         histogramContainerView.addSubview(histogramView)
         histogramCDFContainerView.addSubview(histogramCDFView)
         
+        //
+        // Создаем окно превью изображения
+        //
         imageView = IMPView(frame: scrollView.bounds)
-        
+
+        //
+        // Создаем фильтр
+        //
         mainFilter = IMPTestFilter(context: self.context)
+        
+        //
+        // Связываем фильтр с превью
+        //
         imageView.filter = mainFilter
         
         IMPDocument.sharedInstance.filter = mainFilter
@@ -146,21 +172,45 @@ class ViewController: NSViewController {
 
         
         scrollView.drawsBackground = false
-        scrollView.documentView = imageView
         scrollView.allowsMagnification = true
         scrollView.acceptsTouchEvents = true
-        
+
+        //
+        // добавляем окно как документ скролируемого контента
+        //
+        scrollView.documentView = imageView
+
         NSNotificationCenter.defaultCenter().addObserver(
             self,
             selector: "magnifyChanged:",
             name: NSScrollViewWillStartLiveMagnifyNotification,
             object: nil)
         
+        //
+        // Хендлер меню загрузки файла
+        //
         IMPDocument.sharedInstance.addDocumentObserver { (file, type) -> Void in
             if type == .Image {
+                
+                //
+                // Читаем изображение в стандартный контейнер IMPIMage,
+                // для OSX IMPImage определен как алиас к NSImage
+                // public typealias IMPImage = NSImage, для iOS соответственно к UIImage
+                //
+                //
                 if let image = IMPImage(contentsOfFile: file){
+                    
+                    //
+                    // Обновляем размеры содержимого окна
+                    //
                     self.imageView.frame = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+                    
+                    //
+                    // Обновляем источник фильтра. Свойство .source IMPView определяется как alias IMPFilter.source
+                    // После обновления источника происходит автоматическое исполнения фильтра и содержимого окна превью
+                    //
                     self.imageView.source = IMPImageProvider(context: self.imageView.context, image: image)
+                    
                     self.asyncChanges({ () -> Void in
                         self.zoomOne()                        
                     })
