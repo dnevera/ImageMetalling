@@ -11,6 +11,22 @@ import IMProcessing
 import SnapKit
 
 
+class IMPLabel: NSTextField {
+    
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        drawsBackground = false
+        bezeled = false
+        editable = false
+        alignment = .Center
+        textColor = IMPColor.lightGrayColor()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class ViewController: NSViewController {
 
     let context = IMPContext()
@@ -163,6 +179,16 @@ class ViewController: NSViewController {
         }
         allHeights+=200
         
+        let label  = IMPLabel(frame: view.bounds)
+        sview.addSubview(label)
+        label.stringValue = "Palette"
+        label.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(histogramView.snp_bottom).offset(20)
+            make.right.equalTo(sview).offset(0)
+            make.height.equalTo(20)
+        }
+        allHeights+=20
+
         paletteView = IMPPaletteListView(frame: view.bounds)
         paletteView.wantsLayer = true
         paletteView.layer?.backgroundColor = IMPColor.clearColor().CGColor
@@ -170,7 +196,7 @@ class ViewController: NSViewController {
         sview.addSubview(paletteView)
 
         paletteView.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(histogramView.snp_bottom).offset(10)
+            make.top.equalTo(label.snp_bottom).offset(5)
             make.left.equalTo(sview).offset(0)
             make.right.equalTo(sview).offset(0)
             make.height.equalTo(320)
@@ -178,6 +204,74 @@ class ViewController: NSViewController {
         allHeights+=320
      
         configurePaletteTypeChooser()
+        
+        configureFilterSettings()
+    }
+    
+    private func configureFilterSettings(){
+        
+        let contrastLabel  = IMPLabel(frame: view.bounds)
+        sview.addSubview(contrastLabel)
+        contrastLabel.stringValue = "Contrast"
+        contrastLabel.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(paletteTypeChooser.snp_bottom).offset(20)
+            make.right.equalTo(sview).offset(0)
+            make.height.equalTo(20)
+        }
+        allHeights+=20
+        
+        let contrastSlider = NSSlider(frame: view.bounds)
+        contrastSlider.minValue = 0
+        contrastSlider.maxValue = 100
+        contrastSlider.integerValue = 100
+        contrastSlider.target = self
+        contrastSlider.action = "changeContrast:"
+        contrastSlider.continuous = true
+        sview.addSubview(contrastSlider)
+        contrastSlider.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(contrastLabel.snp_bottom).offset(5)
+            make.left.equalTo(sview).offset(0)
+            make.right.equalTo(sview).offset(0)
+        }
+        allHeights+=20
+        
+        let awbLabel  = IMPLabel(frame: view.bounds)
+        sview.addSubview(awbLabel)
+        awbLabel.stringValue = "White Balance"
+        awbLabel.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(contrastSlider.snp_bottom).offset(20)
+            make.right.equalTo(sview).offset(0)
+            make.height.equalTo(20)
+        }
+        allHeights+=20
+        
+        let awbSlider = NSSlider(frame: view.bounds)
+        awbSlider.minValue = 0
+        awbSlider.maxValue = 100
+        awbSlider.integerValue = 100
+        awbSlider.action = "changeAWB:"
+        awbSlider.continuous = true
+        sview.addSubview(awbSlider)
+        awbSlider.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(awbLabel.snp_bottom).offset(5)
+            make.left.equalTo(sview).offset(0)
+            make.right.equalTo(sview).offset(0)
+        }
+        allHeights+=20
+    }
+    
+    func changeContrast(sender:NSSlider){
+        let value = sender.floatValue/100
+        asyncChanges { () -> Void in
+            self.filter.contrastFilter.adjustment.blending.opacity = value
+        }
+    }
+
+    func changeAWB(sender:NSSlider){
+        let value = sender.floatValue/100
+        asyncChanges { () -> Void in
+            self.filter.awbFilter.adjustment.blending.opacity = value
+        }
     }
     
     private func configurePaletteTypeChooser(){
@@ -197,14 +291,8 @@ class ViewController: NSViewController {
             make.top.equalTo(paletteView.snp_bottom).offset(10)
             make.left.equalTo(paletteView).offset(0)
         }
-        allHeights+=50
         
-        paletteSizeLabel = NSTextField(frame: view.bounds)
-        paletteSizeLabel.drawsBackground = false
-        paletteSizeLabel.bezeled = false
-        paletteSizeLabel.editable = false
-        paletteSizeLabel.alignment = .Center
-        paletteSizeLabel.textColor = IMPColor.lightGrayColor()
+        paletteSizeLabel = IMPLabel(frame: view.bounds)
         paletteSizeLabel.stringValue = "Palette size: \(paletteSolver.maxColors)"
         sview.addSubview(paletteSizeLabel)
         paletteSizeLabel.snp_makeConstraints { (make) -> Void in

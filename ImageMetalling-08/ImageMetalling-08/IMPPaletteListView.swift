@@ -64,7 +64,7 @@ public class IMPPaletteListView: NSView, NSTableViewDataSource, NSTableViewDeleg
     }
     
     public func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        return 40
+        return 36
     }
     
     public func tableView(tableView: NSTableView, willDisplayCell cell: AnyObject, forTableColumn tableColumn: NSTableColumn?, row: Int) {

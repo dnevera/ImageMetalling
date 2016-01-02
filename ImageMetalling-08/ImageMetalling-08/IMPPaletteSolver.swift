@@ -16,7 +16,7 @@ public enum IMPPaletteType{
 
 public class IMPPaletteSolver: IMPHistogramCubeSolver {
     
-    public var maxColors = Int(16)
+    public var maxColors = Int(8)
     public var colors = [IMPColor]()
     public var type = IMPPaletteType.palette
     

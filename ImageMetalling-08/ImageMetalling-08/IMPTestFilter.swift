@@ -8,8 +8,34 @@
 
 import IMProcessing
 
-class IMPTestFilter:IMPFilter {
-    required init(context: IMPContext) {
+public class IMPTestFilter:IMPFilter {
+    
+    var contrastFilter:IMPContrastFilter!
+    var awbFilter:IMPAutoWBFilter!
+    
+    var sourceAnalyzer:IMPHistogramAnalyzer!
+    let rangeSolver = IMPHistogramRangeSolver()
+
+    public required init(context: IMPContext) {
         super.init(context: context)
+        
+        contrastFilter = IMPContrastFilter(context: context)
+        awbFilter = IMPAutoWBFilter(context: context)
+        
+        addFilter(contrastFilter)
+        addFilter(awbFilter)
+        
+        sourceAnalyzer = IMPHistogramAnalyzer(context: self.context)
+        sourceAnalyzer.addSolver(rangeSolver)
+        
+        addSourceObserver { (source) -> Void in
+            self.sourceAnalyzer.source = source
+        }
+
+        sourceAnalyzer.addUpdateObserver({ (histogram) -> Void in
+            self.contrastFilter.adjustment.minimum = self.rangeSolver.minimum
+            self.contrastFilter.adjustment.maximum = self.rangeSolver.maximum
+        })
+
     }
 }
