@@ -1,0 +1,11 @@
+platform :osx, '10.11'
+
+use_frameworks!
+
+pod 'SnapKit'
+
+target 'ImageMetalling-08' do
+    pod 'IMProcessing', :path => '../../degradr/IMProcessing'
+    pod 'SnapKit'
+end
+
