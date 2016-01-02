@@ -12,6 +12,7 @@
 		310071671C36CAA200227AEA /* IMPMenuHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310071651C36CAA200227AEA /* IMPMenuHandler.swift */; };
 		310071691C374FC200227AEA /* IMPTestFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310071681C374FC200227AEA /* IMPTestFilter.swift */; };
 		3100716B1C37ABE000227AEA /* IMPPaletteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3100716A1C37ABE000227AEA /* IMPPaletteListView.swift */; };
+		3100716D1C37F36C00227AEA /* IMPPaletteSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3100716C1C37F36C00227AEA /* IMPPaletteSolver.swift */; };
 		316F14E01C36BDE90091044F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316F14DF1C36BDE90091044F /* AppDelegate.swift */; };
 		316F14E21C36BDE90091044F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316F14E11C36BDE90091044F /* ViewController.swift */; };
 		316F14E41C36BDE90091044F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 316F14E31C36BDE90091044F /* Assets.xcassets */; };
@@ -26,6 +27,7 @@
 		310071651C36CAA200227AEA /* IMPMenuHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPMenuHandler.swift; sourceTree = "<group>"; };
 		310071681C374FC200227AEA /* IMPTestFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPTestFilter.swift; sourceTree = "<group>"; };
 		3100716A1C37ABE000227AEA /* IMPPaletteListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPPaletteListView.swift; sourceTree = "<group>"; };
+		3100716C1C37F36C00227AEA /* IMPPaletteSolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPPaletteSolver.swift; sourceTree = "<group>"; };
 		316F14DC1C36BDE90091044F /* ImageMetalling-08.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-08.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		316F14DF1C36BDE90091044F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		316F14E11C36BDE90091044F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				316F14DF1C36BDE90091044F /* AppDelegate.swift */,
 				316F14E11C36BDE90091044F /* ViewController.swift */,
 				3100716A1C37ABE000227AEA /* IMPPaletteListView.swift */,
+				3100716C1C37F36C00227AEA /* IMPPaletteSolver.swift */,
 				310071641C36CAA200227AEA /* IMPDocument.swift */,
 				310071681C374FC200227AEA /* IMPTestFilter.swift */,
 				310071651C36CAA200227AEA /* IMPMenuHandler.swift */,
@@ -238,6 +241,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				310071691C374FC200227AEA /* IMPTestFilter.swift in Sources */,
+				3100716D1C37F36C00227AEA /* IMPPaletteSolver.swift in Sources */,
 				310071671C36CAA200227AEA /* IMPMenuHandler.swift in Sources */,
 				316F14E21C36BDE90091044F /* ViewController.swift in Sources */,
 				310071661C36CAA200227AEA /* IMPDocument.swift in Sources */,

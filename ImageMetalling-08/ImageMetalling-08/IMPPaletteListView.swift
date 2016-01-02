@@ -9,26 +9,16 @@
 import Cocoa
 import IMProcessing
 
-//class __IMPTextCenteredView:NSTextField {
-//    func titleRectForBounds(frame:NSRect) {
-//        
-//        let stringHeight       = self.attributedStringValue.size().height
-//        let titleRect          = super.titleRectForBounds(frame)
-//        titleRect.origin.y = frame.origin.y +
-//        (frame.size.height - stringHeight) / 2.0;
-//        return titleRect;
-//    }
-//    - (void) drawInteriorWithFrame:(NSRect)cFrame inView:(NSView*)cView {
-//    [super drawInteriorWithFrame:[self titleRectForBounds:cFrame] inView:cView];
-//    }
-//}
-
 public class IMPPaletteListView: NSView, NSTableViewDataSource, NSTableViewDelegate {
     
     var scrollView:NSScrollView!
     var colorListView:NSTableView!
     
-    public var colorList:[float3] = [float3(0,0,0),float3(0.5,0.5,0.5),float3(1,1,1)]{
+    public var colorList:[IMPColor] = [
+        IMPColor(red: 0, green: 0, blue: 0, alpha: 1),
+        IMPColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1),
+        IMPColor(red: 1, green: 1, blue: 1, alpha: 1),
+        ]{
         didSet{
             colorListView.reloadData()
         }
@@ -46,12 +36,13 @@ public class IMPPaletteListView: NSView, NSTableViewDataSource, NSTableViewDeleg
         colorListView.backgroundColor = IMPColor.clearColor()
         colorListView.headerView = nil
         colorListView.intercellSpacing = IMPSize(width: 5,height: 5)
+        colorListView.columnAutoresizingStyle = .UniformColumnAutoresizingStyle
         
         scrollView.documentView = colorListView
         
         let column1 = NSTableColumn(identifier: "Color")
         let column2 = NSTableColumn(identifier: "Value")
-        column1.width = 200
+        column1.width = 300
         column2.width = 200
         column1.title = ""
         column2.title = "Value"
@@ -85,7 +76,7 @@ public class IMPPaletteListView: NSView, NSTableViewDataSource, NSTableViewDeleg
         
         var result:NSView?
 
-        let color = IMPColor(color: float4(rgb: colorList[row], a: 1))
+        let color = colorList[row]
 
         if tableColumn?.identifier == "Color"{
             let id = "Color"
@@ -98,7 +89,7 @@ public class IMPPaletteListView: NSView, NSTableViewDataSource, NSTableViewDeleg
             result?.layer?.backgroundColor = color.CGColor
         }
         else{
-            let id = "Color"
+            let id = "Value"
             result = tableView.makeViewWithIdentifier(id, owner: self) as? NSTextField
             if result == nil {
                 result = NSTextField(frame: NSRect(x: 0, y: 0, width: 320, height: 40))
@@ -111,8 +102,9 @@ public class IMPPaletteListView: NSView, NSTableViewDataSource, NSTableViewDeleg
                 
                 result?.identifier = id
             }
-            (result as! NSTextField).stringValue = " ## "
-            (result as! NSTextField).textColor = color
+            let rgb = color.rgb * 255
+            (result as! NSTextField).stringValue = String(format: "[%.0f,%.0f,%.0f]", rgb.r,rgb.g,rgb.b)
+            (result as! NSTextField).textColor = color * 2
         }
         
         let rowView = colorListView.rowViewAtRow(row, makeIfNecessary:false)
@@ -121,9 +113,14 @@ public class IMPPaletteListView: NSView, NSTableViewDataSource, NSTableViewDeleg
         return result
     }
     
+    public func reloadData(){
+        colorListView.sizeLastColumnToFit()
+        colorListView.reloadData()
+    }
+    
     override public func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
-        colorListView.reloadData()
+        self.reloadData()
         // Drawing code here.
     }
     
