@@ -12,10 +12,12 @@ import IMProcessing
 ///  Типы распределения цветовых акцентов изображения
 ///
 ///  - palette:   палитра квантирования цветов изображения.
-///               расчитывается по сжеме median-cut преобрзования 
+///               расчитывается по сжеме median-cut преобрзования:
 ///               http://www.leptonica.com/papers/mediancut.pdf
 ///  - dominants: расчет доминантных цветов изображения через поиск локальных максимумов 
-///               функции плотности распределения цветов
+///               функции плотности распределения цветов: 
+///               https://github.com/pixelogik/ColorCube
+///
 public enum IMPPaletteType{
     case palette
     case dominants

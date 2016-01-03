@@ -140,7 +140,9 @@ class ViewController: NSViewController {
         
         IMPDocument.sharedInstance.addDocumentObserver { (file, type) -> Void in
             if type == .Image {
-                if let image = IMPImage(contentsOfFile: file){
+            // byReferencingFile
+                //if let image = IMPImage(contentsOfFile: file){
+                if let image = IMPImage(byReferencingFile: file){
                     self.imageView.source = IMPImageProvider(context: self.imageView.context, image: image)
                 }
             }
