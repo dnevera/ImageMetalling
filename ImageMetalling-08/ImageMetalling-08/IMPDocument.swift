@@ -11,6 +11,7 @@ import IMProcessing
 
 public enum IMPDocumentType{
     case Image
+    case LUT
 }
 
 public typealias IMPDocumentObserver = ((file:String, type:IMPDocumentType) -> Void)
@@ -120,6 +121,14 @@ public class IMPDocument: NSObject {
         NSUserDefaults.standardUserDefaults().synchronize()
         
         return list
+    }
+    
+    var currentLutFile:String?{
+        didSet{
+            for o in self.didUpdateDocumnetHandlers{
+                o(file: currentLutFile!, type: .LUT)
+            }
+        }
     }
 }
 

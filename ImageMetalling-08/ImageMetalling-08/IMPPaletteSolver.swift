@@ -33,7 +33,7 @@ public class IMPPaletteSolver: IMPHistogramCubeSolver {
     public var colors = [IMPColor]()
     
     /// Тип палитры
-    public var type = IMPPaletteType.palette
+    public var type = IMPPaletteType.dominants
     
     ///  Хендлер обработчика солвера
     ///

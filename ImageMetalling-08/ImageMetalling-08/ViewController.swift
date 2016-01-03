@@ -21,14 +21,14 @@ class IMPLabel: NSTextField {
         alignment = .Center
         textColor = IMPColor.lightGrayColor()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 class ViewController: NSViewController {
-
+    
     //
     // Контекст процессинга
     //
@@ -54,7 +54,12 @@ class ViewController: NSViewController {
     // Основной фильтр
     //
     var filter:IMPTestFilter!
-    
+
+    //
+    // Фильтр CLUT из фалов формата Adobe Cube
+    //
+    var lutFilter:IMPLutFilter?
+
     //
     // Анализатор кубической гистограммы изображения в RGB пространстве
     //
@@ -68,9 +73,9 @@ class ViewController: NSViewController {
     var paletteTypeChooser:NSSegmentedControl!
     
     override func viewDidLoad() {
-
+        
         super.viewDidLoad()
-
+        
         configurePannel()
         
         //
@@ -85,7 +90,7 @@ class ViewController: NSViewController {
         imageView = IMPImageView(context: context, frame: view.bounds)
         imageView.filter = filter
         imageView.backgroundColor = IMPColor(color: IMPPrefs.colors.background)
-
+        
         //
         // Добавляем еще один хендлер к наблюдению за исходной картинкой
         // (еще один был доавлен в основном фильтре IMPTestFilter)
@@ -101,7 +106,7 @@ class ViewController: NSViewController {
         }
         
         //
-        // Добавляем наблюдателя к фильтру для обработки результатов 
+        // Добавляем наблюдателя к фильтру для обработки результатов
         // фильтрования
         //
         filter.addDestinationObserver { (destination) -> Void in
@@ -122,28 +127,70 @@ class ViewController: NSViewController {
             })
         }
         
-        //
-        // Вся остальная часть относится к визуальному представления данных
-        //
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         imageView.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(imageView.superview!).offset(10)
-            make.bottom.equalTo(imageView.superview!).offset(-10)
+            make.bottom.equalTo(imageView.superview!).offset(0)
             make.left.equalTo(imageView.superview!).offset(10)
-            make.right.equalTo(pannelScrollView.snp_left).offset(-10)
+            make.right.equalTo(pannelScrollView.snp_left).offset(0)
         }
         
         
-        // Do any additional setup after loading the view.
-        
         IMPDocument.sharedInstance.addDocumentObserver { (file, type) -> Void in
             if type == .Image {
-            // byReferencingFile
-                //if let image = IMPImage(contentsOfFile: file){
-                if let image = IMPImage(byReferencingFile: file){
-                    self.imageView.source = IMPImageProvider(context: self.imageView.context, image: image)
+                do{
+                    //
+                    // Загружаем файл и связываем источником фильтра
+                    //
+                    self.imageView.source = try IMPImageProvider(context: self.imageView.context, file: file)
+                    self.asyncChanges({ () -> Void in
+                        self.zoomFit()
+                    })
+                }
+                catch let error as NSError {
+                    self.asyncChanges({ () -> Void in
+                        let alert = NSAlert(error: error)
+                        alert.runModal()
+                    })
+                }
+            }
+            else if type == .LUT {
+                do {
+                    
+                    //
+                    // Инициализируем дескриптор CLUT
+                    //
+                    var description = IMPImageProvider.LutDescription()
+                    //
+                    // Загружаем CLUT
+                    //
+                    let lutProvider = try IMPImageProvider(context: self.context, cubeFile: file, description: &description)
+                    
+                    if let lut = self.lutFilter{
+                        //
+                        // Если CLUT-фильтр добавлен - обновляем его LUT-таблицу из файла с полученным дескриптором
+                        //
+                        lut.update(lutProvider, description:description)
+                    }
+                    else{
+                        //
+                        // Создаем новый фильтр LUT
+                        //
+                        self.lutFilter = IMPLutFilter(context: self.context, lut: lutProvider, description: description)
+                    }
+                    
+                    //
+                    // Добавляем LUT-фильтр, если этот фильтр уже был добавленб ничего не происходит
+                    //
+                    self.filter.addFilter(self.lutFilter!)
+                }
+                catch let error as NSError {
+                    self.asyncChanges({ () -> Void in
+                        let alert = NSAlert(error: error)
+                        alert.runModal()
+                    })
                 }
             }
         }
@@ -155,11 +202,20 @@ class ViewController: NSViewController {
                     self.zoomFit()
                 case .zoom100:
                     self.zoom100()
+                case .resetLut:
+                    if let l = self.lutFilter {
+                        self.filter.removeFilter(l)
+                    }
+                    break
                 }
             }
         }
     }
     
+    //
+    // Вся остальная часть относится к визуальному представления данных
+    //
+
     private func zoomFit(){
         asyncChanges { () -> Void in
             self.imageView.sizeFit()
@@ -243,13 +299,13 @@ class ViewController: NSViewController {
             make.height.equalTo(20)
         }
         allHeights+=20
-
+        
         paletteView = IMPPaletteListView(frame: view.bounds)
         paletteView.wantsLayer = true
         paletteView.layer?.backgroundColor = IMPColor.clearColor().CGColor
-
+        
         sview.addSubview(paletteView)
-
+        
         paletteView.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(label.snp_bottom).offset(5)
             make.left.equalTo(sview).offset(0)
@@ -257,23 +313,48 @@ class ViewController: NSViewController {
             make.height.equalTo(320)
         }
         allHeights+=320
-     
+        
         configurePaletteTypeChooser()
         
         configureFilterSettings()
     }
     
     private func configureFilterSettings(){
-        
-        let contrastLabel  = IMPLabel(frame: view.bounds)
-        sview.addSubview(contrastLabel)
-        contrastLabel.stringValue = "Contrast"
-        contrastLabel.snp_makeConstraints { (make) -> Void in
+
+        let clippingLabel  = IMPLabel(frame: view.bounds)
+        sview.addSubview(clippingLabel)
+        clippingLabel.stringValue = "Colors clipping"
+        clippingLabel.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(paletteTypeChooser.snp_bottom).offset(20)
             make.right.equalTo(sview).offset(0)
             make.height.equalTo(20)
         }
-        allHeights+=20
+        allHeights+=40
+        
+        let clippingSlider = NSSlider(frame: view.bounds)
+        clippingSlider.minValue = 0
+        clippingSlider.maxValue = 100
+        clippingSlider.integerValue = 50
+        clippingSlider.target = self
+        clippingSlider.action = "changeClippingColors:"
+        clippingSlider.continuous = true
+        sview.addSubview(clippingSlider)
+        clippingSlider.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(clippingLabel.snp_bottom).offset(5)
+            make.left.equalTo(sview).offset(0)
+            make.right.equalTo(sview).offset(0)
+        }
+        allHeights+=40
+
+        let contrastLabel  = IMPLabel(frame: view.bounds)
+        sview.addSubview(contrastLabel)
+        contrastLabel.stringValue = "Contrast"
+        contrastLabel.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(clippingSlider.snp_bottom).offset(20)
+            make.right.equalTo(sview).offset(0)
+            make.height.equalTo(20)
+        }
+        allHeights+=40
         
         let contrastSlider = NSSlider(frame: view.bounds)
         contrastSlider.minValue = 0
@@ -288,7 +369,7 @@ class ViewController: NSViewController {
             make.left.equalTo(sview).offset(0)
             make.right.equalTo(sview).offset(0)
         }
-        allHeights+=20
+        allHeights+=40
         
         let awbLabel  = IMPLabel(frame: view.bounds)
         sview.addSubview(awbLabel)
@@ -298,7 +379,7 @@ class ViewController: NSViewController {
             make.right.equalTo(sview).offset(0)
             make.height.equalTo(20)
         }
-        allHeights+=20
+        allHeights+=40
         
         let awbSlider = NSSlider(frame: view.bounds)
         awbSlider.minValue = 0
@@ -312,7 +393,31 @@ class ViewController: NSViewController {
             make.left.equalTo(sview).offset(0)
             make.right.equalTo(sview).offset(0)
         }
-        allHeights+=20
+        allHeights+=40
+
+        let clutLabel  = IMPLabel(frame: view.bounds)
+        sview.addSubview(clutLabel)
+        clutLabel.stringValue = "CLUT Impact"
+        clutLabel.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(awbSlider.snp_bottom).offset(20)
+            make.right.equalTo(sview).offset(0)
+            make.height.equalTo(20)
+        }
+        allHeights+=40
+
+        let clutSlider = NSSlider(frame: view.bounds)
+        clutSlider.minValue = 0
+        clutSlider.maxValue = 100
+        clutSlider.integerValue = 100
+        clutSlider.action = "changeClut:"
+        clutSlider.continuous = true
+        sview.addSubview(clutSlider)
+        clutSlider.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(clutLabel.snp_bottom).offset(5)
+            make.left.equalTo(sview).offset(0)
+            make.right.equalTo(sview).offset(0)
+        }
+        allHeights+=40
     }
     
     func changeContrast(sender:NSSlider){
@@ -322,13 +427,29 @@ class ViewController: NSViewController {
         }
     }
 
+    func changeClippingColors(sender:NSSlider){
+        let value = sender.floatValue/100
+        asyncChanges { () -> Void in
+            self.histograCube.clipping.shadows = IMPHistogramCubeAnalyzer.defaultClipping.shadows  * 2 * value
+            self.histograCube.clipping.highlights = IMPHistogramCubeAnalyzer.defaultClipping.highlights * 2 * value
+            self.filter.dirty = true
+        }
+    }
+
     func changeAWB(sender:NSSlider){
         let value = sender.floatValue/100
         asyncChanges { () -> Void in
             self.filter.awbFilter.adjustment.blending.opacity = value
         }
     }
-    
+
+    func changeClut(sender:NSSlider){
+        let value = sender.floatValue/100
+        asyncChanges { () -> Void in
+            self.lutFilter?.adjustment.blending.opacity = value
+        }
+    }
+
     private func configurePaletteTypeChooser(){
         
         paletteTypeChooser = NSSegmentedControl(frame: view.bounds)
@@ -336,8 +457,8 @@ class ViewController: NSViewController {
         
         paletteTypeChooser.segmentCount = 2
         paletteTypeChooser.trackingMode = .SelectOne
-        paletteTypeChooser.setLabel("Palette", forSegment: 0)
-        paletteTypeChooser.setLabel("Dominants", forSegment: 1)
+        paletteTypeChooser.setLabel("Dominants", forSegment: 0)
+        paletteTypeChooser.setLabel("Palette", forSegment: 1)
         paletteTypeChooser.selectedSegment = 0
         paletteTypeChooser.target = self
         paletteTypeChooser.action = "changePaletteType:"
@@ -384,18 +505,18 @@ class ViewController: NSViewController {
         asyncChanges { () -> Void in
             switch sender.selectedSegment {
             case 0:
-                self.paletteSolver.type = .palette
-            case 1:
                 self.paletteSolver.type = .dominants
+            case 1:
+                self.paletteSolver.type = .palette
             default: break
             }
             self.histograCube.apply()
         }
     }
-        
+    
     
     override func viewDidLayout() {
-        let h = view.bounds.height < allHeights ? allHeights+40 : view.bounds.height
+        let h = view.bounds.height < allHeights ? allHeights : view.bounds.height
         sview.snp_remakeConstraints { (make) -> Void in
             make.top.equalTo(pannelScrollView).offset(0)
             make.left.equalTo(pannelScrollView).offset(0)

@@ -65,5 +65,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         IMPDocument.sharedInstance.currentFile = sender.title
     }
 
+    
+    @IBAction func loadLuteFile(sender: AnyObject) {
+        let openPanel = NSOpenPanel()
+        
+        openPanel.canChooseFiles  = true;
+        openPanel.resolvesAliases = true;
+        openPanel.extensionHidden = false;
+        openPanel.allowedFileTypes = ["cube", "CUBE", "Cube"]
+        
+        let result = openPanel.runModal()
+        
+        if result == NSModalResponseOK {
+            IMPDocument.sharedInstance.currentLutFile=openPanel.URLs[0].path
+        }
+    }
+
 }
 

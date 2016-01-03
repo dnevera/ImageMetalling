@@ -215,7 +215,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-08/Pods-ImageMetalling-08-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F82D8259E987F1CA9610E95A /* Embed Pods Frameworks */ = {
@@ -347,7 +347,7 @@
 		};
 		316F14EC1C36BDE90091044F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3A5651A3F37775C8D6D17B41 /* Pods-ImageMetalling-08.debug.xcconfig */;
+			baseConfigurationReference = 5F0D314E72623B381376FC02 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -361,7 +361,7 @@
 		};
 		316F14ED1C36BDE90091044F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6B38B73F51E2BAF1D030F90B /* Pods-ImageMetalling-08.release.xcconfig */;
+			baseConfigurationReference = 176026D67E8D85930DA0547A /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;

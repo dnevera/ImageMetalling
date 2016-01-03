@@ -13,6 +13,7 @@ typealias IMPMenuObserver = ((item:NSMenuItem)->Void)
 enum IMPMenuTag:Int{
     case zoomFit  = 3004
     case zoom100  = 3005
+    case resetLut = 3011
 }
 
 class IMPMenuHandler:NSObject {

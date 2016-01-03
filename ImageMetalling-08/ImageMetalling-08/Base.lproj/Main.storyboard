@@ -83,6 +83,19 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
+                                        <menuItem title="Load CLUT" id="b7V-yd-DRE">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="loadLuteFile:" target="Voe-Tx-rLC" id="Maa-zY-6Kf"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Reset CLUT" tag="3011" id="Vdv-eA-Lok">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="chooseMenuItem:" target="Voe-Tx-rLC" id="Awa-uZ-oOP"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="HwX-N3-pQQ"/>
                                         <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
                                             <connections>
                                                 <action selector="saveDocument:" target="Ady-hI-5gd" id="teZ-XB-qJY"/>
