@@ -29,15 +29,40 @@ class IMPLabel: NSTextField {
 
 class ViewController: NSViewController {
 
+    //
+    // Контекст процессинга
+    //
     let context = IMPContext()
+    //
+    // Окно представления загруженной картинки
+    //
     var imageView:IMPImageView!
     
     var pannelScrollView = NSScrollView()
+    
+    //
+    // Окно вывода гистограммы изображения
+    //
     var histogramView:IMPHistogramView!
+    
+    //
+    // NSTableView - представления списка цветов из палитры
+    //
     var paletteView:IMPPaletteListView!
     
+    //
+    // Основной фильтр
+    //
     var filter:IMPTestFilter!
+    
+    //
+    // Анализатор кубической гистограммы изображения в RGB пространстве
+    //
     var histograCube:IMPHistogramCubeAnalyzer!
+    
+    //
+    // Наш солвер для поиска цветов
+    //
     var paletteSolver = IMPPaletteSolver()
     
     var paletteTypeChooser:NSSegmentedControl!
@@ -48,6 +73,10 @@ class ViewController: NSViewController {
 
         configurePannel()
         
+        //
+        // Инициализируем кучу нужных нам объектов
+        //
+        
         filter = IMPTestFilter(context: context)
         
         histograCube = IMPHistogramCubeAnalyzer(context: context)
@@ -57,27 +86,51 @@ class ViewController: NSViewController {
         imageView.filter = filter
         imageView.backgroundColor = IMPColor(color: IMPPrefs.colors.background)
 
+        //
+        // Добавляем еще один хендлер к наблюдению за исходной картинкой
+        // (еще один был доавлен в основном фильтре IMPTestFilter)
+        //
+        filter.addSourceObserver { (source) -> Void in
+            //
+            // для минимизации расчетов анализатор будет сжимать картинку до 1000px по широкой стороне
+            //
+            if let size = source.texture?.size {
+                let scale = 1000/max(size.width,size.height)
+                self.histograCube.downScaleFactor = scale.float
+            }
+        }
         
+        //
+        // Добавляем наблюдателя к фильтру для обработки результатов 
+        // фильтрования
+        //
         filter.addDestinationObserver { (destination) -> Void in
+            
+            // передаем картинку показывателю кистограммы
             self.histogramView.source = destination
+            
+            // передаем результат в анализатор кубической гистограммы
             self.histograCube.source = destination
         }
         
-        histograCube.downScaleFactor = 0.5
-        
+        //
+        // Результаты обновления расчета анализатора выводим в окне списка цветов
+        //
         histograCube.addUpdateObserver { (histogram) -> Void in
             self.asyncChanges({ () -> Void in
                 self.paletteView.colorList = self.paletteSolver.colors
             })
         }
         
-        
+        //
+        // Вся остальная часть относится к визуальному представления данных
+        //
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         imageView.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(imageView.superview!).offset(10)
-            make.bottom.equalTo(imageView.superview!).offset(10)
+            make.bottom.equalTo(imageView.superview!).offset(-10)
             make.left.equalTo(imageView.superview!).offset(10)
             make.right.equalTo(pannelScrollView.snp_left).offset(-10)
         }
@@ -303,8 +356,8 @@ class ViewController: NSViewController {
         
         let stepper = NSStepper(frame: view.bounds)
         stepper.integerValue = paletteSolver.maxColors
-        stepper.maxValue = 16
-        stepper.minValue = 4
+        stepper.maxValue = 8
+        stepper.minValue = 3
         stepper.increment = 1
         stepper.target = self
         stepper.action = "changePaletteSize:"

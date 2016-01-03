@@ -9,11 +9,12 @@
 import Cocoa
 import IMProcessing
 
+///
+/// Класс представления цветовой палитры
+///
 public class IMPPaletteListView: NSView, NSTableViewDataSource, NSTableViewDelegate {
     
-    var scrollView:NSScrollView!
-    var colorListView:NSTableView!
-    
+    /// Список цветов
     public var colorList:[IMPColor] = [
         IMPColor(red: 0, green: 0, blue: 0, alpha: 1),
         IMPColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1),
@@ -58,6 +59,9 @@ public class IMPPaletteListView: NSView, NSTableViewDataSource, NSTableViewDeleg
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private var scrollView:NSScrollView!
+    private var colorListView:NSTableView!
     
     public func numberOfRowsInTableView(tableView: NSTableView) -> Int {
         return colorList.count
