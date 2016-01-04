@@ -32,7 +32,7 @@ class ViewController: NSViewController {
     //
     // Контекст процессинга
     //
-    let context = IMPContext()
+    var context:IMPContext!
     //
     // Окно представления загруженной картинки
     //
@@ -54,12 +54,12 @@ class ViewController: NSViewController {
     // Основной фильтр
     //
     var filter:IMPTestFilter!
-
+    
     //
     // Фильтр CLUT из фалов формата Adobe Cube
     //
     var lutFilter:IMPLutFilter?
-
+    
     //
     // Анализатор кубической гистограммы изображения в RGB пространстве
     //
@@ -75,6 +75,20 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        if !IMPContext.supportsSystemDevice {
+            
+            self.asyncChanges({ () -> Void in
+                let alert = NSAlert(error: NSError(domain: "com.imagemetalling.08", code: 0, userInfo: [
+                    NSLocalizedFailureReasonErrorKey:"MTL initialization error",
+                    NSLocalizedDescriptionKey:"The system does not support MTL..."
+                    ]))
+                alert.runModal()
+            })
+            return
+        }
+        
+        context = IMPContext()
         
         configurePannel()
         
@@ -215,7 +229,7 @@ class ViewController: NSViewController {
     //
     // Вся остальная часть относится к визуальному представления данных
     //
-
+    
     private func zoomFit(){
         asyncChanges { () -> Void in
             self.imageView.sizeFit()
@@ -229,9 +243,11 @@ class ViewController: NSViewController {
     }
     
     override func viewDidAppear() {
-        super.viewDidAppear()
-        asyncChanges { () -> Void in
-            self.imageView.sizeFit()
+        if IMPContext.supportsSystemDevice {
+            super.viewDidAppear()
+            asyncChanges { () -> Void in
+                self.imageView.sizeFit()
+            }
         }
     }
     
@@ -320,7 +336,7 @@ class ViewController: NSViewController {
     }
     
     private func configureFilterSettings(){
-
+        
         let clippingLabel  = IMPLabel(frame: view.bounds)
         sview.addSubview(clippingLabel)
         clippingLabel.stringValue = "Colors clipping"
@@ -345,7 +361,7 @@ class ViewController: NSViewController {
             make.right.equalTo(sview).offset(0)
         }
         allHeights+=40
-
+        
         let contrastLabel  = IMPLabel(frame: view.bounds)
         sview.addSubview(contrastLabel)
         contrastLabel.stringValue = "Contrast"
@@ -394,7 +410,7 @@ class ViewController: NSViewController {
             make.right.equalTo(sview).offset(0)
         }
         allHeights+=40
-
+        
         let clutLabel  = IMPLabel(frame: view.bounds)
         sview.addSubview(clutLabel)
         clutLabel.stringValue = "CLUT Impact"
@@ -404,7 +420,7 @@ class ViewController: NSViewController {
             make.height.equalTo(20)
         }
         allHeights+=40
-
+        
         let clutSlider = NSSlider(frame: view.bounds)
         clutSlider.minValue = 0
         clutSlider.maxValue = 100
@@ -426,7 +442,7 @@ class ViewController: NSViewController {
             self.filter.contrastFilter.adjustment.blending.opacity = value
         }
     }
-
+    
     func changeClippingColors(sender:NSSlider){
         let value = sender.floatValue/100
         asyncChanges { () -> Void in
@@ -435,21 +451,21 @@ class ViewController: NSViewController {
             self.filter.dirty = true
         }
     }
-
+    
     func changeAWB(sender:NSSlider){
         let value = sender.floatValue/100
         asyncChanges { () -> Void in
             self.filter.awbFilter.adjustment.blending.opacity = value
         }
     }
-
+    
     func changeClut(sender:NSSlider){
         let value = sender.floatValue/100
         asyncChanges { () -> Void in
             self.lutFilter?.adjustment.blending.opacity = value
         }
     }
-
+    
     private func configurePaletteTypeChooser(){
         
         paletteTypeChooser = NSSegmentedControl(frame: view.bounds)
