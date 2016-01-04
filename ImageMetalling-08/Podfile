@@ -3,7 +3,8 @@ platform :osx, '10.11'
 use_frameworks!
 
 pod 'SnapKit'
-pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
+#pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
+pod 'IMProcessing', :path => '../../degradr/IMProcessing'
 
 target 'ImageMetalling-08' do
 end

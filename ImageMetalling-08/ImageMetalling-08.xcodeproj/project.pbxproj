@@ -28,6 +28,7 @@
 		310071681C374FC200227AEA /* IMPTestFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPTestFilter.swift; sourceTree = "<group>"; };
 		3100716A1C37ABE000227AEA /* IMPPaletteListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPPaletteListView.swift; sourceTree = "<group>"; };
 		3100716C1C37F36C00227AEA /* IMPPaletteSolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPPaletteSolver.swift; sourceTree = "<group>"; };
+		315BC9001C39DA8B008081DE /* libturbojpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libturbojpeg.a; path = ../../degradr/IMProcessing/vendor/lib/libturbojpeg.a; sourceTree = "<group>"; };
 		316F14DC1C36BDE90091044F /* ImageMetalling-08.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-08.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		316F14DF1C36BDE90091044F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		316F14E11C36BDE90091044F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -113,6 +114,7 @@
 		F27C0086A86E747DDF6A7AE1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				315BC9001C39DA8B008081DE /* libturbojpeg.a */,
 				6E94DEFA87A76D8121260395 /* Pods.framework */,
 				A3A1C32F21D75F9904D028A4 /* Pods_ImageMetalling_08.framework */,
 			);
@@ -353,6 +355,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "ImageMetalling-08/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACH_O_TYPE = mh_execute;
 				MTL_HEADER_SEARCH_PATHS = "$(PODS_ROOT)/Headers/Private/IMProcessing";
 				PRODUCT_BUNDLE_IDENTIFIER = "image-metalling.ImageMetalling-08";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -367,6 +370,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "ImageMetalling-08/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACH_O_TYPE = mh_execute;
 				MTL_HEADER_SEARCH_PATHS = "$(PODS_ROOT)/Headers/Private/IMProcessing";
 				PRODUCT_BUNDLE_IDENTIFIER = "image-metalling.ImageMetalling-08";
 				PRODUCT_NAME = "$(TARGET_NAME)";
