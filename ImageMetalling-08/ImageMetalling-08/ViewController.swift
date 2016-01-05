@@ -32,7 +32,7 @@ class ViewController: NSViewController {
     //
     // Контекст процессинга
     //
-    var context:IMPContext!
+    var context = IMPContext()
     //
     // Окно представления загруженной картинки
     //
@@ -87,9 +87,7 @@ class ViewController: NSViewController {
             })
             return
         }
-        
-        context = IMPContext()
-        
+                
         configurePannel()
         
         //
@@ -118,7 +116,7 @@ class ViewController: NSViewController {
                 self.histograCube.downScaleFactor = scale.float
             }
         }
-        
+                
         //
         // Добавляем наблюдателя к фильтру для обработки результатов
         // фильтрования
@@ -158,7 +156,7 @@ class ViewController: NSViewController {
                     //
                     // Загружаем файл и связываем источником фильтра
                     //
-                    self.imageView.source = try IMPImageProvider(context: self.imageView.context, file: file)
+                    self.imageView.source = try IMPImageProvider(context: self.context, file: file)
                     self.asyncChanges({ () -> Void in
                         self.zoomFit()
                     })
@@ -292,7 +290,7 @@ class ViewController: NSViewController {
             make.edges.equalTo(pannelScrollView).inset(NSEdgeInsetsMake(10, 10, 10, 10))
         }
         
-        histogramView = IMPHistogramView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
+        histogramView = IMPHistogramView(context: context)
         histogramView.backgroundColor = IMPColor.clearColor()
         
         sview.addSubview(histogramView)

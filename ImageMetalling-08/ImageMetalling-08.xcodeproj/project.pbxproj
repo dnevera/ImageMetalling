@@ -356,7 +356,7 @@
 				INFOPLIST_FILE = "ImageMetalling-08/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACH_O_TYPE = mh_execute;
-				MTL_HEADER_SEARCH_PATHS = "$(PODS_ROOT)/Headers/Private/IMProcessing";
+				MTL_HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "image-metalling.ImageMetalling-08";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -371,7 +371,7 @@
 				INFOPLIST_FILE = "ImageMetalling-08/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACH_O_TYPE = mh_execute;
-				MTL_HEADER_SEARCH_PATHS = "$(PODS_ROOT)/Headers/Private/IMProcessing";
+				MTL_HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "image-metalling.ImageMetalling-08";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
