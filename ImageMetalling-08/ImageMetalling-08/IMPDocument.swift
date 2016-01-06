@@ -130,5 +130,35 @@ public class IMPDocument: NSObject {
             }
         }
     }
+    
+    public func openFilePanel(types:[String]){
+        let openPanel = NSOpenPanel()
+        
+        openPanel.canChooseFiles  = true;
+        openPanel.resolvesAliases = true;
+        openPanel.extensionHidden = false;
+        openPanel.allowedFileTypes = ["jpg", "tif", "tiff", "png"]
+        
+        let result = openPanel.runModal()
+        
+        if result == NSModalResponseOK {
+            IMPDocument.sharedInstance.currentFile = openPanel.URLs[0].path
+        }
+    }
+    
+    public func openLutPanel(){
+        let openPanel = NSOpenPanel()
+        
+        openPanel.canChooseFiles  = true;
+        openPanel.resolvesAliases = true;
+        openPanel.extensionHidden = false;
+        openPanel.allowedFileTypes = ["cube", "CUBE", "Cube"]
+        
+        let result = openPanel.runModal()
+        
+        if result == NSModalResponseOK {
+            IMPDocument.sharedInstance.currentLutFile=openPanel.URLs[0].path
+        }
+    }
 }
 

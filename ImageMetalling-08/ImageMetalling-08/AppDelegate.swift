@@ -45,20 +45,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         IMPMenuHandler.sharedInstance.currentMenuItem = sender as? NSMenuItem
     }
     
-    @IBAction func openFile(sender: AnyObject) {
-        
-        let openPanel = NSOpenPanel()
-        
-        openPanel.canChooseFiles  = true;
-        openPanel.resolvesAliases = true;
-        openPanel.extensionHidden = false;
-        openPanel.allowedFileTypes = ["jpg", "tif", "tiff", "png"]
-        
-        let result = openPanel.runModal()
-        
-        if result == NSModalResponseOK {
-            IMPDocument.sharedInstance.currentFile = openPanel.URLs[0].path
-        }
+    @IBAction func openFile(sender: AnyObject) {        
+        IMPDocument.sharedInstance.openFilePanel(["jpg", "tif", "tiff", "png"])
     }
     
     func openRecentHandler(sender:NSMenuItem){
@@ -67,18 +55,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     
     @IBAction func loadLuteFile(sender: AnyObject) {
-        let openPanel = NSOpenPanel()
-        
-        openPanel.canChooseFiles  = true;
-        openPanel.resolvesAliases = true;
-        openPanel.extensionHidden = false;
-        openPanel.allowedFileTypes = ["cube", "CUBE", "Cube"]
-        
-        let result = openPanel.runModal()
-        
-        if result == NSModalResponseOK {
-            IMPDocument.sharedInstance.currentLutFile=openPanel.URLs[0].path
-        }
+        IMPDocument.sharedInstance.openLutPanel()
     }
 
 }
