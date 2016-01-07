@@ -270,7 +270,6 @@ class ViewController: NSViewController {
         view.addSubview(pannelScrollView)
         
         pannelScrollView.drawsBackground = false
-        pannelScrollView.documentView = imageView
         pannelScrollView.allowsMagnification = false
         pannelScrollView.contentView.wantsLayer = true
         
@@ -446,7 +445,6 @@ class ViewController: NSViewController {
         asyncChanges { () -> Void in
             self.histograCube.clipping.shadows = IMPHistogramCubeAnalyzer.defaultClipping.shadows  * 2 * value
             self.histograCube.clipping.highlights = IMPHistogramCubeAnalyzer.defaultClipping.highlights * 2 * value
-            self.filter.dirty = true
         }
     }
     
