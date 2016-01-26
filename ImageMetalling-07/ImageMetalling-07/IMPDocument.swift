@@ -43,10 +43,18 @@ class IMPDocument: NSObject {
     
                 let resultilter = IMPTestFilter(context: IMPContext())
                 resultilter.hsvFilter.adjustment = filter.hsvFilter.adjustment
+                resultilter.hsvFilter.overlap = filter.hsvFilter.overlap
                 
-                resultilter.source = IMPImageProvider(context: filter.context, image: IMPImage(contentsOfFile: cf)!)
-                let im = IMPImage(provider: resultilter.destination!)
-                im.saveJPEGImage(compression: 1, path: filename)
+                do{
+                    resultilter.source = try IMPImageProvider(context: resultilter.context, file: cf)
+                    try resultilter.destination?.writeToJpeg(filename, compression: 1)
+                }
+                catch let error as NSError {
+                    
+                    let alert = NSAlert(error: error)
+                    alert.runModal()
+                    
+                }
             }
         }
     }

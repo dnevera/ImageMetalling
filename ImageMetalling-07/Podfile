@@ -2,7 +2,8 @@ platform :osx, '10.11'
 
 use_frameworks!
 
+pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
+
 target 'ImageMetalling-07' do
-    pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
 end
 

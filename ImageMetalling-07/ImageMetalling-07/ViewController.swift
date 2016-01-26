@@ -137,11 +137,11 @@ class ViewController: NSViewController {
         histogramContainerView.layer?.backgroundColor = IMPColor.redColor().CGColor
         
         histogramView = IMPHistogramView(frame: histogramContainerView.bounds)
-        histogramView.histogram.solver.layer.backgroundColor = IMPPrefs.colors.background
+        histogramView.histogramLayer.solver.layer.backgroundColor = IMPPrefs.colors.background
         
         histogramCDFView = IMPHistogramView(frame: histogramContainerView.bounds)
-        histogramCDFView.histogram.solver.layer.backgroundColor = IMPPrefs.colors.background
-        histogramCDFView.histogram.solver.histogramType = (type:.CDF,power:1)
+        histogramCDFView.histogramLayer.solver.layer.backgroundColor = IMPPrefs.colors.background
+        histogramCDFView.histogramLayer.solver.histogramType = (type:.CDF,power:1)
         
         histogramContainerView.addSubview(histogramView)
         histogramCDFContainerView.addSubview(histogramCDFView)
