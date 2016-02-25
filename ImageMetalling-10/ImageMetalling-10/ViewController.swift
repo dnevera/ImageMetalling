@@ -38,6 +38,9 @@ extension IMPHistogram {
         return e / channels.count.float
     }
     
+    //
+    // Средная поканальная энтропия
+    //
     func averageEntropy()  -> Float {
         var e:Float = 0
         for i in 0...2 {
@@ -47,8 +50,14 @@ extension IMPHistogram {
     }
 }
 
+//
+// Анализатор вариативности
+//
 public class DHCVariabilityAnalyzer: IMPHistogramAnalyzer {
     public required init(context: IMPContext) {
+        //
+        // Основной расчет производим в kernel-функции Metal
+        //
         super.init(context: context, function: "kernel_variabilityPartial")
     }
 }
