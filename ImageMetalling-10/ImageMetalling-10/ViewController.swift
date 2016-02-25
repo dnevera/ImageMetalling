@@ -35,7 +35,7 @@ extension IMPHistogram {
         for i in 0..<channels.count {
             e += entropy(channel: IMPHistogram.ChannelNo(rawValue: i)!)
         }
-        return e / channels.count.float
+        return e / channels.count.float / log2(size.float) * 100
     }
     
     //
@@ -81,7 +81,9 @@ class ViewController: NSViewController {
     //
     // Основной фильтр
     //
-    var filter:IMPAutoWBFilter!
+    var filter:IMPFilter!
+
+    var awb:IMPAutoWBFilter!
     
     //
     // Анализатор диапазона светов через гистограмму изображения
@@ -120,7 +122,11 @@ class ViewController: NSViewController {
         // Создаем фильтр автоматической коррекции баланса цветов
         //
         
-        filter = IMPAutoWBFilter(context: context)
+        filter = IMPFilter(context: context)
+        
+        awb = IMPAutoWBFilter(context: context)
+        
+        filter.addFilter(awb)
         
         //
         // Добавляем Регулировку контраста
@@ -395,6 +401,7 @@ class ViewController: NSViewController {
         label2.stringValue = " Dest. var./avrgEntr.:"
         label3.stringValue = "Source entropy:"
         label4.stringValue = " Dest. entropy:"
+        
     }
     
     var pannelScrollView = NSScrollView()
@@ -566,7 +573,27 @@ class ViewController: NSViewController {
         }
         allHeights += 20
         
-        return reset
+        let disable =  NSButton(frame: NSRect(x: 230, y: 0, width: 50, height: view.bounds.height))
+        
+        let attrTitle = NSMutableAttributedString(string: "Enable")
+        attrTitle.addAttribute(NSForegroundColorAttributeName, value: IMPColor.whiteColor(), range: NSMakeRange(0, attrTitle.length))
+        
+        disable.attributedTitle = attrTitle
+        disable.setButtonType(.SwitchButton)
+        disable.target = self
+        disable.action = "disable:"
+        disable.state = 1
+        sview.addSubview(disable)
+        
+        disable.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(reset.snp_bottom).offset(10)
+            make.left.equalTo(sview).offset(10)
+            make.width.equalTo(120)
+            make.height.equalTo(20)
+        }
+        allHeights += 20
+
+        return disable
     }
     
     var awbSlider:NSSlider!
@@ -576,7 +603,7 @@ class ViewController: NSViewController {
     func changeAWB(sender:NSSlider){
         let value = sender.floatValue/100
         asyncChanges { () -> Void in
-            self.filter.adjustment.blending.opacity = value
+            self.awb.adjustment.blending.opacity = value
             self.awbValueLabel.stringValue = String(format: "%2.3f",value)
         }
     }
@@ -598,7 +625,7 @@ class ViewController: NSViewController {
     }
     
     func reset(sender:NSButton?){
-        self.filter.adjustment.blending.opacity = 0
+        self.awb.adjustment.blending.opacity = 0
         self.contrast.adjustment.blending.opacity = 0
         self.saturation.adjustment.level = 0.5
         
@@ -609,6 +636,16 @@ class ViewController: NSViewController {
         self.awbValueLabel.stringValue = String(format: "%2.3f",0.0)
         self.contrastValueLabel.stringValue = String(format: "%2.3f",0.0)
         self.saturationValueLabel.stringValue = String(format: "%2.3f",0.5)
+    }
+        
+    func disable(sender:NSButton){
+        if filter?.enabled == true {
+            filter?.enabled = false
+        }
+        else {
+            filter?.enabled = true
+        }
+        filter.apply() 
     }
     
     override func viewDidLayout() {
