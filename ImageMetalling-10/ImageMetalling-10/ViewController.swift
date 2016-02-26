@@ -160,7 +160,7 @@ class ViewController: NSViewController {
             self.contrast.adjustment.maximum = rangeSolver.maximum
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.variabilitySourceLabel.stringValue = String(format: "%2.3f/%2.3f", histogram.variability(), histogram.averageEntropy())
+                self.variabilitySourceLabel.stringValue = String(format: "%2.3f", histogram.variability())
                 let er = histogram.entropy(channel: .X)
                 let eg = histogram.entropy(channel: .Y)
                 let eb = histogram.entropy(channel: .Z)
@@ -200,7 +200,7 @@ class ViewController: NSViewController {
         //
         destinationVariability.addUpdateObserver({ (histogram) -> Void in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.variabilityDestinationLabel.stringValue = String(format: "%2.3f/%2.3f", histogram.variability(), histogram.averageEntropy())
+                self.variabilityDestinationLabel.stringValue = String(format: "%2.3f", histogram.variability())
                 let er = histogram.entropy(channel: .X)
                 let eg = histogram.entropy(channel: .Y)
                 let eb = histogram.entropy(channel: .Z)
@@ -318,9 +318,10 @@ class ViewController: NSViewController {
         
         let font  = NSFont(name: "Courier", size: 12)
         let fontS = NSFont(name: "Courier", size: 10)
+        let fontB = NSFont(name: "Courier", size: 20)
         
-        variabilitySourceLabel.font = fontS
-        variabilityDestinationLabel.font = fontS
+        variabilitySourceLabel.font = fontB
+        variabilityDestinationLabel.font = fontB
         entropySourceLabel.font = fontS
         entropyDestinationLabel.font = fontS
         
