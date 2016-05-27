@@ -186,7 +186,7 @@ class ViewController: NSViewController {
         //
         filter.addDestinationObserver { (destination) -> Void in
             // передаем картинку показывателю кистограммы
-            self.histogramView.source = destination
+            self.histogramView.filter?.source = destination
             
         }
         
@@ -206,7 +206,7 @@ class ViewController: NSViewController {
                     //
                     // Загружаем файл и связываем источником фильтра
                     //
-                    self.imageView.source = try IMPImageProvider(context: self.context, file: file)
+                    self.imageView.filter?.source = try IMPJpegProvider(context: self.context, file: file)
                     self.asyncChanges({ () -> Void in
                         self.zoomFit()
                     })
@@ -442,8 +442,7 @@ class ViewController: NSViewController {
             make.edges.equalTo(pannelScrollView).inset(NSEdgeInsetsMake(10, 10, 10, 10))
         }
         
-        histogramView = IMPHistogramView(context: context)
-        histogramView.backgroundColor = IMPColor.clearColor()
+        histogramView = IMPHistogramView(context: context, frame: view.bounds)
         
         sview.addSubview(histogramView)
         
@@ -477,7 +476,7 @@ class ViewController: NSViewController {
         awbSlider.minValue = 0
         awbSlider.maxValue = 100
         awbSlider.integerValue = 100
-        awbSlider.action = "changeAWB:"
+        awbSlider.action = #selector(ViewController.changeAWB(_:))
         awbSlider.continuous = true
         sview.addSubview(awbSlider)
         awbSlider.snp_makeConstraints { (make) -> Void in
@@ -501,7 +500,7 @@ class ViewController: NSViewController {
         clutSlider.minValue = 0
         clutSlider.maxValue = 100
         clutSlider.integerValue = 100
-        clutSlider.action = "changeClut:"
+        clutSlider.action = #selector(ViewController.changeClut(_:))
         clutSlider.continuous = true
         sview.addSubview(clutSlider)
         clutSlider.snp_makeConstraints { (make) -> Void in

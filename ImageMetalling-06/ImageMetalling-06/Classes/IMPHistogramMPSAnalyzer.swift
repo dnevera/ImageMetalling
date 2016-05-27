@@ -28,7 +28,7 @@ class IMPHistogramMPSAnalyzer: IMPHistogramAnalyzer {
         // Конструируем гистограмму MPS
         //
         var imageHistogramInfo = MPSImageHistogramInfo(
-            numberOfHistogramEntries: Int(kIMP_HistogramSize),
+            numberOfHistogramEntries: Int(histogram.size),
             histogramForAlpha: true,
             minPixelValue: vector_float4(x: 0, y: 0, z: 0, w: 0),
             maxPixelValue: vector_float4(x: 1, y: 1, z: 1, w: 1))

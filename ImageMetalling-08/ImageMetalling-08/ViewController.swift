@@ -63,7 +63,7 @@ class ViewController: NSViewController {
     //
     // Анализатор кубической гистограммы изображения в RGB пространстве
     //
-    var histograCube:IMPHistogramCubeAnalyzer!
+    var histogramCube:IMPHistogramCubeAnalyzer!
     
     //
     // Наш солвер для поиска цветов
@@ -96,8 +96,8 @@ class ViewController: NSViewController {
         
         filter = IMPTestFilter(context: context)
         
-        histograCube = IMPHistogramCubeAnalyzer(context: context)
-        histograCube.addSolver(paletteSolver)
+        histogramCube = IMPHistogramCubeAnalyzer(context: context)
+        histogramCube.addSolver(paletteSolver)
         
         imageView = IMPImageView(context: context, frame: view.bounds)
         imageView.filter = filter
@@ -113,7 +113,7 @@ class ViewController: NSViewController {
             //
             if let size = source.texture?.size {
                 let scale = 1000/max(size.width,size.height)
-                self.histograCube.downScaleFactor = scale.float
+                self.histogramCube.downScaleFactor = scale.float
             }
         }
                 
@@ -124,16 +124,16 @@ class ViewController: NSViewController {
         filter.addDestinationObserver { (destination) -> Void in
             
             // передаем картинку показывателю кистограммы
-            self.histogramView.source = destination
+            self.histogramView.filter?.source = destination
             
             // передаем результат в анализатор кубической гистограммы
-            self.histograCube.source = destination
+            self.histogramCube.source = destination
         }
         
         //
         // Результаты обновления расчета анализатора выводим в окне списка цветов
         //
-        histograCube.addUpdateObserver { (histogram) -> Void in
+        histogramCube.addUpdateObserver { (histogram) -> Void in
             self.asyncChanges({ () -> Void in
                 self.paletteView.colorList = self.paletteSolver.colors
             })
@@ -156,7 +156,7 @@ class ViewController: NSViewController {
                     //
                     // Загружаем файл и связываем источником фильтра
                     //
-                    self.imageView.source = try IMPImageProvider(context: self.context, file: file)
+                    self.imageView.filter?.source = try IMPJpegProvider(context: self.context, file: file)
                     self.asyncChanges({ () -> Void in
                         self.zoomFit()
                     })
@@ -289,8 +289,7 @@ class ViewController: NSViewController {
             make.edges.equalTo(pannelScrollView).inset(NSEdgeInsetsMake(10, 10, 10, 10))
         }
         
-        histogramView = IMPHistogramView(context: context)
-        histogramView.backgroundColor = IMPColor.clearColor()
+        histogramView = IMPHistogramView(context: context, frame: view.bounds)
         
         sview.addSubview(histogramView)
         
@@ -349,7 +348,7 @@ class ViewController: NSViewController {
         clippingSlider.maxValue = 100
         clippingSlider.integerValue = 50
         clippingSlider.target = self
-        clippingSlider.action = "changeClippingColors:"
+        clippingSlider.action = #selector(ViewController.changeClippingColors(_:))
         clippingSlider.continuous = true
         sview.addSubview(clippingSlider)
         clippingSlider.snp_makeConstraints { (make) -> Void in
@@ -374,7 +373,7 @@ class ViewController: NSViewController {
         contrastSlider.maxValue = 100
         contrastSlider.integerValue = 100
         contrastSlider.target = self
-        contrastSlider.action = "changeContrast:"
+        contrastSlider.action = #selector(ViewController.changeContrast(_:))
         contrastSlider.continuous = true
         sview.addSubview(contrastSlider)
         contrastSlider.snp_makeConstraints { (make) -> Void in
@@ -398,7 +397,7 @@ class ViewController: NSViewController {
         awbSlider.minValue = 0
         awbSlider.maxValue = 100
         awbSlider.integerValue = 100
-        awbSlider.action = "changeAWB:"
+        awbSlider.action = #selector(ViewController.changeAWB(_:))
         awbSlider.continuous = true
         sview.addSubview(awbSlider)
         awbSlider.snp_makeConstraints { (make) -> Void in
@@ -422,7 +421,7 @@ class ViewController: NSViewController {
         clutSlider.minValue = 0
         clutSlider.maxValue = 100
         clutSlider.integerValue = 100
-        clutSlider.action = "changeClut:"
+        clutSlider.action = #selector(ViewController.changeClut(_:))
         clutSlider.continuous = true
         sview.addSubview(clutSlider)
         clutSlider.snp_makeConstraints { (make) -> Void in
@@ -443,8 +442,9 @@ class ViewController: NSViewController {
     func changeClippingColors(sender:NSSlider){
         let value = sender.floatValue/100
         asyncChanges { () -> Void in
-            self.histograCube.clipping.shadows = IMPHistogramCubeAnalyzer.defaultClipping.shadows  * 2 * value
-            self.histograCube.clipping.highlights = IMPHistogramCubeAnalyzer.defaultClipping.highlights * 2 * value
+            self.histogramCube.clipping.shadows = IMPHistogramCubeAnalyzer.defaultClipping.shadows  * 2 * value
+            self.histogramCube.clipping.highlights = IMPHistogramCubeAnalyzer.defaultClipping.highlights * 2 * value
+            self.histogramCube.apply()
         }
     }
     
@@ -473,7 +473,7 @@ class ViewController: NSViewController {
         paletteTypeChooser.setLabel("Palette", forSegment: 1)
         paletteTypeChooser.selectedSegment = 0
         paletteTypeChooser.target = self
-        paletteTypeChooser.action = "changePaletteType:"
+        paletteTypeChooser.action = #selector(ViewController.changePaletteType(_:))
         
         paletteTypeChooser.snp_makeConstraints { (make) -> Void in
             make.top.equalTo(paletteView.snp_bottom).offset(10)
@@ -495,7 +495,7 @@ class ViewController: NSViewController {
         stepper.minValue = 3
         stepper.increment = 1
         stepper.target = self
-        stepper.action = "changePaletteSize:"
+        stepper.action = #selector(ViewController.changePaletteSize(_:))
         sview.addSubview(stepper)
         stepper.snp_makeConstraints { (make) -> Void in
             make.centerY.equalTo(paletteSizeLabel.snp_centerY).offset(0)
@@ -509,7 +509,7 @@ class ViewController: NSViewController {
         asyncChanges { () -> Void in
             self.paletteSizeLabel?.stringValue = "\(sender.intValue)"
             self.paletteSolver.maxColors = sender.integerValue
-            self.histograCube.apply()
+            self.histogramCube.apply()
         }
     }
     
@@ -522,7 +522,7 @@ class ViewController: NSViewController {
                 self.paletteSolver.type = .palette
             default: break
             }
-            self.histograCube.apply()
+            self.histogramCube.apply()
         }
     }
     

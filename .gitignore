@@ -8,5 +8,5 @@ Pods
 *xcshareddata
 *.xccheckout
 DegradrFilterTest.xcscheme
-Carthage/Build
-Carthage/Checkouts
+*/**/Build
+*/**/Checkouts

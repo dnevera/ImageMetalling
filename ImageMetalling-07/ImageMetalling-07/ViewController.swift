@@ -136,12 +136,10 @@ class ViewController: NSViewController {
         histogramContainerView.wantsLayer = true
         histogramContainerView.layer?.backgroundColor = IMPColor.redColor().CGColor
         
-        histogramView = IMPHistogramView(frame: histogramContainerView.bounds)
-        histogramView.histogramLayer.solver.layer.backgroundColor = IMPPrefs.colors.background
+        histogramView = IMPHistogramView(context: IMPContext(), frame: histogramContainerView.bounds)
         
-        histogramCDFView = IMPHistogramView(frame: histogramContainerView.bounds)
-        histogramCDFView.histogramLayer.solver.layer.backgroundColor = IMPPrefs.colors.background
-        histogramCDFView.histogramLayer.solver.histogramType = (type:.CDF,power:1)
+        histogramCDFView = IMPHistogramView(context: histogramView.context , frame: histogramContainerView.bounds)
+        histogramCDFView.type = .CDF
         
         histogramContainerView.addSubview(histogramView)
         histogramCDFContainerView.addSubview(histogramCDFView)
@@ -165,8 +163,8 @@ class ViewController: NSViewController {
         
         mainFilter.addDestinationObserver { (destination) -> Void in
             self.asyncChanges { () -> Void in
-                self.histogramView.source = destination
-                self.histogramCDFView.source = destination
+                self.histogramView.filter?.source = destination
+                self.histogramCDFView.filter?.source = destination
             }
         }
 
@@ -182,7 +180,7 @@ class ViewController: NSViewController {
 
         NSNotificationCenter.defaultCenter().addObserver(
             self,
-            selector: "magnifyChanged:",
+            selector: #selector(ViewController.magnifyChanged(_:)),
             name: NSScrollViewWillStartLiveMagnifyNotification,
             object: nil)
         
@@ -209,7 +207,7 @@ class ViewController: NSViewController {
                     // Обновляем источник фильтра. Свойство .source IMPView определяется как alias IMPFilter.source
                     // После обновления источника происходит автоматическое исполнения фильтра и содержимого окна превью
                     //
-                    self.imageView.source = IMPImageProvider(context: self.imageView.context, image: image)
+                    self.imageView.filter?.source = IMPImageProvider(context: self.imageView.context, image: image)
                     
                     self.asyncChanges({ () -> Void in
                         self.zoomOne()                        

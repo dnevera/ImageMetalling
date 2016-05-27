@@ -12,11 +12,11 @@ import IMProcessing
 
 class IMPTestFilter:IMPFilter {
     
-    var hsvFilter:IMPHSVExampleFilter!
+    var hsvFilter:IMPHSVFilter!
     
     required init(context: IMPContext) {        
         super.init(context: context)
-        hsvFilter = IMPHSVExampleFilter(context: context, optimization: .NORMAL)
+        hsvFilter = IMPHSVFilter(context: context, optimization: .HIGH)
         addFilter(hsvFilter)                
     }
     

@@ -79,7 +79,7 @@ public class IMPDocument: NSObject {
     
     private func addOpenRecentMenuItemMenu(file:String){
         if let menu = openRecentMenu {
-            let menuItem = menu.insertItemWithTitle(file, action: "openRecentHandler:", keyEquivalent: "", atIndex: 0)
+            let menuItem = menu.insertItemWithTitle(file, action: Selector("openRecentHandler:"), keyEquivalent: "", atIndex: 0)
             openRecentMenuItems[file]=menuItem
         }
     }

@@ -419,7 +419,7 @@ public class IMPHSVExampleFilter:IMPFilter,IMPAdjustmentProtocol{
     //
     private func applyHsv3DLut(){
         
-        self.context.execute({ (commandBuffer) -> Void in
+        self.context.execute{ (commandBuffer) -> Void in
             
             let width  = self.hsv3DlutTexture!.width
             let height = self.hsv3DlutTexture!.height
@@ -445,7 +445,7 @@ public class IMPHSVExampleFilter:IMPFilter,IMPAdjustmentProtocol{
             
             commandEncoder.dispatchThreadgroups(threadgroups, threadsPerThreadgroup:threadgroupCounts)
             commandEncoder.endEncoding()
-        })
+        }
     }
     
     //

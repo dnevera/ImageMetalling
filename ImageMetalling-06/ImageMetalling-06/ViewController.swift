@@ -19,7 +19,7 @@ class IMPTestFilter:DPFilter{
         
         if (analyzer != nil) {
             self.analyzer = analyzer
-            self.analyzer?.downScaleFactor = 1
+            self.analyzer?.downScaleFactor = 0.5
             
             self.willStartProcessing = { (source) in
                 analyzer!.source = source

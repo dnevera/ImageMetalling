@@ -19,7 +19,7 @@ kernel void kernel_variabilityPartial(
                                        texture2d<float, access::sample>   inTexture  [[texture(0)]],
                                        device   IMPHistogramBuffer        *outArray  [[ buffer(0)]],
                                        constant uint                      &channels  [[ buffer(1)]],
-                                       constant IMPCropRegion             &regionIn  [[ buffer(2)]],
+                                       constant IMPRegion             &regionIn  [[ buffer(2)]],
                                        constant float                     &scale     [[ buffer(3)]],
                                        uint  tid      [[thread_index_in_threadgroup]],
                                        uint2 groupid  [[threadgroup_position_in_grid]],

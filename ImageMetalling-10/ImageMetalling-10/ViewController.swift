@@ -222,7 +222,7 @@ class ViewController: NSViewController {
         //
         filter.addDestinationObserver { (destination) -> Void in
             // передаем картинку показывателю гистограммы
-            self.histogramView.source = destination
+            self.histogramView.filter?.source = destination
             
         }
         
@@ -242,7 +242,7 @@ class ViewController: NSViewController {
                     //
                     // Загружаем файл и связываем источником фильтра
                     //
-                    self.imageView.source = try IMPImageProvider(context: self.context, file: file)
+                    self.imageView.filter?.source = try IMPJpegProvider(context: self.context, file: file)
                     self.asyncChanges({ () -> Void in
                         self.zoomFit()
                     })
@@ -434,8 +434,7 @@ class ViewController: NSViewController {
             make.edges.equalTo(pannelScrollView).inset(NSEdgeInsetsMake(10, 10, 10, 10))
         }
         
-        histogramView = IMPHistogramView(context: context)
-        histogramView.backgroundColor = IMPColor.clearColor()
+        histogramView = IMPHistogramView(context: context, frame: view.bounds)
         
         sview.addSubview(histogramView)
         
@@ -482,7 +481,7 @@ class ViewController: NSViewController {
         awbSlider.minValue = 0
         awbSlider.maxValue = 100
         awbSlider.integerValue = 100
-        awbSlider.action = "changeAWB:"
+        awbSlider.action = #selector(ViewController.changeAWB(_:))
         awbSlider.continuous = true
         sview.addSubview(awbSlider)
         awbSlider.snp_makeConstraints { (make) -> Void in
@@ -516,7 +515,7 @@ class ViewController: NSViewController {
         contrastSlider.minValue = 0
         contrastSlider.maxValue = 100
         contrastSlider.integerValue = 100
-        contrastSlider.action = "contrastLevel:"
+        contrastSlider.action = #selector(ViewController.contrastLevel(_:))
         contrastSlider.continuous = true
         sview.addSubview(contrastSlider)
         contrastSlider.snp_makeConstraints { (make) -> Void in
@@ -549,7 +548,7 @@ class ViewController: NSViewController {
         saturationLevelSlider.minValue = 0
         saturationLevelSlider.maxValue = 100
         saturationLevelSlider.integerValue = 50
-        saturationLevelSlider.action = "saturationLevel:"
+        saturationLevelSlider.action = #selector(ViewController.saturationLevel(_:))
         saturationLevelSlider.continuous = true
         sview.addSubview(saturationLevelSlider)
         saturationLevelSlider.snp_makeConstraints { (make) -> Void in
@@ -563,7 +562,7 @@ class ViewController: NSViewController {
         let reset = NSButton(frame: NSRect(x: 230, y: 0, width: 50, height: view.bounds.height))
         reset.title = "Reset"
         reset.target = self
-        reset.action = "reset:"
+        reset.action = #selector(ViewController.reset(_:))
         sview.addSubview(reset)
         
         reset.snp_makeConstraints { (make) -> Void in
@@ -582,7 +581,7 @@ class ViewController: NSViewController {
         disable.attributedTitle = attrTitle
         disable.setButtonType(.SwitchButton)
         disable.target = self
-        disable.action = "disable:"
+        disable.action = #selector(ViewController.disable(_:))
         disable.state = 1
         sview.addSubview(disable)
         

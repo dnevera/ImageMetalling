@@ -17,12 +17,11 @@
 		3127DF931C285C57007C6883 /* IMPTestFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3127DF8F1C285C57007C6883 /* IMPTestFilter.swift */; };
 		3127DF961C285C77007C6883 /* IMPMain_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3127DF951C285C77007C6883 /* IMPMain_metal.metal */; };
 		31F62CA81C2F2669004204C7 /* IMPHSVExampleFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F62CA71C2F2669004204C7 /* IMPHSVExampleFilter.swift */; };
-		AF5E51F24AB420EFF1BEB38A /* Pods_ImageMetalling_07.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9080D1BC75F4AC051C1AB1 /* Pods_ImageMetalling_07.framework */; };
-		B6C50E449F7425BC8D8348AD /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68E28702D46338C358AB68A4 /* Pods.framework */; };
+		AEF40C4B5ADDB8CE6EF31C6A /* Pods_ImageMetalling_07.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC9912869704DB5104E6FDA0 /* Pods_ImageMetalling_07.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		09580C7BA97A6B49B1D60EBA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		052520710F4ABDD8257BF430 /* Pods-ImageMetalling-07.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-07.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-07/Pods-ImageMetalling-07.release.xcconfig"; sourceTree = "<group>"; };
 		3127DF7A1C285B74007C6883 /* ImageMetalling-07.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-07.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3127DF7D1C285B74007C6883 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3127DF7F1C285B74007C6883 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -36,11 +35,9 @@
 		3127DF951C285C77007C6883 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = IMPMain_metal.metal; path = Shaders/IMPMain_metal.metal; sourceTree = "<group>"; };
 		31D329CD1C2F29C900C713EB /* IMPAdjustmentHSV_metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IMPAdjustmentHSV_metal.h; path = Shaders/IMPAdjustmentHSV_metal.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		31F62CA71C2F2669004204C7 /* IMPHSVExampleFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPHSVExampleFilter.swift; sourceTree = "<group>"; };
-		503D1F6D5C089D84B925ED88 /* Pods-ImageMetalling-07.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-07.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-07/Pods-ImageMetalling-07.release.xcconfig"; sourceTree = "<group>"; };
 		68E28702D46338C358AB68A4 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7F9080D1BC75F4AC051C1AB1 /* Pods_ImageMetalling_07.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_07.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		89207C678F6DBF3BDA9E66B6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		90BBE2ABDC7B722F5C02F883 /* Pods-ImageMetalling-07.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-07.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-07/Pods-ImageMetalling-07.debug.xcconfig"; sourceTree = "<group>"; };
+		CF63239EF22CCCB2F9771F0C /* Pods-ImageMetalling-07.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-07.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-07/Pods-ImageMetalling-07.debug.xcconfig"; sourceTree = "<group>"; };
+		FC9912869704DB5104E6FDA0 /* Pods_ImageMetalling_07.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_07.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,8 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF5E51F24AB420EFF1BEB38A /* Pods_ImageMetalling_07.framework in Frameworks */,
-				B6C50E449F7425BC8D8348AD /* Pods.framework in Frameworks */,
+				AEF40C4B5ADDB8CE6EF31C6A /* Pods_ImageMetalling_07.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,8 +57,8 @@
 			children = (
 				3127DF7C1C285B74007C6883 /* ImageMetalling-07 */,
 				3127DF7B1C285B74007C6883 /* Products */,
-				B539A5A9FF9DFD6534E3396A /* Pods */,
 				4F6496967DEEACA40D1454E7 /* Frameworks */,
+				B5816ADFF534899EC916322E /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,19 +100,17 @@
 		4F6496967DEEACA40D1454E7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7F9080D1BC75F4AC051C1AB1 /* Pods_ImageMetalling_07.framework */,
 				68E28702D46338C358AB68A4 /* Pods.framework */,
+				FC9912869704DB5104E6FDA0 /* Pods_ImageMetalling_07.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B539A5A9FF9DFD6534E3396A /* Pods */ = {
+		B5816ADFF534899EC916322E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				90BBE2ABDC7B722F5C02F883 /* Pods-ImageMetalling-07.debug.xcconfig */,
-				503D1F6D5C089D84B925ED88 /* Pods-ImageMetalling-07.release.xcconfig */,
-				09580C7BA97A6B49B1D60EBA /* Pods.debug.xcconfig */,
-				89207C678F6DBF3BDA9E66B6 /* Pods.release.xcconfig */,
+				CF63239EF22CCCB2F9771F0C /* Pods-ImageMetalling-07.debug.xcconfig */,
+				052520710F4ABDD8257BF430 /* Pods-ImageMetalling-07.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -128,12 +122,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3127DF891C285B74007C6883 /* Build configuration list for PBXNativeTarget "ImageMetalling-07" */;
 			buildPhases = (
-				45BF584260D9CF769FC5B02A /* Check Pods Manifest.lock */,
+				D37CAB73883812BAE1CBE5B8 /* 📦 Check Pods Manifest.lock */,
 				3127DF761C285B74007C6883 /* Sources */,
 				3127DF771C285B74007C6883 /* Frameworks */,
 				3127DF781C285B74007C6883 /* Resources */,
-				939B3BB9EAF91BEA7EB1E931 /* Embed Pods Frameworks */,
-				E152FF7927B1962DCD7A670F /* Copy Pods Resources */,
+				E5E9D3E092048B12D48C9E00 /* 📦 Embed Pods Frameworks */,
+				1EF5AB5CCD716FE8FEC7786F /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -190,14 +184,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		45BF584260D9CF769FC5B02A /* Check Pods Manifest.lock */ = {
+		1EF5AB5CCD716FE8FEC7786F /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-07/Pods-ImageMetalling-07-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D37CAB73883812BAE1CBE5B8 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -205,34 +214,19 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		939B3BB9EAF91BEA7EB1E931 /* Embed Pods Frameworks */ = {
+		E5E9D3E092048B12D48C9E00 /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "📦 Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E152FF7927B1962DCD7A670F /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-07/Pods-ImageMetalling-07-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -349,13 +343,14 @@
 		};
 		3127DF8A1C285B74007C6883 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 09580C7BA97A6B49B1D60EBA /* Pods.debug.xcconfig */;
+			baseConfigurationReference = CF63239EF22CCCB2F9771F0C /* Pods-ImageMetalling-07.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "ImageMetalling-07/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MTL_HEADER_SEARCH_PATHS = "$(PODS_ROOT)/Headers/Private/IMProcessing";
+				MTL_HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "image-metalling.ImageMetalling-07";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -363,13 +358,14 @@
 		};
 		3127DF8B1C285B74007C6883 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89207C678F6DBF3BDA9E66B6 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 052520710F4ABDD8257BF430 /* Pods-ImageMetalling-07.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "ImageMetalling-07/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MTL_HEADER_SEARCH_PATHS = "$(PODS_ROOT)/Headers/Private/IMProcessing";
+				MTL_HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "image-metalling.ImageMetalling-07";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

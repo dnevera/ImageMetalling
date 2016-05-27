@@ -46,7 +46,7 @@ class IMPDocument: NSObject {
                 resultilter.hsvFilter.overlap = filter.hsvFilter.overlap
                 
                 do{
-                    resultilter.source = try IMPImageProvider(context: resultilter.context, file: cf)
+                    resultilter.source = try IMPJpegProvider(context: resultilter.context, file: cf)
                     try resultilter.destination?.writeToJpeg(filename, compression: 1)
                 }
                 catch let error as NSError {

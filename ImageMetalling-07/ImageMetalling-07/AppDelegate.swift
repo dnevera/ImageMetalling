@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var openRecentMenuItems = Dictionary<String,NSMenuItem>()
     
     private func addOpenRecentMenuItemMenu(file:String){
-        let menuItem = openRecentMenu.insertItemWithTitle(file, action: "openRecentHandler:", keyEquivalent: "", atIndex: 0)
+        let menuItem = openRecentMenu.insertItemWithTitle(file, action: #selector(AppDelegate.openRecentHandler(_:)), keyEquivalent: "", atIndex: 0)
         openRecentMenuItems[file]=menuItem
     }
     
