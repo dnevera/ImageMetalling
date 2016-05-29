@@ -1,0 +1,19 @@
+
+use_frameworks!
+
+target 'ImageMetalling-11' do
+    platform :ios, '9.0'
+    pod 'SnapKit'
+    pod 'ScalePicker'
+    pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
+end
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['DYLIB_COMPATIBILITY_VERSION'] = ''
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
+        end
+    end
+end
+
