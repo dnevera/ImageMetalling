@@ -44,14 +44,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     lazy var cropFilter: IMPCropFilter = {
         return IMPCropFilter(context:self.context)
     }()
-    
+
     var currentScaleFactor:Float {
         return IMPPlate(aspect: transformFilter.aspect).scaleFactorFor(model: transformFilter.model)
     }
     
     var currentCropRegion:IMPRegion {
         let offset = (1 - currentScaleFactor * transformFilter.scale.x ) / 2
-        return IMPRegion(left: offset, right: offset, top: offset, bottom: offset)
+        return IMPRegion(left: offset+currentCrop.left, right: offset+currentCrop.right, top: offset+currentCrop.top, bottom: offset+currentCrop.bottom)
     }
     
     var currentTranslationTimer:IMPDisplayTimer? {
@@ -80,10 +80,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let aspect   = transformFilter.aspect
             let model    = transformFilter.model
             
+            print(" outOfBounds, aspect = \(aspect)")
+            
             //
             // Model of Cropped Quad
             //
-            let cropQuad = IMPQuad(region:cropFilter.region, aspect: aspect)
+            let cropQuad = IMPQuad(region:currentCropRegion, aspect: aspect)
             
             //
             // Model of transformed Quad
@@ -108,16 +110,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         animateTranslation(-outOfBounds)
     }
     
-    func updateCrop()  {
-        self.cropFilter.region = currentCropRegion
-    }
-    
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
         filter.addFilter(transformFilter)
         filter.addFilter(cropFilter)
+
         imageView.filter = filter
         
         cropAngleScaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in
@@ -146,8 +145,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var timer:NSTimer? = nil
     func didChangeAngle(value:Float) {
+        
         transformFilter.angle.z = value
-        updateCrop()
+        cropFilter.region = currentCropRegion
         
         if timer != nil {
             timer?.invalidate()
@@ -157,6 +157,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func reset(sender:UIButton){
         cropAngleScaleView.reset()
+        currentCrop = IMPRegion()
+        cropFilter.region = currentCrop
     }
     
     var finger_point_offset = NSPoint()
@@ -311,6 +313,67 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         transformFilter.translation -= lastDistance * (float2(1)-abs(outOfBounds))
     }
     
+    var currentCrop = IMPRegion()
+    
+    func crop(sender:UIButton)  {
+        var ucropOffset:Float = 1
+        var scropOffset:Float = 1
+        
+        if let t = filter.source?.texture {
+            
+            let aspect = t.width.float/t.height.float
+            var isPortrate = false
+            if aspect < 1 {
+                isPortrate = true
+            }
+            
+            switch sender.tag {
+            case 11:
+                if isPortrate {
+                    scropOffset =  aspect
+                }
+                else {
+                    ucropOffset =  1/aspect
+                }
+            case 32:
+                if isPortrate {
+                    ucropOffset =   (2/3) / aspect
+                }
+                else {
+                    scropOffset =  aspect / (3/2)
+                }
+            case 169:
+                if isPortrate {
+                    ucropOffset =  (9/16) / aspect
+                }
+                else {
+                    scropOffset =  aspect / (16/9)
+                }
+            case 43:
+                if isPortrate{
+                    ucropOffset =  (3/4) / aspect
+                }
+                else {
+                    scropOffset =  aspect / (4/3)
+                }
+            default:
+                scropOffset = 1
+                ucropOffset = 1
+            }
+            
+            let soffset = (1-scropOffset)/2
+            let uoffset = (1-ucropOffset)/2
+            
+            print("aspect = \(aspect)  soffset = \(soffset) uoffset =\(uoffset)")
+            
+            currentCrop = IMPRegion(left: uoffset, right: uoffset, top: soffset, bottom: soffset)
+            
+            cropFilter.region = currentCropRegion
+            
+            checkBounds()
+        }
+    }
+    
     private let cropAngleScaleContainer = UIView(frame: CGRect(x: 0, y: Config.ScreenHeight - Config.AppTabBarHeight - 52,
         width: Config.ScreenWidth, height: 52.0))
     
@@ -361,6 +424,63 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         resetButton.snp_makeConstraints { (make) -> Void in
             make.centerY.equalTo(albumButton.snp_centerY).offset(0)
             make.right.equalTo(view).offset(-20)
+        }
+
+        let crop11Button = UIButton(type: .System)
+        
+        crop11Button.backgroundColor = IMPColor.clearColor()
+        crop11Button.tag       = 11
+        crop11Button.tintColor = IMPColor.whiteColor()
+        crop11Button.setImage(IMPImage(named: "crop1x1"), forState: .Normal)
+        crop11Button.addTarget(self, action: #selector(self.crop(_:)), forControlEvents: .TouchUpInside)
+        view.addSubview(crop11Button)
+        
+        crop11Button.snp_makeConstraints { (make) -> Void in
+            make.centerY.equalTo(albumButton.snp_centerY).offset(0)
+            make.right.equalTo(resetButton.snp_left).offset(-15)
+        }
+        
+        let crop169Button = UIButton(type: .System)
+        
+        crop169Button.backgroundColor = IMPColor.clearColor()
+        crop169Button.tag       = 169
+        crop169Button.tintColor = IMPColor.whiteColor()
+        crop169Button.setImage(IMPImage(named: "crop16x9"), forState: .Normal)
+        crop169Button.addTarget(self, action: #selector(self.crop(_:)), forControlEvents: .TouchUpInside)
+        view.addSubview(crop169Button)
+        
+        crop169Button.snp_makeConstraints { (make) -> Void in
+            make.centerY.equalTo(albumButton.snp_centerY).offset(0)
+            make.right.equalTo(crop11Button.snp_left).offset(-10)
+        }
+
+        let crop32Button = UIButton(type: .System)
+        
+        crop32Button.backgroundColor = IMPColor.clearColor()
+        crop32Button.tag       = 32
+        crop32Button.tintColor = IMPColor.whiteColor()
+        crop32Button.setImage(IMPImage(named: "crop3x2"), forState: .Normal)
+        crop32Button.addTarget(self, action: #selector(self.crop(_:)), forControlEvents: .TouchUpInside)
+        view.addSubview(crop32Button)
+        
+        crop32Button.snp_makeConstraints { (make) -> Void in
+            make.centerY.equalTo(albumButton.snp_centerY).offset(0)
+            make.right.equalTo(crop169Button.snp_left).offset(-10)
+        }
+        
+
+        let crop43Button = UIButton(type: .System)
+        
+        crop43Button.backgroundColor = IMPColor.clearColor()
+        crop43Button.tag       = 43
+        crop43Button.tintColor = IMPColor.whiteColor()
+        crop43Button.setImage(IMPImage(named: "crop4x3"), forState: .Normal)
+        crop43Button.addTarget(self, action: #selector(self.crop(_:)), forControlEvents: .TouchUpInside)
+        view.addSubview(crop43Button)
+        
+        crop43Button.snp_makeConstraints { (make) -> Void in
+            make.centerY.equalTo(albumButton.snp_centerY).offset(0)
+            make.right.equalTo(crop32Button.snp_left).offset(-10)
         }
     }
     
