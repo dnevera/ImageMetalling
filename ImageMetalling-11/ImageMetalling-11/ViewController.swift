@@ -316,59 +316,41 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var currentCrop = IMPRegion()
     
     func crop(sender:UIButton)  {
-        var ucropOffset:Float = 1
-        var scropOffset:Float = 1
+        var ucropOffset:Float = 0
+        var scropOffset:Float = 0
         
         if let t = filter.source?.texture {
             
-            let aspect = t.width.float/t.height.float
-            
-            var isPortrate = false
-            
-            if aspect < 1 {
-                isPortrate = true
-            }
+            let aspect    = t.width.float/t.height.float
+            var newAspect = aspect
             
             switch sender.tag {
             case 11:
-                if isPortrate {
-                    scropOffset =  aspect
-                }
-                else {
-                    ucropOffset =  1/aspect
-                }
+                newAspect = 1
             case 32:
-                if isPortrate {
-                    ucropOffset =   (2/3) / aspect
-                }
-                else {
-                    scropOffset =  aspect / (3/2)
-                }
+                newAspect = 3/2
             case 169:
-                if isPortrate {
-                    ucropOffset =  (9/16) / aspect
-                }
-                else {
-                    scropOffset =  aspect / (16/9)
-                }
+                newAspect = 16/9
             case 43:
-                if isPortrate{
-                    ucropOffset =  (3/4) / aspect
-                }
-                else {
-                    scropOffset =  aspect / (4/3)
-                }
+                newAspect = 4/3
             default:
-                scropOffset = 1
-                ucropOffset = 1
+                newAspect = aspect
             }
             
-            let soffset:Float = 0.1 //(1-scropOffset)/2
-            let uoffset:Float = 0.15 //(1-ucropOffset)/2
+            if aspect < 1 { // portrait
+                newAspect = 1/newAspect
+            }
             
-            print("aspect = \(aspect)  soffset = \(soffset) uoffset =\(uoffset)")
+            let ratio = aspect / newAspect
             
-            currentCrop = IMPRegion(left: uoffset, right: uoffset, top: soffset, bottom: soffset)
+            if ratio <= 1 {
+                scropOffset = (1 - aspect / newAspect)/2
+            }
+            else {
+                ucropOffset = (1 - newAspect / aspect )/2
+            }
+            
+            currentCrop = IMPRegion(left: ucropOffset, right: ucropOffset, top: scropOffset, bottom: scropOffset)
             
             cropFilter.region = currentCropRegion
             
