@@ -15,7 +15,7 @@ import ImageIO
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
-    let animateDuration:NSTimeInterval = UIApplication.sharedApplication().statusBarOrientationAnimationDuration
+    let animateDuration:NSTimeInterval = UIApplication.sharedApplication().statusBarOrientationAnimationDuration / 2 
     
     var context = IMPContext()
     
@@ -322,7 +322,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let t = filter.source?.texture {
             
             let aspect = t.width.float/t.height.float
+            
             var isPortrate = false
+            
             if aspect < 1 {
                 isPortrate = true
             }
@@ -361,8 +363,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 ucropOffset = 1
             }
             
-            let soffset = (1-scropOffset)/2
-            let uoffset = (1-ucropOffset)/2
+            let soffset:Float = 0.1 //(1-scropOffset)/2
+            let uoffset:Float = 0.15 //(1-ucropOffset)/2
             
             print("aspect = \(aspect)  soffset = \(soffset) uoffset =\(uoffset)")
             
