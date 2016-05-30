@@ -45,13 +45,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return IMPCropFilter(context:self.context)
     }()
 
+
     var currentScaleFactor:Float {
         return IMPPlate(aspect: transformFilter.aspect).scaleFactorFor(model: transformFilter.model)
     }
     
     var currentCropRegion:IMPRegion {
-        let offset = (1 - currentScaleFactor * transformFilter.scale.x ) / 2
-        return IMPRegion(left: offset+currentCrop.left, right: offset+currentCrop.right, top: offset+currentCrop.top, bottom: offset+currentCrop.bottom)
+        let offset  = (1 - currentScaleFactor * transformFilter.scale.x ) / 2
+        let aspect  = currentCrop.width/currentCrop.height
+        let offsetx = offset * aspect
+        let offsety = offset
+        return IMPRegion(left: offsetx+currentCrop.left, right: offsetx+currentCrop.right, top: offsety+currentCrop.top, bottom: offsety+currentCrop.bottom)
     }
     
     var currentTranslationTimer:IMPDisplayTimer? {
@@ -79,8 +83,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         get {
             let aspect   = transformFilter.aspect
             let model    = transformFilter.model
-            
-            print(" outOfBounds, aspect = \(aspect)")
             
             //
             // Model of Cropped Quad
