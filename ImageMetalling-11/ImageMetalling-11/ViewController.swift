@@ -54,7 +54,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return IMPFilter(context:self.context)
     }()
     
-    lazy var transformFilter:IMPPhotoEditor = {
+    lazy var photoEditor:IMPPhotoEditor = {
         let f = IMPPhotoEditor(context:self.context)
         f.backgroundColor = IMPColor.blackColor()
         f.addDestinationObserver(destination: { (destination) in
@@ -62,27 +62,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         })
         return f
     }()
-    
-    lazy var cropFilter: IMPCropFilter = {
-        let f =  IMPCropFilter(context:self.context)
-        f.addDirtyObserver({
-            self.transformFilter.cropBounds = f.region
-        })
-        return f
-    }()
-
-
-    var currentScaleFactor:Float {
-        return IMPPhotoPlate(aspect: transformFilter.aspect).scaleFactorFor(model: transformFilter.model)
-    }
-    
-    var currentCropRegion:IMPRegion {
-        let offset  = (1 - currentScaleFactor * transformFilter.scale.x ) / 2
-        let aspect  = currentCrop.width/currentCrop.height
-        let offsetx = offset * aspect
-        let offsety = offset
-        return IMPRegion(left: offsetx+currentCrop.left, right: offsetx+currentCrop.right, top: offsety+currentCrop.top, bottom: offsety+currentCrop.bottom)
-    }
     
     
     lazy var animator:UIDynamicAnimator = UIDynamicAnimator(referenceView: self.imageView)
@@ -92,23 +71,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     func updateBounds(){
         
-        guard let anchor = transformFilter.anchor else { return }
+        guard let anchor = photoEditor.anchor else { return }
         
-        let spring = UIAttachmentBehavior(item: transformFilter, attachedToAnchor: anchor)
+        let spring = UIAttachmentBehavior(item: photoEditor, attachedToAnchor: anchor)
         
-        if transformFilter.scale.x <= 1 {
-            let offset = abs(transformFilter.outOfBounds)
+        if photoEditor.scale <= 1 {
+            let offset = abs(photoEditor.outOfBounds)
             
-            if offset.x < 0.1 * transformFilter.aspect && offset.y < 0.1 {
+            if offset.x < 0.1 * photoEditor.aspect && offset.y < 0.1 {
                 //
                 // remove oscilations
                 //
                 self.animator.removeAllBehaviors()
                 
-                let start = self.transformFilter.translation
-                let final = start - self.transformFilter.outOfBounds
+                let start = self.photoEditor.translation
+                let final = start - self.photoEditor.outOfBounds
                 IMPDisplayTimer.execute(duration: 0.2, options: .EaseOut, update: { (atTime) in
-                    self.transformFilter.translation = start.lerp(final: final, t: atTime.float)
+                    self.photoEditor.translation = start.lerp(final: final, t: atTime.float)
                     }, complete: { (flag) in
                 })
                 
@@ -133,8 +112,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             velocity = CGPoint(x: velocity.x,y: -velocity.y)
         }
         
-        let decelerate = UIDynamicItemBehavior(items: [transformFilter])
-        decelerate.addLinearVelocity(velocity, forItem: transformFilter)
+        let decelerate = UIDynamicItemBehavior(items: [photoEditor])
+        decelerate.addLinearVelocity(velocity, forItem: photoEditor)
         decelerate.resistance = 10
         
         decelerate.action = {
@@ -147,10 +126,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
  
     func checkBounds() {
         animator.removeAllBehaviors()
-        let start = self.transformFilter.translation
-        let final = start - self.transformFilter.outOfBounds
+        let start = self.photoEditor.translation
+        let final = start - self.photoEditor.outOfBounds
         IMPDisplayTimer.execute(duration: 0.2, options: .EaseOut, update: { (atTime) in
-            self.transformFilter.translation = start.lerp(final: final, t: atTime.float)
+            self.photoEditor.translation = start.lerp(final: final, t: atTime.float)
             }, complete: { (flag) in
         })
     }
@@ -164,8 +143,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         super.viewDidLoad()
         
-        filter.addFilter(transformFilter)
-        filter.addFilter(cropFilter)
+        filter.addFilter(photoEditor)
 
         imageView.filter = filter
         
@@ -192,8 +170,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func rotate(angle:Float) {
-        transformFilter.angle.z = angle
-        cropFilter.region = currentCropRegion
+        photoEditor.angle.z = angle
     }
     
     func didChangeAngle(value:Float) {
@@ -204,17 +181,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func reset(sender:UIButton){
         animator.removeAllBehaviors()
         currentCrop = IMPRegion()
-        cropFilter.region = currentCrop
+        photoEditor.region = currentCrop
 
         self.cropAngleScaleView.valueChangeHandler = {_ in }
         self.cropAngleScaleView.reset()
         
-        let startScale = transformFilter.scale
-        let startTranslation = transformFilter.translation
-        let startAngle = transformFilter.angle.z
+        let startScale = photoEditor.scale
+        let startTranslation = photoEditor.translation
+        let startAngle = photoEditor.angle.z
         IMPDisplayTimer.execute(duration: 0.3, options: .EaseOut, update: { (atTime) in
-            self.transformFilter.translation = startTranslation.lerp(final: float2(0), t: atTime.float)
-            self.transformFilter.scale = startScale.lerp(final: float3(1), t: atTime.float)
+            self.photoEditor.translation = startTranslation.lerp(final: float2(0), t: atTime.float)
+            self.photoEditor.scale = startScale.lerp(final: 1, t: atTime.float)
             self.rotate(startAngle.lerp(final: 0, t: atTime.float))
         }) { (flag) in
             self.cropAngleScaleView.valueChangeHandler = self.angleChangeHandler
@@ -249,11 +226,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         if gesture.state == .Began {
             animator.removeAllBehaviors()
-            initialScale = transformFilter.scale.x
+            initialScale = photoEditor.scale
         }
         else if gesture.state == .Changed {
             let factor = initialScale * gesture.scale.float
-            transformFilter.scale(factor: factor)
+            photoEditor.scale = factor
             checkBounds()
         }
         else if gesture.state == .Ended{
@@ -335,9 +312,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let x = 1/w * finger_point_offset.x.float
         let y = -1/h * finger_point_offset.y.float
         
-        let f = IMPPhotoPlate(aspect: transformFilter.aspect).scaleFactorFor(model: transformFilter.model)
+        let f = IMPPhotoPlate(aspect: photoEditor.aspect).scaleFactorFor(model: photoEditor.model)
         
-        return float2(x,y) * f * transformFilter.scale.x
+        return float2(x,y) * f * photoEditor.scale
     }
     
     var lastDistance = float2(0)
@@ -345,7 +322,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func translateImage(gesture:UIPanGestureRecognizer)  {
         finger_point = convertOrientation(gesture.locationInView(imageView))
         lastDistance  = panningDistance()
-        transformFilter.translation -= lastDistance * (float2(1)-abs(transformFilter.outOfBounds))
+        photoEditor.translation -= lastDistance * (float2(1)-abs(photoEditor.outOfBounds))
     }
     
     var currentCrop = IMPRegion()
@@ -385,9 +362,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 ucropOffset = (1 - newAspect / aspect )/2
             }
             
-            currentCrop = IMPRegion(left: ucropOffset, right: ucropOffset, top: scropOffset, bottom: scropOffset)
-            
-            cropFilter.region = currentCropRegion
+            photoEditor.crop = IMPRegion(left: ucropOffset, right: ucropOffset, top: scropOffset, bottom: scropOffset)
             
             checkBounds()
         }

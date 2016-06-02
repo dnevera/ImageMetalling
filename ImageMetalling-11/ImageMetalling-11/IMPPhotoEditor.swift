@@ -8,14 +8,99 @@
 
 import IMProcessing
 
-public class IMPPhotoEditor: IMPTransformFilter, UIDynamicItem{
+public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
     
-    //
-    // Conversions between absolute view port of View and model presentation
-    //
-    public var cropBounds:IMPRegion? = nil
+    public required init(context: IMPContext) {
+        super.init(context: context)
+        addFilter(photo)
+        addFilter(cropFilter)
+    }
+    
+    public lazy var photo:IMPTransformFilter = {
+        return IMPTransformFilter(context: self.context)
+    }()
+    
+    
+    lazy var cropFilter:IMPCropFilter = {
+        return IMPCropFilter(context:self.context)
+    }()
+    
+    
+    var currentScaleFactor:Float {
+        return IMPPhotoPlate(aspect: aspect).scaleFactorFor(model: model)
+    }
+    
+    var currentCropRegion:IMPRegion {
+        let offset  = (1 - currentScaleFactor * scale ) / 2
+        let aspect  = crop.width/crop.height
+        let offsetx = offset * aspect
+        let offsety = offset
+        return IMPRegion(left: offsetx+crop.left, right: offsetx+crop.right, top: offsety+crop.top, bottom: offsety+crop.bottom)
+    }
+
+    public var crop = IMPRegion() {
+        didSet{
+            region = currentCropRegion
+        }
+    }
+    
+    public var region: IMPRegion {
+        set {
+            cropFilter.region = newValue
+            dirty = true
+        }
+        get {
+            return cropFilter.region
+        }
+    }
+    
+    public var backgroundColor:IMPColor {
+        get {
+            return photo.backgroundColor
+        }
+        set {
+            photo.backgroundColor = newValue
+        }
+    }
+    
+    public var aspect:Float {
+            return photo.aspect
+    }
+    
+    public var model:IMPMatrixModel {
+        return photo.model
+    }
+        
+    public var translation:float2 {
+        set{
+            photo.translation = newValue
+        }
+        get {
+            return photo.translation
+        }
+    }
+
+    public var angle:float3 {
+        set {
+            photo.angle = newValue
+            region = currentCropRegion
+        }
+        get{
+            return photo.angle
+        }
+    }
+
+    public var scale:Float {
+        set {
+            photo.scale(factor: newValue)
+        }
+        get{
+            return photo.scale.x
+        }
+    }
+    
     public var viewPort:CGRect? = nil
-    
+
     //
     // Conform to UIDynamicItem
     //
@@ -33,6 +118,7 @@ public class IMPPhotoEditor: IMPTransformFilter, UIDynamicItem{
         }
     }
     
+    
     public var bounds:CGRect {
         get {
             return CGRect(x: 0, y: 0, width: 1, height: 1)
@@ -44,15 +130,13 @@ public class IMPPhotoEditor: IMPTransformFilter, UIDynamicItem{
     public var outOfBounds:float2 {
         get {
             
-            guard let crop=self.cropBounds else { return float2(0) }
-            
             let aspect   = self.aspect
             let model    = self.model
             
             //
             // Model of Cropped Quad
             //
-            let cropQuad = IMPQuad(region:crop, aspect: aspect)
+            let cropQuad = IMPQuad(region:cropFilter.region, aspect: aspect)
             
             //
             // Model of transformed Quad
@@ -72,7 +156,7 @@ public class IMPPhotoEditor: IMPTransformFilter, UIDynamicItem{
         }
     }
     
-    public var anchor:CGPoint? {
+    public var anchor:CGPoint?  {
         get {
             guard let size = viewPort?.size else { return nil }
             
