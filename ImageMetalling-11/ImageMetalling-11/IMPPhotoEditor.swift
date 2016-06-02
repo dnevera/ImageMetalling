@@ -16,7 +16,7 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         addFilter(cropFilter)
     }
     
-    public lazy var photo:IMPTransformFilter = {
+    lazy var photo:IMPTransformFilter = {
         return IMPTransformFilter(context: self.context)
     }()
     
@@ -44,7 +44,7 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         }
     }
     
-    public var region: IMPRegion {
+    var region: IMPRegion {
         set {
             cropFilter.region = newValue
             dirty = true

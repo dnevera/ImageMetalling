@@ -31,7 +31,7 @@ public func / (left:CGPoint, right:Float) -> CGPoint {
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
-    let animateDuration:NSTimeInterval = UIApplication.sharedApplication().statusBarOrientationAnimationDuration / 2 
+    let animateDuration:NSTimeInterval = UIApplication.sharedApplication().statusBarOrientationAnimationDuration 
     
     var context = IMPContext()
     
@@ -68,7 +68,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var deceleration:UIDynamicItemBehavior?
     var spring:UIAttachmentBehavior?
     
-
     func updateBounds(){
         
         guard let anchor = photoEditor.anchor else { return }
@@ -86,7 +85,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 
                 let start = self.photoEditor.translation
                 let final = start - self.photoEditor.outOfBounds
-                IMPDisplayTimer.execute(duration: 0.2, options: .EaseOut, update: { (atTime) in
+                IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
                     self.photoEditor.translation = start.lerp(final: final, t: atTime.float)
                     }, complete: { (flag) in
                 })
@@ -128,7 +127,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         animator.removeAllBehaviors()
         let start = self.photoEditor.translation
         let final = start - self.photoEditor.outOfBounds
-        IMPDisplayTimer.execute(duration: 0.2, options: .EaseOut, update: { (atTime) in
+        IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
             self.photoEditor.translation = start.lerp(final: final, t: atTime.float)
             }, complete: { (flag) in
         })
@@ -176,26 +175,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func didChangeAngle(value:Float) {
         rotate(value)
         checkBounds()
-    }
-    
-    func reset(sender:UIButton){
-        animator.removeAllBehaviors()
-        currentCrop = IMPRegion()
-        photoEditor.region = currentCrop
-
-        self.cropAngleScaleView.valueChangeHandler = {_ in }
-        self.cropAngleScaleView.reset()
-        
-        let startScale = photoEditor.scale
-        let startTranslation = photoEditor.translation
-        let startAngle = photoEditor.angle.z
-        IMPDisplayTimer.execute(duration: 0.3, options: .EaseOut, update: { (atTime) in
-            self.photoEditor.translation = startTranslation.lerp(final: float2(0), t: atTime.float)
-            self.photoEditor.scale = startScale.lerp(final: 1, t: atTime.float)
-            self.rotate(startAngle.lerp(final: 0, t: atTime.float))
-        }) { (flag) in
-            self.cropAngleScaleView.valueChangeHandler = self.angleChangeHandler
-        }
     }
     
     var finger_point_offset = NSPoint()
@@ -325,8 +304,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         photoEditor.translation -= lastDistance * (float2(1)-abs(photoEditor.outOfBounds))
     }
     
-    var currentCrop = IMPRegion()
-    
     func crop(sender:UIButton)  {
         var ucropOffset:Float = 0
         var scropOffset:Float = 0
@@ -362,9 +339,37 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 ucropOffset = (1 - newAspect / aspect )/2
             }
             
-            photoEditor.crop = IMPRegion(left: ucropOffset, right: ucropOffset, top: scropOffset, bottom: scropOffset)
-            
-            checkBounds()
+            let start = photoEditor.crop
+            let final = IMPRegion(left: ucropOffset, right: ucropOffset, top: scropOffset, bottom: scropOffset)
+
+            IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
+                self.photoEditor.crop = start.lerp(final: final, t: atTime.float)
+                }, complete: { (flag) in
+                    self.checkBounds()
+            })
+        }
+    }
+    
+    func reset(sender:UIButton){
+        animator.removeAllBehaviors()
+        
+        self.cropAngleScaleView.valueChangeHandler = {_ in }
+        self.cropAngleScaleView.reset()
+        
+        let startScale = photoEditor.scale
+        let startTranslation = photoEditor.translation
+        let startAngle = photoEditor.angle.z
+        
+        let startCrop = photoEditor.crop
+        let finalCrop = IMPRegion()
+
+        IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
+            self.photoEditor.translation = startTranslation.lerp(final: float2(0), t: atTime.float)
+            self.photoEditor.scale = startScale.lerp(final: 1, t: atTime.float)
+            self.rotate(startAngle.lerp(final: 0, t: atTime.float))
+            self.photoEditor.crop = startCrop.lerp(final: finalCrop, t: atTime.float)
+        }) { (flag) in
+            self.cropAngleScaleView.valueChangeHandler = self.angleChangeHandler
         }
     }
     
@@ -480,6 +485,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func openAlbum(sender:UIButton){
         imagePicker = UIImagePickerController()
+    }
+    
+    var aflag = true
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if aflag {
+            imagePicker = UIImagePickerController()
+            aflag = false
+        }
     }
     
     var imagePicker:UIImagePickerController!{
