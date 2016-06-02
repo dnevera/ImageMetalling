@@ -13,6 +13,22 @@ import SnapKit
 import ImageIO
 
 
+public func * (left:CGPoint, right:CGPoint) -> CGPoint {
+    return CGPoint(x: left.x*right.x, y: left.y*right.y)
+}
+
+public func / (left:CGPoint, right:CGPoint) -> CGPoint {
+    return CGPoint(x: left.x/right.x, y: left.y/right.y)
+}
+
+public func * (left:CGPoint, right:Float) -> CGPoint {
+    return CGPoint(x: left.x*right, y: left.y*right)
+}
+
+public func / (left:CGPoint, right:Float) -> CGPoint {
+    return CGPoint(x: left.x/right, y: left.y/right)
+}
+
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     let animateDuration:NSTimeInterval = UIApplication.sharedApplication().statusBarOrientationAnimationDuration / 2 
@@ -27,7 +43,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         let pan = UIPanGestureRecognizer(target: self, action: #selector(self.panHandler(_:)))
         v.addGestureRecognizer(pan)
-        
+
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(self.scaleHandler(_:)))
+        v.addGestureRecognizer(pinch)
+
         return v
     }()
     
@@ -80,8 +99,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if transformFilter.scale.x <= 1 {
             let offset = abs(transformFilter.outOfBounds)
             
-            print("***** \(offset)")
-            
             if offset.x < 0.1 * transformFilter.aspect && offset.y < 0.1 {
                 //
                 // remove oscilations
@@ -100,8 +117,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         
         spring.length    = 0
-        spring.damping   = 1
-        spring.frequency = 2
+        spring.damping   = 0.5
+        spring.frequency = 1
         
         animator.addBehavior(spring)
         self.spring = spring
@@ -115,18 +132,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             velocity = g.velocityInView(imageView)
             velocity = CGPoint(x: velocity.x,y: -velocity.y)
         }
-        else {
-            var offset = transformFilter.outOfBounds
-            if simd.distance(offset,float2(0)) > 0 {
-                offset = offset * float2(imageView.bounds.size.width.float,imageView.bounds.size.height.float) * 100
-                velocity = CGPoint(x: offset.x.cgfloat,y: -offset.y.cgfloat)
-            }
-        }
         
         let decelerate = UIDynamicItemBehavior(items: [transformFilter])
         decelerate.addLinearVelocity(velocity, forItem: transformFilter)
-        decelerate.resistance = 1
-        deceleration?.density = 1
+        decelerate.resistance = 10
         
         decelerate.action = {
             self.updateBounds()
@@ -179,16 +188,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         cunfigureUI()
     }
     
-    func didChangeAngle(value:Float) {
-        transformFilter.angle.z = value
+    func rotate(angle:Float) {
+        transformFilter.angle.z = angle
         cropFilter.region = currentCropRegion
+    }
+    
+    func didChangeAngle(value:Float) {
+        rotate(value)
         checkBounds()
     }
     
     func reset(sender:UIButton){
-        cropAngleScaleView.reset()
+        animator.removeAllBehaviors()
         currentCrop = IMPRegion()
         cropFilter.region = currentCrop
+        
+        let startScale = transformFilter.scale
+        let startTranslation = transformFilter.translation
+        let startAngle = transformFilter.angle.z
+        IMPDisplayTimer.execute(duration: 0.1, options: .EaseOut, update: { (atTime) in
+            self.transformFilter.translation = startTranslation.lerp(final: float2(0), t: atTime.float)
+            self.transformFilter.scale = startScale.lerp(final: float3(1), t: atTime.float)
+            self.rotate(startAngle.lerp(final: 0, t: atTime.float))
+        }) { (flag) in
+           self.cropAngleScaleView.reset()
+        }
     }
     
     var finger_point_offset = NSPoint()
@@ -212,6 +236,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             tapUp(gesture)
         }
     }
+    
+    var initialScale:Float = 1
+    
+    func scaleHandler(gesture:UIPinchGestureRecognizer)  {
+        
+        if gesture.state == .Began {
+            animator.removeAllBehaviors()
+            initialScale = transformFilter.scale.x
+        }
+        else if gesture.state == .Changed {
+            let factor = initialScale * gesture.scale.float
+            transformFilter.scale(factor: factor)
+            checkBounds()
+        }
+        else if gesture.state == .Ended{
+            checkBounds()
+        }
+    }
+
     
     func  convertOrientation(point:NSPoint) -> NSPoint {
         
