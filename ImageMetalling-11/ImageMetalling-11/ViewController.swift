@@ -341,7 +341,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             let start = photoEditor.crop
             let final = IMPRegion(left: ucropOffset, right: ucropOffset, top: scropOffset, bottom: scropOffset)
-
+            
             IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
                 self.photoEditor.crop = start.lerp(final: final, t: atTime.float)
                 }, complete: { (flag) in
@@ -362,7 +362,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         let startCrop = photoEditor.crop
         let finalCrop = IMPRegion()
-
+        
         IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
             self.photoEditor.translation = startTranslation.lerp(final: float2(0), t: atTime.float)
             self.photoEditor.scale = startScale.lerp(final: 1, t: atTime.float)

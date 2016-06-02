@@ -40,17 +40,7 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
 
     public var crop = IMPRegion() {
         didSet{
-            region = currentCropRegion
-        }
-    }
-    
-    var region: IMPRegion {
-        set {
-            cropFilter.region = newValue
-            dirty = true
-        }
-        get {
-            return cropFilter.region
+            cropFilter.region = currentCropRegion
         }
     }
     
@@ -83,7 +73,7 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
     public var angle:float3 {
         set {
             photo.angle = newValue
-            region = currentCropRegion
+            cropFilter.region = currentCropRegion
         }
         get{
             return photo.angle
