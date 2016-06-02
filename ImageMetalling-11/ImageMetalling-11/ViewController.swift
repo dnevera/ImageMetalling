@@ -155,6 +155,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         })
     }
     
+    
+    lazy var angleChangeHandler:((value: CGFloat) -> Void) = {[unowned self] (value: CGFloat) -> Void in
+        self.didChangeAngle(((value.float * 9) % 360).radians)
+    }
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -175,9 +180,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             return NSMutableAttributedString(string: text, attributes: attrs)
         }
         
-        cropAngleScaleView.valueChangeHandler = {[unowned self] (value: CGFloat) -> Void in
-            self.didChangeAngle(((value.float * 9) % 360).radians)
-        }
+        cropAngleScaleView.valueChangeHandler = angleChangeHandler
         
         self.view.insertSubview(imageView, atIndex: 0)
         
@@ -202,16 +205,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         animator.removeAllBehaviors()
         currentCrop = IMPRegion()
         cropFilter.region = currentCrop
+
+        self.cropAngleScaleView.valueChangeHandler = {_ in }
+        self.cropAngleScaleView.reset()
         
         let startScale = transformFilter.scale
         let startTranslation = transformFilter.translation
         let startAngle = transformFilter.angle.z
-        IMPDisplayTimer.execute(duration: 0.1, options: .EaseOut, update: { (atTime) in
+        IMPDisplayTimer.execute(duration: 0.3, options: .EaseOut, update: { (atTime) in
             self.transformFilter.translation = startTranslation.lerp(final: float2(0), t: atTime.float)
             self.transformFilter.scale = startScale.lerp(final: float3(1), t: atTime.float)
             self.rotate(startAngle.lerp(final: 0, t: atTime.float))
         }) { (flag) in
-           self.cropAngleScaleView.reset()
+            self.cropAngleScaleView.valueChangeHandler = self.angleChangeHandler
         }
     }
     
