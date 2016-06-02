@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31759B2B1D008BA6009061E5 /* IMPPhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31759B2A1D008BA6009061E5 /* IMPPhotoEditor.swift */; };
 		31D692DB1CFB36E5006E665B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D692DA1CFB36E5006E665B /* AppDelegate.swift */; };
 		31D692DD1CFB36E5006E665B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D692DC1CFB36E5006E665B /* ViewController.swift */; };
 		31D692E01CFB36E5006E665B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 31D692DE1CFB36E5006E665B /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		0480AEC68932688161621830 /* Pods_ImageMetalling_11.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_11.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		31759B2A1D008BA6009061E5 /* IMPPhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPPhotoEditor.swift; sourceTree = "<group>"; };
 		31D692D71CFB36E5006E665B /* ImageMetalling-11.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-11.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31D692DA1CFB36E5006E665B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		31D692DC1CFB36E5006E665B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -52,6 +54,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		31759B291D008B24009061E5 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				31D692EF1CFB3909006E665B /* IMPAssets.swift */,
+				31759B2A1D008BA6009061E5 /* IMPPhotoEditor.swift */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
 		31D692CE1CFB36E5006E665B = {
 			isa = PBXGroup;
 			children = (
@@ -73,10 +84,10 @@
 		31D692D91CFB36E5006E665B /* ImageMetalling-11 */ = {
 			isa = PBXGroup;
 			children = (
+				31759B291D008B24009061E5 /* Classes */,
 				31D692EC1CFB37A1006E665B /* Shaders */,
 				31D692DA1CFB36E5006E665B /* AppDelegate.swift */,
 				31D692DC1CFB36E5006E665B /* ViewController.swift */,
-				31D692EF1CFB3909006E665B /* IMPAssets.swift */,
 				31D692DE1CFB36E5006E665B /* Main.storyboard */,
 				31D692E11CFB36E5006E665B /* Assets.xcassets */,
 				31D692E31CFB36E5006E665B /* LaunchScreen.storyboard */,
@@ -227,6 +238,7 @@
 				31D692DD1CFB36E5006E665B /* ViewController.swift in Sources */,
 				31D692EE1CFB37A1006E665B /* IMPMain_metal.metal in Sources */,
 				31D692DB1CFB36E5006E665B /* AppDelegate.swift in Sources */,
+				31759B2B1D008BA6009061E5 /* IMPPhotoEditor.swift in Sources */,
 				31D692F01CFB3909006E665B /* IMPAssets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
