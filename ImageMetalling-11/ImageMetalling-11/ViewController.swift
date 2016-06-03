@@ -219,12 +219,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             checkBounds()
         }
         else if gesture.state == .Ended{
-            if photoEditor.scale < 1 {
+            if photoEditor.scale < 1 || photoEditor.scale > 4 {
                 
                 let start = photoEditor.scale
+                let final:Float =  photoEditor.scale > 4 ? 4 : 1
                 
                 IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
-                    self.photoEditor.scale = start.lerp(final: 1, t: atTime.float)
+                    self.photoEditor.scale = start.lerp(final: final, t: atTime.float)
                     }, complete: { (flag) in
                         self.checkBounds()
                 })
