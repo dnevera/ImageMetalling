@@ -208,15 +208,32 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             initialScale = photoEditor.scale
         }
         else if gesture.state == .Changed {
-            let factor = initialScale * gesture.scale.float
+            
+            var factor = initialScale * gesture.scale.float
+            
+            if factor<1{
+                factor = pow(factor, 1/4)
+            }
+            
             photoEditor.scale = factor
             checkBounds()
         }
         else if gesture.state == .Ended{
-            checkBounds()
+            if photoEditor.scale < 1 {
+                
+                let start = photoEditor.scale
+                
+                IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
+                    self.photoEditor.scale = start.lerp(final: 1, t: atTime.float)
+                    }, complete: { (flag) in
+                        self.checkBounds()
+                })
+            }
+            else {
+                self.checkBounds()
+            }
         }
     }
-
     
     func  convertOrientation(point:NSPoint) -> NSPoint {
         
@@ -291,13 +308,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let x = 1/w * finger_point_offset.x.float
         let y = -1/h * finger_point_offset.y.float
         
-        let f = IMPPhotoPlate(aspect: photoEditor.aspect).scaleFactorFor(model: photoEditor.model)
+        let friction:Float = 0.1
+        let sx =  springBand(friction, offset: finger_point_offset.x.float, dimension: w)/w
+        let sy = -springBand(friction, offset: finger_point_offset.y.float, dimension: h)/h
         
-        return float2(x,y) * f * photoEditor.scale
+        return float2(x+sx,y+sy) * photoEditor.cropedFactor
     }
     
     var lastDistance = float2(0)
     
+    func springBand(friction:Float, offset:Float, dimension:Float) -> Float {
+        let result = (friction * abs(offset) * dimension) / (dimension + friction * abs(offset))
+        return offset < 0.0 ? -result : result;
+    }
+
     func translateImage(gesture:UIPanGestureRecognizer)  {
         finger_point = convertOrientation(gesture.locationInView(imageView))
         lastDistance  = panningDistance()

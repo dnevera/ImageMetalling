@@ -89,6 +89,10 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         }
     }
     
+    public var cropedFactor:Float {
+        return IMPPhotoPlate(aspect: aspect).scaleFactorFor(model: model) * scale
+    }
+    
     public var viewPort:CGRect? = nil
 
     //
@@ -126,7 +130,7 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
             //
             // Model of Cropped Quad
             //
-            let cropQuad = IMPQuad(region:cropFilter.region, aspect: aspect)
+            let cropQuad = IMPQuad(region:cropFilter.region, aspect: aspect, scale: 1)
             
             //
             // Model of transformed Quad
