@@ -8,28 +8,52 @@
 
 import IMProcessing
 
+///
+/// Контейнер геометрических операцие над изобраением и 
+/// расширений для анимационного дивжка UIDynamicAnimator
+///
 public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
+   
+    //
+    // Прикинемся винтажными инженерами и будем рассуждать в рамках объектов темной комнаты
+    // 1. Фото-пластина (или фото-отпечаток, но пластина как-то еще винтажнее)
+    // 2. Фото-ножницы
+    // 3. Светлый стол или просмотровщик
+    //
+    // Фото пластину можно вращать премещать по ней проекцию изображения и увеличивать/уменьшать.
+    // 
+    // Ножницами резать то что напечатали. Пластину можно перемщать по смотровому столу. 
+    // Стол оборудуем динамическими движками для более удобного перемещения. 
+    //
     
-    public required init(context: IMPContext) {
-        super.init(context: context)
-        addFilter(photo)
-        addFilter(cropFilter)
-    }
-    
+    /// Трансформирующией операции
     lazy var photo:IMPTransformFilter = {
         return IMPTransformFilter(context: self.context)
     }()
     
-    
+    /// Отрезание лишнего
     lazy var cropFilter:IMPCropFilter = {
         return IMPCropFilter(context:self.context)
     }()
+
+    public required init(context: IMPContext) {
+        super.init(context: context)
+        /// конструктор цепочки геометрических фильтров
+        addFilter(photo)
+        addFilter(cropFilter)
+    }
     
-    
+    //
+    // Коэффициент масштабирования трансформированного четерехугольника вписанного в модель 
+    // фото-пластины
+    //
     var currentScaleFactor:Float {
         return IMPPhotoPlate(aspect: aspect).scaleFactorFor(model: model)
     }
     
+    //
+    // Размер результирующей фото-пластиный
+    //
     var currentCropRegion:IMPRegion {
         let offset  = (1 - currentScaleFactor * scale ) / 2
         let aspect  = crop.width/crop.height
@@ -38,12 +62,18 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         return IMPRegion(left: offsetx+crop.left, right: offsetx+crop.right, top: offsety+crop.top, bottom: offsety+crop.bottom)
     }
 
+    ///
+    /// Фото-ножницы
+    ///
     public var crop = IMPRegion() {
         didSet{
             cropFilter.region = currentCropRegion
         }
     }
     
+    ///
+    /// Цвет заливки полей пластины
+    ///
     public var backgroundColor:IMPColor {
         get {
             return photo.backgroundColor
@@ -53,14 +83,23 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         }
     }
     
+    ///
+    /// Соотношение сторон пластины
+    ///
     public var aspect:Float {
             return photo.aspect
     }
     
+    ///
+    /// Модель пластины в терминах матричных операций (тут уж винтажем не прикроемся...)
+    ///
     public var model:IMPMatrixModel {
         return photo.model
     }
-        
+    
+    ///
+    /// Операция перемещения проекции по фотопластине
+    ///
     public var translation:float2 {
         set{
             photo.translation = newValue
@@ -70,6 +109,9 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         }
     }
 
+    ///
+    /// Угол поворота пластиный в пространстве
+    ///
     public var angle:float3 {
         set {
             photo.angle = newValue
@@ -80,6 +122,9 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         }
     }
 
+    ///
+    /// Кожффициент увеличения
+    ///
     public var scale:Float {
         set {
             photo.scale(factor: newValue)
@@ -89,15 +134,51 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         }
     }
     
+    ///
+    /// Полезный атрибут
+    ///
     public var cropedFactor:Float {
         return IMPPhotoPlate(aspect: aspect).scaleFactorFor(model: model) * scale
     }
     
+    ///
+    /// Окно проекции в просмотровщике
+    ///
     public var viewPort:CGRect? = nil
 
-    //
-    // Conform to UIDynamicItem
-    //
+    ///
+    /// Для вычисления выхода за границы нам нужно получить вектор сдвига
+    ///
+    public var outOfBounds:float2 {
+        get {
+            
+            let aspect   = self.aspect
+            let model    = self.model
+            
+            //
+            // Создаем четырех-угольник с установленным кропом и соотношением сторон
+            //
+            let cropQuad = IMPQuad(region:cropFilter.region, aspect: aspect, scale: 1)
+            
+            //
+            // Содаем четырех-угольную модель пластины с учетом соотношения сторон и прикладываем к ней модель трансформации.
+            // Снимаем у модели координаты вершин в формате структур четырех-угольник
+            //
+            let transformedQuad = IMPPhotoPlate(aspect: aspect).quad(model: model)
+            
+            //
+            // Получаем смещение нашего кропа относительно трансформированной пластины -
+            // по сути получаем величину движения на которое нам надо сдвинуть пластину на столе фото-ножниц
+            //
+            return transformedQuad.translation(quad: cropQuad)
+        }
+    }
+    
+    //// MARK - Поддержка протокола динамических айтемов движка UIDynamicAnimator
+    
+    ///
+    /// Центр пластины привязываем к левому нижнему углу
+    ///
     public var center:CGPoint {
         set{
             if let size = viewPort?.size {
@@ -112,44 +193,26 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         }
     }
     
-    
+    ///
+    /// Фиксируем относительный размер в относительных координатах для определения отношения 
+    /// с другими объектами
+    ///
     public var bounds:CGRect {
         get {
             return CGRect(x: 0, y: 0, width: 1, height: 1)
         }
     }
     
+    ///
+    /// Трансформации оставляем пустыми - будем управлять ими самостоятельно, тем более что UIDynamics 
+    /// по факту работает только с поворотами
+    ///
     public var transform = CGAffineTransform()
     
-    public var outOfBounds:float2 {
-        get {
-            
-            let aspect   = self.aspect
-            let model    = self.model
-            
-            //
-            // Model of Cropped Quad
-            //
-            let cropQuad = IMPQuad(region:cropFilter.region, aspect: aspect, scale: 1)
-            
-            //
-            // Model of transformed Quad
-            // Transformation matrix of the model can be the same which transformation filter has or it can be computed independently
-            //
-            let transformedQuad = IMPPhotoPlate(aspect: aspect).quad(model: model)
-            
-            //
-            // Offset for transformed quad which should contain inscribed croped quad
-            //
-            // NOTE:
-            // 1. quads should be rectangle
-            // 2. scale of transformed quad should be great then or equal scaleFactorFor for the transformed model:
-            //    IMPPhotoPlate(aspect: transformFilter.aspect).scaleFactorFor(model: model)
-            //
-            return transformedQuad.translation(quad: cropQuad)
-        }
-    }
     
+    ///
+    /// Якорь, к которому цепляем viewPort просмотровщика
+    ///
     public var anchor:CGPoint?  {
         get {
             guard let size = viewPort?.size else { return nil }

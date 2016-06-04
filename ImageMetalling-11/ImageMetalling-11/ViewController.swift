@@ -13,28 +13,70 @@ import SnapKit
 import ImageIO
 
 
-public func * (left:CGPoint, right:CGPoint) -> CGPoint {
-    return CGPoint(x: left.x*right.x, y: left.y*right.y)
-}
-
-public func / (left:CGPoint, right:CGPoint) -> CGPoint {
-    return CGPoint(x: left.x/right.x, y: left.y/right.y)
-}
-
-public func * (left:CGPoint, right:Float) -> CGPoint {
-    return CGPoint(x: left.x*right, y: left.y*right)
-}
-
-public func / (left:CGPoint, right:Float) -> CGPoint {
-    return CGPoint(x: left.x/right, y: left.y/right)
-}
-
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
+    ///
+    /// Настройка анимации
+    ///
     let animateDuration:NSTimeInterval = UIApplication.sharedApplication().statusBarOrientationAnimationDuration 
     
+    ///
+    /// Контекст фильтрации
+    ///
     var context = IMPContext()
     
+    ///
+    /// Ну... загружаем все...
+    ///
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        
+        ///
+        /// Создаем и добавляем к фильтру "опереторскую" (фильтр фото-редактора)
+        ///
+        filter.addFilter(photoEditor)
+        
+        ///
+        /// Водружаем все на просмотровый стол
+        ///
+        imageView.filter = filter
+        
+        ///
+        /// Привязываем колесо поворота к автоматическим движкам "операторской"
+        ///
+        cropAngleScaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in
+            let attrs = [NSForegroundColorAttributeName: UIColor.whiteColor(),
+                         NSFontAttributeName: UIFont.systemFontOfSize(12.0)]
+            
+            let updatedValue = value * 9.0
+            let sign = updatedValue > 0 ? "+" : ""
+            let text = sign + String(format: "%.2f°", updatedValue)
+            
+            return NSMutableAttributedString(string: text, attributes: attrs)
+        }
+        
+        cropAngleScaleView.valueChangeHandler = angleChangeHandler
+        
+        self.view.insertSubview(imageView, atIndex: 0)
+        
+        ///
+        /// Нас могут повернуть вокрух оси, что-бы не потерять ориентир - реагируем синхронным 
+        /// поворотом всех инструментов в операторской
+        ///
+        IMPMotionManager.sharedInstance.addRotationObserver { (orientation) in
+            self.imageView.setOrientation(orientation, animate: true)
+        }
+        
+        ///
+        /// всякая обычная UI-шняга
+        ///
+        cunfigureUI()
+    }
+
+    //
+    // Окно просмотрового стола
+    //
     lazy var imageView:IMPView = {
         let v = IMPView(context: (self.filter.context)!,  frame: CGRectMake( 0, 20,
             self.view.bounds.size.width,
@@ -50,13 +92,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return v
     }()
     
+    //
+    // Фильтр процессинга
+    //
     lazy var filter:IMPFilter = {
         return IMPFilter(context:self.context)
     }()
     
+    //
+    // Операторская
+    //
     lazy var photoEditor:IMPPhotoEditor = {
         let f = IMPPhotoEditor(context:self.context)
+        //
+        // Поля красим в черный цвет
+        //
         f.backgroundColor = IMPColor.blackColor()
+        //
+        // При смене ориентации меняем размеры просмотровщика
+        //
         f.addDestinationObserver(destination: { (destination) in
             f.viewPort = self.imageView.layer.bounds
         })
@@ -64,10 +118,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }()
     
     
+    ///
+    /// Аниматор "физических" движений из UIKit
+    ///
     lazy var animator:UIDynamicAnimator = UIDynamicAnimator(referenceView: self.imageView)
+    
+    ///
+    /// Декселератор дивжения на "толкание" пластины
+    ///
     var deceleration:UIDynamicItemBehavior?
+    
+    ///
+    /// Пружинка цепляется к краям пластины при пересечении граци стола просмотра или фото-ножниц
+    ///
     var spring:UIAttachmentBehavior?
     
+    ///
+    /// Обработка события движения и проверка границ пластины на столе и под ножницами
+    ///
     func updateBounds(){
         
         guard let anchor = photoEditor.anchor else { return }
@@ -102,13 +170,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.spring = spring
     }
     
+    ///
+    /// Дигать до границ
+    ///
     func decelerateToBonds(gesture:UIPanGestureRecognizer? = nil) {
         
         var velocity = CGPoint()
         
         if let g = gesture {
             velocity = g.velocityInView(imageView)
-            velocity = CGPoint(x: velocity.x,y: -velocity.y)
+            let o = imageView.orientation
+            if UIDeviceOrientationIsPortrait(o) {
+                velocity = CGPoint(x: velocity.x, y: -velocity.y)
+            }
+            else if UIDeviceOrientationIsLandscape(o){
+                let s:CGFloat = (o == .LandscapeLeft ? 1 : -1)
+                velocity = CGPoint(x: s * velocity.y, y:  s * velocity.x)
+            }
         }
         
         let decelerate = UIDynamicItemBehavior(items: [photoEditor])
@@ -123,6 +201,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
  
+    ///
+    /// После любого не "кинетического" движения просто возвращаем пластину на место с помощью таймера
+    ///
     func checkBounds() {
         animator.removeAllBehaviors()
         let start = self.photoEditor.translation
@@ -133,42 +214,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         })
     }
     
-    
+
     lazy var angleChangeHandler:((value: CGFloat) -> Void) = {[unowned self] (value: CGFloat) -> Void in
         self.didChangeAngle(((value.float * 9) % 360).radians)
     }
-    
-    override func viewDidLoad() {
-        
-        super.viewDidLoad()
-        
-        filter.addFilter(photoEditor)
 
-        imageView.filter = filter
-        
-        cropAngleScaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in
-            let attrs = [NSForegroundColorAttributeName: UIColor.whiteColor(),
-                         NSFontAttributeName: UIFont.systemFontOfSize(12.0)]
-            
-            let updatedValue = value * 9.0
-            let sign = updatedValue > 0 ? "+" : ""
-            let text = sign + String(format: "%.2f°", updatedValue)
-            
-            return NSMutableAttributedString(string: text, attributes: attrs)
-        }
-        
-        cropAngleScaleView.valueChangeHandler = angleChangeHandler
-        
-        self.view.insertSubview(imageView, atIndex: 0)
-        
-        IMPMotionManager.sharedInstance.addRotationObserver { (orientation) in
-            self.imageView.setOrientation(orientation, animate: true)
-        }
-        
-        cunfigureUI()
-    }
-    
     func rotate(angle:Float) {
+        ///
+        /// Поворачиваем фотопластину
+        ///
+        ///
         photoEditor.angle.z = angle
     }
     
@@ -215,6 +270,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 factor = pow(factor, 1/4)
             }
             
+            ///
+            /// Увеличиваем и уменьшаем просмотр
+            ///
+            ///
             photoEditor.scale = factor
             checkBounds()
         }
@@ -236,6 +295,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    ///
+    /// Конвертер физических координат тачскрина в текущие относительно поворота
+    /// координат вьюпорта металического слоя окна вывода
+    ///
     func  convertOrientation(point:NSPoint) -> NSPoint {
         
         let o = imageView.orientation
@@ -244,9 +307,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             return point
         }
         
-        //
-        // adjust absolute coordinates to relative
-        //
         var new_point = point
         
         let w = imageView.bounds.size.width.float
@@ -255,22 +315,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         new_point.x = new_point.x/w.cgfloat * 2 - 1
         new_point.y = new_point.y/h.cgfloat * 2 - 1
         
-        // make relative point
         var p = float4(new_point.x.float,new_point.y.float,0,1)
         
-        // make idenity transformation
         var identity = IMPMatrixModel.identity
         
         if o == .PortraitUpsideDown {
-            //
-            // rotate up-side-down
-            //
             identity.rotateAround(vector: IMPMatrixModel.degrees180)
             
-            // transform point
             p  =  float4x4(identity.transform) * p
             
-            // back to absolute coords
             new_point.x = (p.x.cgfloat+1)/2 * w
             new_point.y = (p.y.cgfloat+1)/2 * h
         }
@@ -326,10 +379,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func translateImage(gesture:UIPanGestureRecognizer)  {
         finger_point = convertOrientation(gesture.locationInView(imageView))
         lastDistance  = panningDistance()
+        
+        ///  
+        ///  Перемещаем пластину
+        ///
+        ///
         photoEditor.translation -= lastDistance * (float2(1)-abs(photoEditor.outOfBounds))
     }
     
     func crop(sender:UIButton)  {
+        
         var ucropOffset:Float = 0
         var scropOffset:Float = 0
         
@@ -368,6 +427,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let final = IMPRegion(left: ucropOffset, right: ucropOffset, top: scropOffset, bottom: scropOffset)
             
             IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
+                ///
+                /// Отрезаем с анимацией
+                ///
+                ///
                 self.photoEditor.crop = start.lerp(final: final, t: atTime.float)
                 }, complete: { (flag) in
                     self.checkBounds()
@@ -546,3 +609,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
 }
 
+public func * (left:CGPoint, right:CGPoint) -> CGPoint {
+    return CGPoint(x: left.x*right.x, y: left.y*right.y)
+}
+
+public func / (left:CGPoint, right:CGPoint) -> CGPoint {
+    return CGPoint(x: left.x/right.x, y: left.y/right.y)
+}
+
+public func * (left:CGPoint, right:Float) -> CGPoint {
+    return CGPoint(x: left.x*right, y: left.y*right)
+}
+
+public func / (left:CGPoint, right:Float) -> CGPoint {
+    return CGPoint(x: left.x/right, y: left.y/right)
+}

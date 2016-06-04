@@ -6,7 +6,6 @@ target 'ImageMetalling-11' do
     pod 'SnapKit'
     pod 'ScalePicker'
     pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
-    #pod 'IMProcessing', :path => '../../degradr/IMProcessing'
 end
 
 post_install do |installer|
