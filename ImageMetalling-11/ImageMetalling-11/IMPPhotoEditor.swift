@@ -13,7 +13,7 @@ import IMProcessing
 /// расширений для анимационного дивжка UIDynamicAnimator
 ///
 public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
-   
+       
     //
     // Прикинемся винтажными инженерами и будем рассуждать в рамках объектов темной комнаты
     // 1. Фото-пластина (или фото-отпечаток, но пластина как-то еще винтажнее)
@@ -47,16 +47,23 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
     // Коэффициент масштабирования трансформированного четерехугольника вписанного в модель 
     // фото-пластины
     //
-    var currentScaleFactor:Float {
-        return IMPPhotoPlate(aspect: aspect).scaleFactorFor(model: model)
+    var currentCropFactor:Float = 1
+    func updateCropFactor() {
+        currentCropFactor = IMPPhotoPlate(aspect: aspect).scaleFactorFor(model: model)
+        let minScale = IMPPhotoPlate(aspect: aspect).scaleFactorFor(model: IMPTransfromModel.with(model: model, angle: IMPTransfromModel.left45, scale:float3(1)))
+        if currentCropFactor < minScale {
+            currentCropFactor = minScale
+        }
+        currentCropFactor *= scale
     }
     
     //
     // Размер результирующей фото-пластиный
     //
     var currentCropRegion:IMPRegion {
-        let offset  = (1 - currentScaleFactor * scale ) / 2
+        var offset  = (1 - currentCropFactor ) / 2
         let aspect  = crop.width/crop.height
+        if  offset < 0 { offset = 0 }
         let offsetx = offset * aspect
         let offsety = offset
         return IMPRegion(left: offsetx+crop.left, right: offsetx+crop.right, top: offsety+crop.top, bottom: offsety+crop.bottom)
@@ -93,7 +100,7 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
     ///
     /// Модель пластины в терминах матричных операций (тут уж винтажем не прикроемся...)
     ///
-    public var model:IMPMatrixModel {
+    public var model:IMPTransfromModel {
         return photo.model
     }
     
@@ -115,6 +122,7 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
     public var angle:float3 {
         set {
             photo.angle = newValue
+            updateCropFactor()
             cropFilter.region = currentCropRegion
         }
         get{
@@ -128,6 +136,8 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
     public var scale:Float {
         set {
             photo.scale(factor: newValue)
+            updateCropFactor()
+            cropFilter.region = currentCropRegion
         }
         get{
             return photo.scale.x
@@ -151,12 +161,8 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
     ///
     public var outOfBounds:float2 {
         get {
-            
-            let aspect   = self.aspect
-            let model    = self.model
-            
             //
-            // Создаем четырех-угольник с установленным кропом и соотношением сторон
+            // Создаем четырехугольник с установленным кропом и соотношением сторон
             //
             let cropQuad = IMPQuad(region:cropFilter.region, aspect: aspect, scale: 1)
             
@@ -170,7 +176,7 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
             // Получаем смещение нашего кропа относительно трансформированной пластины -
             // по сути получаем величину движения на которое нам надо сдвинуть пластину на столе фото-ножниц
             //
-            return transformedQuad.translation(quad: cropQuad)
+            return IMPTransfromModel.with(angle: -angle).transform(point: transformedQuad.translation(quad: cropQuad))
         }
     }
     
