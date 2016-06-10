@@ -169,7 +169,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     ///
-    /// Дигать до границ
+    /// Двигать до границ
     ///
     func decelerateToBonds(gesture:UIPanGestureRecognizer? = nil) {
         
@@ -190,7 +190,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         
         //
-        // Пересчитываемвектор скорости относительно угла наклона viewPort (камеры)
+        // Пересчитываем вектор скорости относительно угла наклона viewPort (камеры)
         //
         velocity = IMPTransfromModel.with(angle:-photoEditor.model.angle).transform(point: velocity)
         
