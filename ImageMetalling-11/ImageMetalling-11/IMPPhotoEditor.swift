@@ -13,7 +13,7 @@ import IMProcessing
 /// расширений для анимационного дивжка UIDynamicAnimator
 ///
 public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
-       
+    
     //
     // Прикинемся винтажными инженерами и будем рассуждать в рамках объектов темной комнаты
     // 1. Фото-пластина (или фото-отпечаток, но пластина как-то еще винтажнее)
@@ -42,7 +42,7 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         addFilter(photo)
         addFilter(cropFilter)
     }
-    
+     
     //
     // Коэффициент масштабирования трансформированного четерехугольника вписанного в модель 
     // фото-пластины
@@ -67,6 +67,12 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         let offsetx = offset * aspect
         let offsety = offset
         return IMPRegion(left: offsetx+crop.left, right: offsetx+crop.right, top: offsety+crop.top, bottom: offsety+crop.bottom)
+    }
+
+    public func lerp(start start: IMPTransfromModel, final:IMPTransfromModel, t:Float) {
+        angle = start.angle.lerp(final: final.angle, t: t)
+        translation = start.translation.lerp(final: final.translation, t: t).xy
+        scale = start.scale.lerp(final: final.scale, t: t).x
     }
 
     ///
