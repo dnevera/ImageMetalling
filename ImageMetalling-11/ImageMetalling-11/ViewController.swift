@@ -18,7 +18,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     ///
     /// Настройка анимации
     ///
-    let animateDuration:NSTimeInterval = UIApplication.sharedApplication().statusBarOrientationAnimationDuration 
+    let animateDuration:NSTimeInterval = UIApplication.sharedApplication().statusBarOrientationAnimationDuration
     
     ///
     /// Контекст фильтрации
@@ -88,7 +88,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(self.scaleHandler(_:)))
         v.addGestureRecognizer(pinch)
-
+        
+        let press = UILongPressGestureRecognizer(target: self, action: #selector(self.pressHandler(_:)))
+        press.minimumPressDuration = 0.05
+        v.addGestureRecognizer(press)
+        
         return v
     }()
     
@@ -133,6 +137,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     ///
     var spring:UIAttachmentBehavior?
     
+    var oscilations = 0
+    
     ///
     /// Обработка события движения и проверка границ пластины на столе и под ножницами
     ///
@@ -141,30 +147,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         guard let anchor = photoEditor.anchor else { return }
         
         let spring = UIAttachmentBehavior(item: photoEditor, attachedToAnchor: anchor)
+
+        if self.oscilations >= 1 {
+            //
+            // Снижаем осциляцию динамики при приближении к краям кропа
+            //
+            self.deceleration?.resistance = 50
+            return
+        }
         
-        if photoEditor.scale <= 1 {
-            let offset = abs(photoEditor.outOfBounds)
-            
-            if offset.x < 0.1 * photoEditor.aspect && offset.y < 0.1 {
-                //
-                // remove oscilations
-                //
-                self.animator.removeAllBehaviors()
-                
-                let start = self.photoEditor.translation
-                let final = start - self.photoEditor.outOfBounds
-                IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
-                    self.photoEditor.translation = start.lerp(final: final, t: atTime.float)
-                    }, complete: { (flag) in
-                })
-                
-                return
-            }
+        spring.action = {
+            self.oscilations += 1
         }
         
         spring.length    = 0
         spring.damping   = 0.5
-        spring.frequency = 1
+        spring.frequency = 2
         
         animator.addBehavior(spring)
         self.spring = spring
@@ -174,6 +172,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     /// Дигать до границ
     ///
     func decelerateToBonds(gesture:UIPanGestureRecognizer? = nil) {
+        
+        oscilations = 0
         
         var velocity = CGPoint()
         
@@ -189,12 +189,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
         }
         
+        //
+        // Пересчитываемвектор скорости относительно угла наклона viewPort (камеры)
+        //
+        velocity = IMPTransfromModel.with(angle:-photoEditor.model.angle).transform(point: velocity)
+        
+        velocity = velocity * UIScreen.mainScreen().scale.float
+        
         let decelerate = UIDynamicItemBehavior(items: [photoEditor])
         decelerate.addLinearVelocity(velocity, forItem: photoEditor)
         decelerate.resistance = 10
         
         decelerate.action = {
-            self.updateBounds()
+            let v = distance(float2(point: decelerate.linearVelocityForItem(self.photoEditor)), float2(0))
+            let o = distance(self.photoEditor.outOfBounds, float2(0))
+            if o >= 0.5 || v < 50 {
+                self.updateBounds()
+            }
         }
         self.animator.addBehavior(decelerate)
         self.deceleration = decelerate
@@ -204,14 +215,33 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     ///
     /// После любого не "кинетического" движения просто возвращаем пластину на место с помощью таймера
     ///
-    func checkBounds() {
+    func checkBounds(startHandler:(()->Void)?=nil) {
+        //
+        // Удаляем все аниматоры
+        //
         animator.removeAllBehaviors()
+        
+        // Начальная точка
         let start = self.photoEditor.translation
+        
+        // Конечная точка
         let final = start - self.photoEditor.outOfBounds
-        IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
-            self.photoEditor.translation = start.lerp(final: final, t: atTime.float)
-            }, complete: { (flag) in
-        })
+        
+        var isStarted = true
+        
+        IMPDisplayTimer.cancelAll()
+        IMPDisplayTimer.execute(duration: animateDuration, // общее время анимации
+                                options: .EaseOut,         // кривая анимации
+                                update: { (atTime) in
+                                    if let s = startHandler {
+                                        if isStarted {
+                                            s()
+                                            isStarted = false
+                                        }
+                                    }
+                                    // линейный интерполятор движения то времени в интервале 0...1
+                                    self.photoEditor.translation = start.lerp(final: final, t: atTime.float)
+            })
     }
     
 
@@ -238,19 +268,34 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var finger_point = NSPoint() {
         didSet{
             finger_point_before = oldValue
-            finger_point_offset = finger_point_before - finger_point
+            ///
+            /// пересчитываем сдвиг относительно нулевой точки в конетксте модели трансформации
+            ///
+            finger_point_offset = IMPTransfromModel.with(model:photoEditor.model,
+                                                         translation:float3(0)).transform(point:finger_point_before - finger_point)
         }
     }
     
+    func pressHandler(gesture:UIPanGestureRecognizer) {
+        if gesture.state == .Began {
+            animator.removeAllBehaviors()
+            IMPDisplayTimer.cancelAll()
+        }
+        else if gesture.state == .Ended {
+            checkBounds()
+        }
+    }
+    
+
     func panHandler(gesture:UIPanGestureRecognizer)  {
         if gesture.state == .Began {
-            tapDown(gesture)
+            panningStart(gesture)
         }
         else if gesture.state == .Changed {
             translateImage(gesture)
         }
         else if gesture.state == .Ended{
-            tapUp(gesture)
+            panningStop(gesture)
         }
     }
     
@@ -283,10 +328,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 let start = photoEditor.scale
                 let final:Float =  photoEditor.scale > 4 ? 4 : 1
                 
+                IMPDisplayTimer.cancelAll()
                 IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
                     self.photoEditor.scale = start.lerp(final: final, t: atTime.float)
                     }, complete: { (flag) in
-                        self.checkBounds()
+                        if flag {
+                            self.checkBounds()
+                        }
                 })
             }
             else {
@@ -296,8 +344,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     ///
-    /// Конвертер физических координат тачскрина в текущие относительно поворота
-    /// координат вьюпорта металического слоя окна вывода
+    /// Конвертер физических координат тачскрина устройства в текущие относительно поворота
+    /// координат вьюпорта
     ///
     func  convertOrientation(point:NSPoint) -> NSPoint {
         
@@ -315,26 +363,33 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         new_point.x = new_point.x/w.cgfloat * 2 - 1
         new_point.y = new_point.y/h.cgfloat * 2 - 1
         
-        var p = float4(new_point.x.float,new_point.y.float,0,1)
+        var p = float2(new_point.x.float,new_point.y.float)
         
-        var identity = IMPMatrixModel.identity
+        var model =  IMPTransfromModel()
         
         if o == .PortraitUpsideDown {
-            identity.rotateAround(vector: IMPMatrixModel.degrees180)
+
+            //
+            // Девайс перевернут - переворачиваем точку
+            //
+            model.angle = IMPTransfromModel.degrees180
             
-            p  =  float4x4(identity.transform) * p
+            p  =  model.transform(point: p)
             
             new_point.x = (p.x.cgfloat+1)/2 * w
             new_point.y = (p.y.cgfloat+1)/2 * h
         }
         else {
             if o == .LandscapeLeft {
-                identity.rotateAround(vector: IMPMatrixModel.right)
+                
+                model.angle = IMPTransfromModel.right
                 
             }else if o == .LandscapeRight {
-                identity.rotateAround(vector: IMPMatrixModel.left)
+                
+                model.angle = IMPTransfromModel.left
+                
             }
-            p  =  float4x4(identity.transform) * p
+            p  =  model.transform(point: p)
             
             new_point.x = (p.x.cgfloat+1)/2 * h
             new_point.y = (p.y.cgfloat+1)/2 * w
@@ -343,14 +398,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return new_point
     }
     
-    func tapDown(gesture:UIPanGestureRecognizer) {
+    func panningStart(gesture:UIPanGestureRecognizer) {
+        animator.removeAllBehaviors()
+        IMPDisplayTimer.cancelAll()
+
         finger_point = convertOrientation(gesture.locationInView(imageView))
         finger_point_before = finger_point
         finger_point_offset = NSPoint(x: 0,y: 0)
-        animator.removeAllBehaviors()
     }
     
-    func tapUp(gesture:UIPanGestureRecognizer) {
+    func panningStop(gesture:UIPanGestureRecognizer) {
         decelerateToBonds(gesture)
     }
     
@@ -426,14 +483,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let start = photoEditor.crop
             let final = IMPRegion(left: ucropOffset, right: ucropOffset, top: scropOffset, bottom: scropOffset)
             
-            IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
+            IMPDisplayTimer.cancelAll()
+            imageView.animationDuration = 0
+            IMPDisplayTimer.execute(duration: animateDuration, options: .Linear, update: { (atTime) in
                 ///
                 /// Отрезаем с анимацией
                 ///
                 ///
                 self.photoEditor.crop = start.lerp(final: final, t: atTime.float)
                 }, complete: { (flag) in
-                    self.checkBounds()
+                    self.imageView.animationDuration = self.animateDuration
+                    if flag {
+                        self.checkBounds()
+                    }
             })
         }
     }
@@ -444,20 +506,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.cropAngleScaleView.valueChangeHandler = {_ in }
         self.cropAngleScaleView.reset()
         
-        let startScale = photoEditor.scale
-        let startTranslation = photoEditor.translation
-        let startAngle = photoEditor.angle.z
-        
         let startCrop = photoEditor.crop
         let finalCrop = IMPRegion()
         
+        let start = photoEditor.model
+        let final = IMPTransfromModel()
+        
+        IMPDisplayTimer.cancelAll()
         IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
-            self.photoEditor.translation = startTranslation.lerp(final: float2(0), t: atTime.float)
-            self.photoEditor.scale = startScale.lerp(final: 1, t: atTime.float)
-            self.rotate(startAngle.lerp(final: 0, t: atTime.float))
-            self.photoEditor.crop = startCrop.lerp(final: finalCrop, t: atTime.float)
+            let t = atTime.float
+            self.photoEditor.crop  = startCrop.lerp(final: finalCrop,        t: t)
+            self.photoEditor.lerp(start: start, final: final, t: t)
         }) { (flag) in
-            self.cropAngleScaleView.valueChangeHandler = self.angleChangeHandler
+            if flag {
+                self.cropAngleScaleView.valueChangeHandler = self.angleChangeHandler
+            }
         }
     }
     
@@ -603,10 +666,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         if let actualImage = chosenImage{
             cropAngleScaleView.reset()
-            imageView.filter?.source = IMPImageProvider(context: context, image: actualImage, maxSize: 1200)
+            let bounds = UIScreen.mainScreen().bounds
+            let size   = max(bounds.size.width, bounds.size.height) * UIScreen.mainScreen().scale
+            imageView.filter?.source = IMPImageProvider(context: context, image: actualImage, maxSize: size.float)
         }
     }
     
+}
+
+extension float2 {
+    init(point: NSPoint){
+        self = float2(point.x.float,point.y.float)
+    }
+}
+
+extension NSPoint {
+    init(vector: float2){
+        self = NSPoint(x: vector.x.cgfloat, y: vector.y.cgfloat)
+    }
 }
 
 public func * (left:CGPoint, right:CGPoint) -> CGPoint {
