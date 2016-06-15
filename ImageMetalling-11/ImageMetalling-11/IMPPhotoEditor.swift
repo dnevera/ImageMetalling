@@ -36,6 +36,16 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
         return IMPCropFilter(context:self.context)
     }()
 
+//    lazy var cropFilter:IMPVignetteFilter = {
+//        let f = IMPVignetteFilter(context:self.context, type:.Frame)
+//        f.adjustment.blending.opacity = 0.8
+//        f.adjustment.start = 0
+//        f.adjustment.end = 0
+//        f.adjustment.color = float3(0)
+//        return f
+//    }()
+    
+    
     public required init(context: IMPContext) {
         super.init(context: context)
         /// конструктор цепочки геометрических фильтров
@@ -49,8 +59,11 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
     //
     var currentCropFactor:Float = 1
     func updateCropFactor() {
-        currentCropFactor = IMPPhotoPlate(aspect: aspect).scaleFactorFor(model: model)
-        let minScale = IMPPhotoPlate(aspect: aspect).scaleFactorFor(model: IMPTransfromModel.with(model: model, angle: IMPTransfromModel.left45, scale:float3(1)))
+        let plate = IMPPhotoPlate(aspect: aspect)
+
+        currentCropFactor = plate.scaleFactorFor(model: model)
+        let minScale      = plate.scaleFactorFor(model: IMPTransfromModel.with(model: model, angle: IMPTransfromModel.left45))
+
         if currentCropFactor < minScale {
             currentCropFactor = minScale
         }
@@ -61,12 +74,16 @@ public class IMPPhotoEditor: IMPFilter, UIDynamicItem{
     // Размер результирующей фото-пластиный
     //
     var currentCropRegion:IMPRegion {
-        var offset  = (1 - currentCropFactor ) / 2
         let aspect  = crop.width/crop.height
+        var offset  = (1 - currentCropFactor ) / 2
         if  offset < 0 { offset = 0 }
         let offsetx = offset * aspect
         let offsety = offset
-        return IMPRegion(left: offsetx+crop.left, right: offsetx+crop.right, top: offsety+crop.top, bottom: offsety+crop.bottom)
+        let left   = (offsetx+crop.left)
+        let right  = (offsetx+crop.right)
+        let top    = (offsety+crop.top)
+        let bottom = (offsety+crop.bottom)
+        return IMPRegion(left: left, right: right, top: top, bottom: bottom)
     }
 
     public func lerp(start start: IMPTransfromModel, final:IMPTransfromModel, t:Float) {
