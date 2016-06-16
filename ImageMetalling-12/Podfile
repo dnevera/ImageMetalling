@@ -1,11 +1,9 @@
 
 use_frameworks!
 
-target 'ImageMetalling-11' do
-    platform :ios, '9.0'
+target 'ImageMetalling-12' do
+    platform :osx, '10.11'
     pod 'SnapKit'
-    pod 'ScalePicker'
-    #pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
     pod 'IMProcessing', :path => '../../degradr/IMProcessing'
 end
 

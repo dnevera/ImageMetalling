@@ -1,0 +1,396 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		313810711D0D796C00E97068 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313810701D0D796C00E97068 /* AppDelegate.swift */; };
+		313810731D0D796C00E97068 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313810721D0D796C00E97068 /* ViewController.swift */; };
+		313810751D0D796C00E97068 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 313810741D0D796C00E97068 /* Assets.xcassets */; };
+		313810781D0D796C00E97068 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 313810761D0D796C00E97068 /* Main.storyboard */; };
+		313810831D0D7B4200E97068 /* IMPMain_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 313810821D0D7B4200E97068 /* IMPMain_metal.metal */; };
+		313810871D0D7C1700E97068 /* IMPDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313810851D0D7C1600E97068 /* IMPDocument.swift */; };
+		313810881D0D7C1700E97068 /* IMPMenuHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313810861D0D7C1600E97068 /* IMPMenuHandler.swift */; };
+		3138108A1D103D6900E97068 /* IMPLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313810891D103D6900E97068 /* IMPLabel.swift */; };
+		31851EDF1D12AF0800D5CFC5 /* IMPGridGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31851EDE1D12AF0800D5CFC5 /* IMPGridGenerator.swift */; };
+		6B71CCD3254F0CE14A89931D /* Pods_ImageMetalling_12.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FA872E0E5D8AEFCCE242266 /* Pods_ImageMetalling_12.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0FA872E0E5D8AEFCCE242266 /* Pods_ImageMetalling_12.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_12.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3138106D1D0D796C00E97068 /* ImageMetalling-12.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-12.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		313810701D0D796C00E97068 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		313810721D0D796C00E97068 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		313810741D0D796C00E97068 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		313810771D0D796C00E97068 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		313810791D0D796C00E97068 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		313810821D0D7B4200E97068 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; };
+		313810851D0D7C1600E97068 /* IMPDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPDocument.swift; sourceTree = "<group>"; };
+		313810861D0D7C1600E97068 /* IMPMenuHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPMenuHandler.swift; sourceTree = "<group>"; };
+		313810891D103D6900E97068 /* IMPLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPLabel.swift; sourceTree = "<group>"; };
+		31851EDE1D12AF0800D5CFC5 /* IMPGridGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPGridGenerator.swift; sourceTree = "<group>"; };
+		391D92A51B1615358AD540EE /* Pods-ImageMetalling-12.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-12.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-12/Pods-ImageMetalling-12.debug.xcconfig"; sourceTree = "<group>"; };
+		F790D7F4C0CB6986EFAB027C /* Pods-ImageMetalling-12.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-12.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-12/Pods-ImageMetalling-12.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3138106A1D0D796C00E97068 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B71CCD3254F0CE14A89931D /* Pods_ImageMetalling_12.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0367E9732B7FBFF4E355A9DB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				391D92A51B1615358AD540EE /* Pods-ImageMetalling-12.debug.xcconfig */,
+				F790D7F4C0CB6986EFAB027C /* Pods-ImageMetalling-12.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		313810641D0D796C00E97068 = {
+			isa = PBXGroup;
+			children = (
+				3138106F1D0D796C00E97068 /* ImageMetalling-12 */,
+				3138106E1D0D796C00E97068 /* Products */,
+				0367E9732B7FBFF4E355A9DB /* Pods */,
+				E888F58A400FD15C0CA2458D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3138106E1D0D796C00E97068 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3138106D1D0D796C00E97068 /* ImageMetalling-12.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3138106F1D0D796C00E97068 /* ImageMetalling-12 */ = {
+			isa = PBXGroup;
+			children = (
+				313810841D0D7C1600E97068 /* Classes */,
+				313810811D0D7B4200E97068 /* Shaders */,
+				313810701D0D796C00E97068 /* AppDelegate.swift */,
+				313810721D0D796C00E97068 /* ViewController.swift */,
+				313810741D0D796C00E97068 /* Assets.xcassets */,
+				313810761D0D796C00E97068 /* Main.storyboard */,
+				313810791D0D796C00E97068 /* Info.plist */,
+			);
+			path = "ImageMetalling-12";
+			sourceTree = "<group>";
+		};
+		313810811D0D7B4200E97068 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				313810821D0D7B4200E97068 /* IMPMain_metal.metal */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		313810841D0D7C1600E97068 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				313810851D0D7C1600E97068 /* IMPDocument.swift */,
+				313810861D0D7C1600E97068 /* IMPMenuHandler.swift */,
+				313810891D103D6900E97068 /* IMPLabel.swift */,
+				31851EDE1D12AF0800D5CFC5 /* IMPGridGenerator.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		E888F58A400FD15C0CA2458D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0FA872E0E5D8AEFCCE242266 /* Pods_ImageMetalling_12.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3138106C1D0D796C00E97068 /* ImageMetalling-12 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3138107C1D0D796C00E97068 /* Build configuration list for PBXNativeTarget "ImageMetalling-12" */;
+			buildPhases = (
+				9331AD4A948F0314BFBB31E8 /* 📦 Check Pods Manifest.lock */,
+				313810691D0D796C00E97068 /* Sources */,
+				3138106A1D0D796C00E97068 /* Frameworks */,
+				3138106B1D0D796C00E97068 /* Resources */,
+				8427FF3A330FA2B5D120D0A7 /* 📦 Embed Pods Frameworks */,
+				5C87FC07EBF23429BCFFA993 /* 📦 Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ImageMetalling-12";
+			productName = "ImageMetalling-12";
+			productReference = 3138106D1D0D796C00E97068 /* ImageMetalling-12.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		313810651D0D796C00E97068 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = ImageMetalling;
+				TargetAttributes = {
+					3138106C1D0D796C00E97068 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 313810681D0D796C00E97068 /* Build configuration list for PBXProject "ImageMetalling-12" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 313810641D0D796C00E97068;
+			productRefGroup = 3138106E1D0D796C00E97068 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3138106C1D0D796C00E97068 /* ImageMetalling-12 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3138106B1D0D796C00E97068 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				313810751D0D796C00E97068 /* Assets.xcassets in Resources */,
+				313810781D0D796C00E97068 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5C87FC07EBF23429BCFFA993 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-12/Pods-ImageMetalling-12-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8427FF3A330FA2B5D120D0A7 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-12/Pods-ImageMetalling-12-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9331AD4A948F0314BFBB31E8 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		313810691D0D796C00E97068 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				313810881D0D7C1700E97068 /* IMPMenuHandler.swift in Sources */,
+				313810731D0D796C00E97068 /* ViewController.swift in Sources */,
+				313810871D0D7C1700E97068 /* IMPDocument.swift in Sources */,
+				3138108A1D103D6900E97068 /* IMPLabel.swift in Sources */,
+				313810831D0D7B4200E97068 /* IMPMain_metal.metal in Sources */,
+				31851EDF1D12AF0800D5CFC5 /* IMPGridGenerator.swift in Sources */,
+				313810711D0D796C00E97068 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		313810761D0D796C00E97068 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				313810771D0D796C00E97068 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3138107A1D0D796C00E97068 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3138107B1D0D796C00E97068 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		3138107D1D0D796C00E97068 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 391D92A51B1615358AD540EE /* Pods-ImageMetalling-12.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "ImageMetalling-12/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ImageMetalling.ImageMetalling-12";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3138107E1D0D796C00E97068 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F790D7F4C0CB6986EFAB027C /* Pods-ImageMetalling-12.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "ImageMetalling-12/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ImageMetalling.ImageMetalling-12";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		313810681D0D796C00E97068 /* Build configuration list for PBXProject "ImageMetalling-12" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3138107A1D0D796C00E97068 /* Debug */,
+				3138107B1D0D796C00E97068 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3138107C1D0D796C00E97068 /* Build configuration list for PBXNativeTarget "ImageMetalling-12" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3138107D1D0D796C00E97068 /* Debug */,
+				3138107E1D0D796C00E97068 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 313810651D0D796C00E97068 /* Project object */;
+}
