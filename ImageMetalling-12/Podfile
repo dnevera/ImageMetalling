@@ -4,7 +4,6 @@ use_frameworks!
 target 'ImageMetalling-12' do
     platform :osx, '10.11'
     pod 'SnapKit'
-    pod 'KFToolbar', :git => 'https://github.com/dnevera/KFToolbar'
     pod 'IMProcessing', :path => '../../degradr/IMProcessing'
 end
 
