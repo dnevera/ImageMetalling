@@ -257,10 +257,10 @@ class ViewController: NSViewController {
         
         view.addSubview(imageView)
         imageView.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(self.view.snp_top).offset(5)
+            make.top.equalTo(self.view.snp_top).offset(10)
             make.bottom.equalTo(self.toolBar.snp_top).offset(0)
-            make.left.equalTo(self.view).offset(5)
-            make.right.equalTo(self.view.snp_right).offset(-5)
+            make.left.equalTo(self.view).offset(10)
+            make.right.equalTo(self.view.snp_right).offset(0)
         }
     }
 
