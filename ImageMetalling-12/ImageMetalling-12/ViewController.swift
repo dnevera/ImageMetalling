@@ -75,6 +75,8 @@ class ViewController: NSViewController {
  
         t.enableFilterHandler = { (flag) in
             self.filter.enabled = flag
+            self.grid.enabled = t.enabledGrid
+            self.imageGrid.enabled = t.enabledGrid
         }
         
         t.enableAspectRatioHandler = { (flag) in
@@ -83,10 +85,12 @@ class ViewController: NSViewController {
         
         t.enableGridHandler = { (flag) in
             self.grid.enabled = flag
+            self.imageGrid.enabled = flag
         }
         
         t.gridSizeHendler = { (step) in
             self.grid.adjustment.step = uint(step)
+            self.imageGrid.adjustment.step = uint(step)
         }
         
         t.resetHandler = {
@@ -134,8 +138,8 @@ class ViewController: NSViewController {
         let f = IMPFilter(context: self.context)
         f.addFilter(self.imageGrid)
         f.addFilter(self.warp)
-        f.addFilter(self.grid)
         f.addFilter(self.crop)
+        f.addFilter(self.grid)
         return f
     }()
     
@@ -143,12 +147,31 @@ class ViewController: NSViewController {
         let v = IMPImageView(context: self.context, frame: self.view.bounds)
         v.filter = self.filter
         v.backgroundColor = IMPColor(color: IMPPrefs.colors.background)
+        
+        v.addMouseEventObserver({ (event) in
+            switch event.type {
+            case .LeftMouseDown:
+                self.localMouseDown(event)
+            case .LeftMouseUp:
+                self.localMouseUp(event)
+            case .MouseMoved:
+                self.localMouseMoved(event)
+            case .MouseExited:
+                if !self.touched {
+                    self.grid.adjustment.spotArea = IMPRegion.null
+                }
+            default:
+                break
+            }
+        })
+
         return v
     }()
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         
+        super.viewDidLoad()
+       
         if !IMPContext.supportsSystemDevice {
             
             self.asyncChanges({ () -> Void in
@@ -276,11 +299,11 @@ class ViewController: NSViewController {
     var touched = false
     var warpDelta:Float = 0.005
     
-    enum PointerPlace {
+    enum PointerPlace: Int {
         case LeftBottom
         case LeftTop
-        case RightBottom
         case RightTop
+        case RightBottom
         case Top
         case Bottom
         case Left
@@ -295,10 +318,10 @@ class ViewController: NSViewController {
         let w = self.imageView.frame.size.width.float
         let h = self.imageView.frame.size.height.float
         
-        if point.x > w/3 && point.x < w*2/3 && point.y < h/2 {
+        if point.x > w/3 && point.x < w*2/3 && point.y < h/3 {
             return .Bottom
         }
-        else if point.x < w/2 && point.y >= h/3 && point.y <= h*2/3 {
+        else if point.x < w/3 && point.y >= h/3 && point.y <= h*2/3 {
             return .Left
         }
         else if point.x < w/3 && point.y < h/3 {
@@ -308,23 +331,57 @@ class ViewController: NSViewController {
             return .LeftTop
         }
             
-        else if point.x > w/3 && point.x < w*2/3 && point.y > h/2 {
+        else if point.x > w/3 && point.x < w*2/3 && point.y > h*2/3 {
             return .Top
         }
-        else if point.x > w/2 && point.y >= h/3 && point.y <= h*2/3 {
+        else if point.x > w*2/3 && point.y >= h/3 && point.y <= h*2/3 {
             return .Right
         }
-        else if point.x > w/3 && point.y < h/3 {
+        else if point.x > w*2/3 && point.y < h/3 {
             return .RightBottom
         }
-        else if point.x > w/3 && point.y > h*2/3 {
+        else if point.x > w*2/3 && point.y > h*2/3 {
             return .RightTop
         }
         
         return .Undefined
     }
     
-    override func mouseDown(theEvent: NSEvent) {
+    func localMouseMoved(theEvent: NSEvent) {
+        
+        if touched {return}
+        
+        let event_location = theEvent.locationInWindow
+        let point = self.imageView.convertPoint(event_location,fromView:nil)
+        
+        switch getPointerPlace(point) {
+            
+        case .LeftBottom:
+            grid.adjustment.spotArea = IMPRegion(left: 0, right: 2/3, top: 0, bottom: 2/3)
+        case .Left:
+            grid.adjustment.spotArea = IMPRegion(left: 0, right: 2/3, top: 1/3, bottom: 1/3)
+        case .LeftTop:
+            grid.adjustment.spotArea = IMPRegion(left: 0, right: 2/3, top: 2/3, bottom: 0)
+            
+        case .Top:
+            grid.adjustment.spotArea = IMPRegion(left: 1/3, right: 1/3, top: 2/3, bottom: 0)
+        case .RightTop:
+            grid.adjustment.spotArea = IMPRegion(left: 2/3, right: 0, top: 2/3, bottom: 0)
+        case .Right:
+            grid.adjustment.spotArea = IMPRegion(left: 2/3, right: 0, top: 1/3, bottom: 1/3)
+   
+        case .RightBottom:
+            grid.adjustment.spotArea = IMPRegion(left: 2/3, right: 0, top: 0, bottom: 2/3)
+        case .Bottom:
+            grid.adjustment.spotArea = IMPRegion(left: 1/3, right: 1/3, top: 0, bottom: 2/3)
+
+        default:
+            grid.adjustment.spotArea = IMPRegion.null
+            break
+        }
+    }
+
+    func localMouseDown(theEvent: NSEvent) {
         let event_location = theEvent.locationInWindow
         mouse_point = self.imageView.convertPoint(event_location,fromView:nil)
         mouse_point_before = mouse_point
@@ -335,11 +392,12 @@ class ViewController: NSViewController {
         deltaStrechedQuad = warp.destinationQuad
     }
     
-    override func mouseUp(theEvent: NSEvent) {
+    func localMouseUp(theEvent: NSEvent) {
         
         touched = false
         deltaStrechedQuad = warp.destinationQuad-deltaStrechedQuad
-
+        grid.adjustment.spotArea = IMPRegion.null
+        
         if toolBar.enabledAspectRatio {
             stretchWarp()
         }
@@ -427,6 +485,7 @@ class ViewController: NSViewController {
     
     override func mouseDragged(theEvent: NSEvent) {
         pointerMoved(theEvent)
+        localMouseMoved(theEvent)
     }
     
     override func touchesMovedWithEvent(theEvent: NSEvent) {

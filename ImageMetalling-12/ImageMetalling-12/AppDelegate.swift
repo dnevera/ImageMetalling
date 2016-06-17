@@ -21,16 +21,12 @@ enum IMPPrefs{
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSToolbarDelegate{
-
-    @IBOutlet weak var window: NSWindow!
-
- 
+    
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
         for w in NSApp.windows{
             w.backgroundColor = IMPColor(color: IMPPrefs.colors.background)
         }
-        
         IMPDocument.sharedInstance.openRecentMenu = openRecentMenu
     }
 

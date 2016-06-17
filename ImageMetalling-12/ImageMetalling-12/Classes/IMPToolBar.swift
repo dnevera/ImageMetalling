@@ -46,7 +46,7 @@ public class IMPToolBar: NSView {
         
         let attributes = [ NSForegroundColorAttributeName : IMPColor.grayColor(), NSParagraphStyleAttributeName : pstyle ]
         
-        enableFilterButton.attributedTitle = NSAttributedString(string: "Enable", attributes: attributes)
+        enableFilterButton.attributedTitle = NSAttributedString(string: "After/Before", attributes: attributes)
         enableFilterButton.setButtonType(.SwitchButton)
         enableFilterButton.state = 1
         
@@ -95,7 +95,7 @@ public class IMPToolBar: NSView {
         
         gridButton.attributedTitle = NSAttributedString(string: "Grid", attributes: attributes)
         gridButton.setButtonType(.SwitchButton)
-        gridButton.state = 0
+        gridButton.state = 1
         
         gridButton.target = self
         gridButton.action = #selector(self.enableGrid(_:))
