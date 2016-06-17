@@ -8,7 +8,6 @@
 
 import Cocoa
 import IMProcessing
-import KFToolbar
 import simd
 
 enum IMPPrefs{

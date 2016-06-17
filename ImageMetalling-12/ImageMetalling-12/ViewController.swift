@@ -148,18 +148,20 @@ class ViewController: NSViewController {
         v.filter = self.filter
         v.backgroundColor = IMPColor(color: IMPPrefs.colors.background)
         
-        v.addMouseEventObserver({ (event) in
+        v.addMouseEventObserver({ (event, location, view) in
             switch event.type {
             case .LeftMouseDown:
-                self.localMouseDown(event)
+                self.localMouseDown(event, location:location, view:view)
             case .LeftMouseUp:
-                self.localMouseUp(event)
+                self.localMouseUp(event, location:location, view:view)
             case .MouseMoved:
-                self.localMouseMoved(event)
+                self.localMouseMoved(event, location:location, view:view)
             case .MouseExited:
                 if !self.touched {
                     self.grid.adjustment.spotArea = IMPRegion.null
                 }
+            case .LeftMouseDragged:
+                self.localMouseDragged(event, location:location, view:view)
             default:
                 break
             }
@@ -311,12 +313,19 @@ class ViewController: NSViewController {
         case Undefined
     }
     
+    func convertPoint(point:NSPoint) -> NSPoint {
+        let p  = float4(point.x.float,point.y.float,0,1)
+        let pn =  warp.model * p
+        print(" new point = \(pn.xy, point)")
+        return NSPoint(x: pn.x.cgfloat,y: pn.y.cgfloat)
+    }
+    
     var pointerPlace:PointerPlace = .Undefined
     
-    func getPointerPlace(point:NSPoint) ->  PointerPlace {
+    func getPointerPlace(point:NSPoint, view:NSView) ->  PointerPlace {
         
-        let w = self.imageView.frame.size.width.float
-        let h = self.imageView.frame.size.height.float
+        let w = view.frame.size.width.float
+        let h = view.frame.size.height.float
         
         if point.x > w/3 && point.x < w*2/3 && point.y < h/3 {
             return .Bottom
@@ -347,14 +356,14 @@ class ViewController: NSViewController {
         return .Undefined
     }
     
-    func localMouseMoved(theEvent: NSEvent) {
+    func localMouseMoved(theEvent: NSEvent, location:NSPoint, view:NSView) {
         
         if touched {return}
+
+        let point = location
         
-        let event_location = theEvent.locationInWindow
-        let point = self.imageView.convertPoint(event_location,fromView:nil)
         
-        switch getPointerPlace(point) {
+        switch getPointerPlace(point,view:view) {
             
         case .LeftBottom:
             grid.adjustment.spotArea = IMPRegion(left: 0, right: 2/3, top: 0, bottom: 2/3)
@@ -381,18 +390,18 @@ class ViewController: NSViewController {
         }
     }
 
-    func localMouseDown(theEvent: NSEvent) {
-        let event_location = theEvent.locationInWindow
-        mouse_point = self.imageView.convertPoint(event_location,fromView:nil)
+    func localMouseDown(theEvent: NSEvent, location:NSPoint, view:NSView) {
+        
+        mouse_point = location
         mouse_point_before = mouse_point
         mouse_point_offset = NSPoint(x: 0,y: 0)
         touched = true
         
-        pointerPlace = getPointerPlace(mouse_point)
+        pointerPlace = getPointerPlace(mouse_point, view: view)
         deltaStrechedQuad = warp.destinationQuad
     }
     
-    func localMouseUp(theEvent: NSEvent) {
+    func localMouseUp(theEvent: NSEvent, location:NSPoint, view:NSView) {
         
         touched = false
         deltaStrechedQuad = warp.destinationQuad-deltaStrechedQuad
@@ -430,16 +439,15 @@ class ViewController: NSViewController {
         }
     }
     
-    func pointerMoved(theEvent: NSEvent)  {
+    func pointerMoved(theEvent: NSEvent, location:NSPoint, view:NSView)  {
         if !touched {
             return
         }
         
-        let event_location = theEvent.locationInWindow
-        mouse_point = self.imageView.convertPoint(event_location,fromView:nil)
+        mouse_point = location
         
-        let w = self.imageView.frame.size.width.float
-        let h = self.imageView.frame.size.height.float
+        let w = view.frame.size.width.float
+        let h = view.frame.size.height.float
         
         let distancex = 1/w * mouse_point_offset.x.float
         let distancey = 1/h * mouse_point_offset.y.float
@@ -483,15 +491,11 @@ class ViewController: NSViewController {
         warp.destinationQuad = destinationQuad
     }
     
-    override func mouseDragged(theEvent: NSEvent) {
-        pointerMoved(theEvent)
-        localMouseMoved(theEvent)
+    func localMouseDragged(theEvent: NSEvent, location:NSPoint, view:NSView) {
+        pointerMoved(theEvent, location:location, view:view)
+        localMouseMoved(theEvent, location:location, view:view)
     }
     
-    override func touchesMovedWithEvent(theEvent: NSEvent) {
-        pointerMoved(theEvent)
-    }
-
     
     func enableFilter(sender:NSButton){
         if sender.state == 1 {
@@ -600,9 +604,9 @@ class ViewController: NSViewController {
     }
     
     override func viewWillAppear() {
-        if let f = NSUserDefaults.standardUserDefaults().valueForKey("View-Position") as? String {
-            //view.frame = NSRectFromString(f)
-        }
+//        if let f = NSUserDefaults.standardUserDefaults().valueForKey("View-Position") as? String {
+//            //view.frame = NSRectFromString(f)
+//        }
     }
 }
 
