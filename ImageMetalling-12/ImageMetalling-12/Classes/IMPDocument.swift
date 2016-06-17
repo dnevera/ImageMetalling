@@ -30,6 +30,8 @@ public class IMPDocument: NSObject {
                 return
             }
             
+            NSApplication.sharedApplication().keyWindow?.title = self.currentFile!
+            
             let code = access(path, R_OK)
             if  code < 0 {
                 let error = NSError(

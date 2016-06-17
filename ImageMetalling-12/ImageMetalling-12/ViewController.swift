@@ -66,33 +66,34 @@ public extension IMPQuad {
     }
 }
 
-
 class ViewController: NSViewController {
 
     let duration:NSTimeInterval = 0.2
     
-    lazy var sview:NSView = {
-        let v = NSView()
-        v.wantsLayer = true
-        v.layer?.backgroundColor = IMPColor.clearColor().CGColor
-        return v
-    }()
-    
-    lazy var pannelScrollView:NSScrollView = {
-        
-        let v = NSScrollView()
-        
-        v.wantsLayer = true
-        v.drawsBackground = false
-        v.allowsMagnification = false
-        v.contentView.wantsLayer = true
-        v.documentView = self.sview
-        
-        self.sview.snp_makeConstraints { (make) -> Void in
-            make.edges.equalTo(v).inset(NSEdgeInsetsMake(0, 0, 0, 0))
+    lazy var toolBar:IMPToolBar = {
+        let t = IMPToolBar(frame: NSRect(x: 0,y: 0,width: 100,height: 20))
+ 
+        t.enableFilterHandler = { (flag) in
+            self.filter.enabled = flag
         }
-
-        return v
+        
+        t.enableAspectRatioHandler = { (flag) in
+            self.aspectRatio(flag)
+        }
+        
+        t.enableGridHandler = { (flag) in
+            self.grid.enabled = flag
+        }
+        
+        t.gridSizeHendler = { (step) in
+            self.grid.adjustment.step = uint(step)
+        }
+        
+        t.resetHandler = {
+            self.reset()
+        }
+        
+        return t
     }()
 
     var context = IMPContext()
@@ -145,9 +146,6 @@ class ViewController: NSViewController {
         return v
     }()
     
-    let autoWarpButton = NSButton()
-    var gridSlider:IMPSlider!
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -247,134 +245,23 @@ class ViewController: NSViewController {
             }
         }
         
-        view.addSubview(pannelScrollView)
-        pannelScrollView.snp_makeConstraints { (make) -> Void in
-            make.width.equalTo(280)
-            make.top.equalTo(self.view).offset(0)
-            make.bottom.equalTo(self.view).offset(0)
-            make.right.equalTo(self.view).offset(0)
+        view.addSubview(toolBar)
+        
+        toolBar.snp_makeConstraints { (make) -> Void in
+            make.bottom.equalTo(self.view.snp_bottom).offset(1)
+            make.left.equalTo(self.view.snp_left).offset(-1)
+            make.right.equalTo(self.view.snp_right).offset(1)
+            make.height.equalTo(40)
+            make.width.greaterThanOrEqualTo(600)
         }
         
         view.addSubview(imageView)
         imageView.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(self.view).offset(10)
-            make.bottom.equalTo(self.view).offset(-10)
-            make.left.equalTo(self.view).offset(10)
-            make.right.equalTo(self.pannelScrollView.snp_left).offset(0)
+            make.top.equalTo(self.view.snp_top).offset(5)
+            make.bottom.equalTo(self.toolBar.snp_top).offset(0)
+            make.left.equalTo(self.view).offset(5)
+            make.right.equalTo(self.view.snp_right).offset(-5)
         }
-
-        
-        let enableFilterLabel = IMPLabel(frame: NSRect())
-        enableFilterLabel.stringValue = "Enable Filter"
-        sview.addSubview(enableFilterLabel)
-
-        enableFilterLabel.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(view).offset(20)
-            make.height.equalTo(40)
-            make.width.equalTo(120)
-            make.left.equalTo(sview).offset(20)
-        }
-        
-        
-        let enableFilterButton = NSButton()
-        enableFilterButton.title = ""
-        enableFilterButton.setButtonType(.SwitchButton)
-        enableFilterButton.state = 1
-        
-        enableFilterButton.target = self
-        enableFilterButton.action = #selector(ViewController.enableFilter(_:))
-        sview.addSubview(enableFilterButton)
-        
-        enableFilterButton.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(view).offset(20)
-            make.width.equalTo(40)
-            make.left.equalTo(enableFilterLabel.snp_right).offset(20)
-        }
-        
-        let autoWarpLabel = IMPLabel(frame: NSRect())
-        autoWarpLabel.stringValue = "Keep aspect ratio"
-        sview.addSubview(autoWarpLabel)
-
-        autoWarpLabel.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(enableFilterButton).offset(20)
-            make.height.equalTo(40)
-            make.width.equalTo(120)
-            make.left.equalTo(sview).offset(20)
-        }
-        
-        autoWarpButton.setButtonType(.SwitchButton)
-        autoWarpButton.title = ""
-        autoWarpButton.state = 0
-        
-        autoWarpButton.target = self
-        autoWarpButton.action = #selector(ViewController.autoWarp(_:))
-        sview.addSubview(autoWarpButton)
-        
-        autoWarpButton.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(enableFilterButton).offset(20)
-            make.width.equalTo(40)
-            make.left.equalTo(autoWarpLabel.snp_right).offset(20)
-        }
-        
-        
-        let gridLabel = IMPLabel(frame: NSRect())
-        gridLabel.stringValue = "Grid On"
-        sview.addSubview(gridLabel)
-        
-        gridLabel.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(autoWarpButton).offset(20)
-            make.height.equalTo(40)
-            make.width.equalTo(120)
-            make.left.equalTo(sview).offset(20)
-        }
-        
-        let gridButton = NSButton()
-        gridButton.setButtonType(.SwitchButton)
-        gridButton.title = ""
-        gridButton.state = Int(grid.enabled)
-        
-        gridButton.target = self
-        gridButton.action = #selector(ViewController.gridOn(_:))
-        sview.addSubview(gridButton)
-        
-        gridButton.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(gridLabel).offset(20)
-            make.width.equalTo(40)
-            make.left.equalTo(gridLabel.snp_right).offset(20)
-        }
-        
-        gridSlider = IMPSlider(
-            title: "Grid size",
-            range: 0..<100, initial: 50)
-        { (value) -> Void in
-            let v = uint((value) * 100)
-            self.grid.adjustment.step = v
-        }
-        
-        gridSlider.slider.enabled = grid.enabled
-        
-        sview.addSubview(gridSlider)
-        gridSlider.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(gridButton.snp_bottom).offset(20)
-            make.left.equalTo(sview).offset(10)
-            make.right.equalTo(sview).offset(-10)
-            make.height.equalTo(40)
-        }
-        
-
-        let resetButton = NSButton()
-        resetButton.title = "Reset"
-        
-        resetButton.target = self
-        resetButton.action = #selector(ViewController.reset(_:))
-        sview.addSubview(resetButton)
-        
-        resetButton.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(gridSlider.snp_bottom).offset(20)
-            make.width.equalTo(120)
-            make.left.equalTo(sview).offset(20)
-        }
-        
     }
 
     var mouse_point_offset = NSPoint()
@@ -453,7 +340,7 @@ class ViewController: NSViewController {
         touched = false
         deltaStrechedQuad = warp.destinationQuad-deltaStrechedQuad
 
-        if autoWarpButton.state == 1{
+        if toolBar.enabledAspectRatio {
             stretchWarp()
         }
         else{
@@ -556,31 +443,18 @@ class ViewController: NSViewController {
         }
     }
     
-    func gridOn(sender:NSButton){
-        if sender.state == 1 {
-            imageGrid.enabled = true
-            grid.enabled = true
-            gridSlider.slider.enabled = true
-        }
-        else {
-            gridSlider.slider.enabled = false
-            imageGrid.enabled = false
-            grid.enabled = false
-        }
-    }
-    
 
     var lastCropRegion = IMPRegion()
     var lastStrechedQuad = IMPQuad()
     lazy var deltaStrechedQuad:IMPQuad = IMPQuad.null
     
-    func autoWarp(sender:NSButton){
-        if sender.state == 1 {
+    func aspectRatio(flag:Bool){
+        if flag {
             
             lastCropRegion = crop.region
             lastStrechedQuad = warp.destinationQuad
             deltaStrechedQuad = IMPQuad.null
-
+            
             let startCrop = crop.region
             let finalCrop = IMPRegion()
             let startQuad = warp.destinationQuad
@@ -593,10 +467,10 @@ class ViewController: NSViewController {
             })
         }
         else {
-
+            
             lastStrechedQuad = lastStrechedQuad+deltaStrechedQuad
             deltaStrechedQuad = IMPQuad.null
-
+            
             let startQuad     = warp.destinationQuad
             let startCrop     = self.crop.region
             let finalCrop     = warp.sourceQuad.croppedRegion(lastStrechedQuad)
@@ -607,9 +481,10 @@ class ViewController: NSViewController {
                 self.crop.region = startCrop.lerp(final: finalCrop, t: atTime.float)
             })
         }
+
     }
-    
-    func reset(sender:NSButton){
+       
+    func reset(){
         
         
         lastCropRegion    = IMPRegion()
@@ -622,15 +497,17 @@ class ViewController: NSViewController {
         let startCrop = crop.region
         let finalCrop = IMPRegion()
         
-        let startSlider = gridSlider.value
+        let startSlider = Float(toolBar.gridSize)
         
         IMPDisplayTimer.cancelAll()
         IMPDisplayTimer.execute(duration: duration, options: .EaseInOut, update: { (atTime) in
+            
             self.warp.destinationQuad = startDestination.lerp(final: finalWarp, t: atTime.float)
             self.crop.region = startCrop.lerp(final: finalCrop, t: atTime.float)
-            self.gridSlider.value = startSlider.lerp(final: 0.5, t: atTime.float)
+            self.toolBar.gridSize = Int(startSlider.lerp(final: 50, t: atTime.float))
+            
             }, complete: { (flag) in
-                self.gridSlider.value = 0.5
+                self.toolBar.gridSize = 50
         })
     }
     
@@ -658,6 +535,16 @@ class ViewController: NSViewController {
         })
     }
 
+    override func viewWillDisappear() {
+        //NSUserDefaults.standardUserDefaults().setValue(NSStringFromRect(view.frame), forKey: "View-Position")
+        //NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    override func viewWillAppear() {
+        if let f = NSUserDefaults.standardUserDefaults().valueForKey("View-Position") as? String {
+            //view.frame = NSRectFromString(f)
+        }
+    }
 }
 
 public func == (left:NSPoint, right:NSPoint) -> Bool{
