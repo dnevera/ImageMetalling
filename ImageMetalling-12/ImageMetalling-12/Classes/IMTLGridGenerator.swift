@@ -10,7 +10,7 @@ import Foundation
 import IMProcessing
 
 
-public class IMPGridGenerator: IMPTransformFilter {
+public class IMTLGridGenerator: IMPTransformFilter {
     
     public struct Adjustment{
         public var step              = uint(50)           // step point

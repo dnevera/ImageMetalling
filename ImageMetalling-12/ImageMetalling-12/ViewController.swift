@@ -117,8 +117,8 @@ class ViewController: NSViewController {
         return f
     }()
 
-    lazy var grid:IMPGridGenerator = {
-        let g = IMPGridGenerator(context: self.context)
+    lazy var grid:IMTLGridGenerator = {
+        let g = IMTLGridGenerator(context: self.context)
         g.enabled = self.toolBar.enabledGrid
         g.adjustment.step  = 50
         g.adjustment.color = float4(1,1,1,0.5)
@@ -126,8 +126,8 @@ class ViewController: NSViewController {
         return g
     }()
  
-    lazy var imageGrid:IMPGridGenerator = {
-        let g = IMPGridGenerator(context: self.context)
+    lazy var imageGrid:IMTLGridGenerator = {
+        let g = IMTLGridGenerator(context: self.context)
         g.enabled = self.grid.enabled
         g.adjustment.color = float4(0)
         g.adjustment.subDivisionColor = float4(0,0,0,1)

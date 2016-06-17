@@ -14,7 +14,7 @@
 		313810831D0D7B4200E97068 /* IMPMain_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 313810821D0D7B4200E97068 /* IMPMain_metal.metal */; };
 		313810871D0D7C1700E97068 /* IMPDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313810851D0D7C1600E97068 /* IMPDocument.swift */; };
 		313810881D0D7C1700E97068 /* IMPMenuHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313810861D0D7C1600E97068 /* IMPMenuHandler.swift */; };
-		31851EDF1D12AF0800D5CFC5 /* IMPGridGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31851EDE1D12AF0800D5CFC5 /* IMPGridGenerator.swift */; };
+		31851EDF1D12AF0800D5CFC5 /* IMTLGridGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31851EDE1D12AF0800D5CFC5 /* IMTLGridGenerator.swift */; };
 		31851EE31D14308700D5CFC5 /* IMPToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31851EE21D14308700D5CFC5 /* IMPToolBar.swift */; };
 		6B71CCD3254F0CE14A89931D /* Pods_ImageMetalling_12.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FA872E0E5D8AEFCCE242266 /* Pods_ImageMetalling_12.framework */; };
 /* End PBXBuildFile section */
@@ -30,7 +30,7 @@
 		313810821D0D7B4200E97068 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; };
 		313810851D0D7C1600E97068 /* IMPDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPDocument.swift; sourceTree = "<group>"; };
 		313810861D0D7C1600E97068 /* IMPMenuHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPMenuHandler.swift; sourceTree = "<group>"; };
-		31851EDE1D12AF0800D5CFC5 /* IMPGridGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPGridGenerator.swift; sourceTree = "<group>"; };
+		31851EDE1D12AF0800D5CFC5 /* IMTLGridGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMTLGridGenerator.swift; sourceTree = "<group>"; };
 		31851EE21D14308700D5CFC5 /* IMPToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPToolBar.swift; sourceTree = "<group>"; };
 		391D92A51B1615358AD540EE /* Pods-ImageMetalling-12.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-12.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-12/Pods-ImageMetalling-12.debug.xcconfig"; sourceTree = "<group>"; };
 		F790D7F4C0CB6986EFAB027C /* Pods-ImageMetalling-12.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-12.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-12/Pods-ImageMetalling-12.release.xcconfig"; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 			children = (
 				313810851D0D7C1600E97068 /* IMPDocument.swift */,
 				313810861D0D7C1600E97068 /* IMPMenuHandler.swift */,
-				31851EDE1D12AF0800D5CFC5 /* IMPGridGenerator.swift */,
+				31851EDE1D12AF0800D5CFC5 /* IMTLGridGenerator.swift */,
 				31851EE21D14308700D5CFC5 /* IMPToolBar.swift */,
 			);
 			path = Classes;
@@ -242,7 +242,7 @@
 				313810731D0D796C00E97068 /* ViewController.swift in Sources */,
 				313810871D0D7C1700E97068 /* IMPDocument.swift in Sources */,
 				313810831D0D7B4200E97068 /* IMPMain_metal.metal in Sources */,
-				31851EDF1D12AF0800D5CFC5 /* IMPGridGenerator.swift in Sources */,
+				31851EDF1D12AF0800D5CFC5 /* IMTLGridGenerator.swift in Sources */,
 				313810711D0D796C00E97068 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
