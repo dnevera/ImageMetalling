@@ -114,14 +114,24 @@ class ViewController: NSViewController {
 
     lazy var grid:IMPGridGenerator = {
         let g = IMPGridGenerator(context: self.context)
+        g.enabled = false
         g.adjustment.step  = 50
         g.adjustment.color = float4(1,1,1,0.5)
         g.adjustment.subDivisionColor = float4(1,0,0,0.9)
         return g
     }()
-    
+ 
+    lazy var imageGrid:IMPGridGenerator = {
+        let g = IMPGridGenerator(context: self.context)
+        g.enabled = self.grid.enabled
+        g.adjustment.color = float4(0)
+        g.adjustment.subDivisionColor = float4(0,0,0,1)
+        return g
+    }()
+
     lazy var filter:IMPFilter = {
         let f = IMPFilter(context: self.context)
+        f.addFilter(self.imageGrid)
         f.addFilter(self.warp)
         f.addFilter(self.grid)
         f.addFilter(self.crop)
@@ -136,6 +146,7 @@ class ViewController: NSViewController {
     }()
     
     let autoWarpButton = NSButton()
+    var gridSlider:IMPSlider!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -305,6 +316,52 @@ class ViewController: NSViewController {
             make.left.equalTo(autoWarpLabel.snp_right).offset(20)
         }
         
+        
+        let gridLabel = IMPLabel(frame: NSRect())
+        gridLabel.stringValue = "Grid On"
+        sview.addSubview(gridLabel)
+        
+        gridLabel.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(autoWarpButton).offset(20)
+            make.height.equalTo(40)
+            make.width.equalTo(120)
+            make.left.equalTo(sview).offset(20)
+        }
+        
+        let gridButton = NSButton()
+        gridButton.setButtonType(.SwitchButton)
+        gridButton.title = ""
+        gridButton.state = Int(grid.enabled)
+        
+        gridButton.target = self
+        gridButton.action = #selector(ViewController.gridOn(_:))
+        sview.addSubview(gridButton)
+        
+        gridButton.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(gridLabel).offset(20)
+            make.width.equalTo(40)
+            make.left.equalTo(gridLabel.snp_right).offset(20)
+        }
+        
+        gridSlider = IMPSlider(
+            title: "Grid size",
+            range: 0..<100, initial: 50)
+        { (value) -> Void in
+            let v = uint((value) * 100)
+            self.grid.adjustment.step = v
+        }
+        
+        gridSlider.slider.enabled = grid.enabled
+        
+        sview.addSubview(gridSlider)
+        gridSlider.snp_makeConstraints { (make) -> Void in
+            make.top.equalTo(gridButton.snp_bottom).offset(20)
+            make.left.equalTo(sview).offset(10)
+            make.right.equalTo(sview).offset(-10)
+            make.height.equalTo(40)
+        }
+        
+
         let resetButton = NSButton()
         resetButton.title = "Reset"
         
@@ -313,11 +370,11 @@ class ViewController: NSViewController {
         sview.addSubview(resetButton)
         
         resetButton.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(autoWarpButton.snp_bottom).offset(20)
+            make.top.equalTo(gridSlider.snp_bottom).offset(20)
             make.width.equalTo(120)
             make.left.equalTo(sview).offset(20)
         }
-
+        
     }
 
     var mouse_point_offset = NSPoint()
@@ -499,6 +556,20 @@ class ViewController: NSViewController {
         }
     }
     
+    func gridOn(sender:NSButton){
+        if sender.state == 1 {
+            imageGrid.enabled = true
+            grid.enabled = true
+            gridSlider.slider.enabled = true
+        }
+        else {
+            gridSlider.slider.enabled = false
+            imageGrid.enabled = false
+            grid.enabled = false
+        }
+    }
+    
+
     var lastCropRegion = IMPRegion()
     var lastStrechedQuad = IMPQuad()
     lazy var deltaStrechedQuad:IMPQuad = IMPQuad.null
@@ -540,6 +611,7 @@ class ViewController: NSViewController {
     
     func reset(sender:NSButton){
         
+        
         lastCropRegion    = IMPRegion()
         lastStrechedQuad  = IMPQuad()
         deltaStrechedQuad = IMPQuad.null
@@ -550,10 +622,15 @@ class ViewController: NSViewController {
         let startCrop = crop.region
         let finalCrop = IMPRegion()
         
+        let startSlider = gridSlider.value
+        
         IMPDisplayTimer.cancelAll()
         IMPDisplayTimer.execute(duration: duration, options: .EaseInOut, update: { (atTime) in
             self.warp.destinationQuad = startDestination.lerp(final: finalWarp, t: atTime.float)
             self.crop.region = startCrop.lerp(final: finalCrop, t: atTime.float)
+            self.gridSlider.value = startSlider.lerp(final: 0.5, t: atTime.float)
+            }, complete: { (flag) in
+                self.gridSlider.value = 0.5
         })
     }
     

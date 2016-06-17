@@ -34,7 +34,7 @@ fragment float4 fragment_gridGenerator(
     
     if(x % sd == 0 || y % sd == 0 ) {
         
-        color = IMProcessing::blendNormal(inColor, gridSubDivColor);
+        color = IMProcessing::blendNormal(1-inColor, gridSubDivColor);
 
         if (x % 2 == 0 && y % 2 == 0){
             color = inColor;

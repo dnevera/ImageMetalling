@@ -10,7 +10,6 @@ import Foundation
 import IMProcessing
 
 
-/// Photo plate transformation filter
 public class IMPGridGenerator: IMPTransformFilter {
     
     public struct Adjustment{
