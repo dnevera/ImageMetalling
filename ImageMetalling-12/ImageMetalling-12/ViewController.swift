@@ -15,6 +15,7 @@ import IMProcessing
 import SnapKit
 import ImageIO
 import MediaLibrary
+import ObjectMapper
 
 public extension IMPQuad {
     
@@ -80,14 +81,13 @@ public extension NSRect {
 class ViewController: NSViewController {
 
     let duration:NSTimeInterval = 0.2
-    
+
     lazy var toolBar:IMPToolBar = {
         let t = IMPToolBar(frame: NSRect(x: 0,y: 0,width: 100,height: 20))
  
         t.enableFilterHandler = { (flag) in
             self.filter.enabled = flag
             self.grid.enabled = t.enabledGrid
-            self.imageGrid.enabled = t.enabledGrid
         }
         
         t.enableAspectRatioHandler = { (flag) in
@@ -96,12 +96,10 @@ class ViewController: NSViewController {
         
         t.enableGridHandler = { (flag) in
             self.grid.enabled = flag
-            self.imageGrid.enabled = flag
         }
         
         t.gridSizeHendler = { (step) in
             self.grid.adjustment.step = uint(step)
-            self.imageGrid.adjustment.step = uint(step)
         }
         
         t.resetHandler = {
@@ -136,14 +134,6 @@ class ViewController: NSViewController {
         g.adjustment.subDivisionColor = float4(0.75,0,0,0.9)
         return g
     }()
- 
-    lazy var imageGrid:IMTLGridGenerator = {
-        let g = IMTLGridGenerator(context: self.context)
-        g.enabled = self.grid.enabled
-        g.adjustment.color = float4(0)
-        g.adjustment.subDivisionColor = float4(0,0,0,1)
-        return g
-    }()
     
     lazy var imageSpots:IMTLGridGenerator = {
         let g = IMTLGridGenerator(context: self.context)
@@ -158,7 +148,6 @@ class ViewController: NSViewController {
 
     lazy var filter:IMPFilter = {
         let f = IMPFilter(context: self.context)
-        f.addFilter(self.imageGrid)
         f.addFilter(self.imageSpots)
         f.addFilter(self.warp)
         f.addFilter(self.crop)
@@ -181,7 +170,7 @@ class ViewController: NSViewController {
                 self.localMouseMoved(event, location:location, view:view)
             case .MouseExited:
                 if !self.touched {
-                    self.imageSpots.adjustment.spotArea = IMPRegion.null
+                    self.spotArea(IMPRegion.null)
                 }
             case .LeftMouseDragged:
                 self.localMouseDragged(event, location:location, view:view)
@@ -192,6 +181,10 @@ class ViewController: NSViewController {
 
         return v
     }()
+    
+    func spotArea(region:IMPRegion)  {
+        self.imageSpots.adjustment.spotArea = region
+    }
     
     override func viewDidLoad() {
         
@@ -237,20 +230,41 @@ class ViewController: NSViewController {
         }
         
         IMPDocument.sharedInstance.addDocumentObserver { (file, type) -> Void in
+            
             if type == .Image {
                 if let image = loadImage(file, size: 1200) {
-                    
+            
                     self.imageView.filter?.source = image
-                    self.warp.destinationQuad = IMPQuad()
-                    self.crop.region = IMPRegion()
-                    
+                    self.currentImageFile = file
+
                     self.asyncChanges({ () -> Void in
                         self.zoomFit()
+                        dispatch_after(1 * NSEC_PER_SEC, dispatch_get_main_queue(), {
+                            self.restoreConfig()
+                        })
                     })
                 }
             }
         }
         
+        imageView.dragOperation = { (files) in
+            
+            if files.count > 0 {
+                
+                let path = files[0]
+                let url = NSURL(fileURLWithPath: path)
+                if let suffix = url.pathExtension {
+                    for ext in ["jpg", "jpeg"] {
+                        if ext.lowercaseString == suffix.lowercaseString {
+                            IMPDocument.sharedInstance.currentFile = path
+                            return true
+                        }
+                    }
+                }
+            }
+            return false
+        }
+
         IMPDocument.sharedInstance.addSavingObserver { (file, type) in
             if type == .Image {
                 if let image = loadImage(IMPDocument.sharedInstance.currentFile!, size: 0) {
@@ -425,7 +439,7 @@ class ViewController: NSViewController {
             break
         }
         
-        imageSpots.adjustment.spotArea = spotArea
+        self.spotArea(spotArea)
     }
 
     func localMouseDown(theEvent: NSEvent, location:NSPoint, view:NSView) {
@@ -443,7 +457,8 @@ class ViewController: NSViewController {
         
         touched = false
         deltaStrechedQuad = warp.destinationQuad-deltaStrechedQuad
-        imageSpots.adjustment.spotArea = IMPRegion.null
+        
+        self.spotArea(IMPRegion.null)
         
         if toolBar.enabledAspectRatio {
             stretchWarp()
@@ -461,6 +476,8 @@ class ViewController: NSViewController {
             IMPDisplayTimer.cancelAll()
             IMPDisplayTimer.execute(duration: duration, options: .EaseInOut, update: { (atTime) in
                 self.warp.destinationQuad = start.lerp(final: final, t: atTime.float)
+                }, complete: { (flag) in
+                    self.updateConfig()
             })
         }
     }
@@ -473,6 +490,8 @@ class ViewController: NSViewController {
             IMPDisplayTimer.cancelAll()
             IMPDisplayTimer.execute(duration: duration, options: .EaseInOut, update: { (atTime) in
                 self.crop.region = start.lerp(final: final, t: atTime.float)
+                }, complete: { (flag) in
+                    self.updateConfig()
             })
         }
     }
@@ -527,6 +546,7 @@ class ViewController: NSViewController {
         }
                 
         warp.destinationQuad = destinationQuad
+        updateConfig()
     }
     
     func localMouseDragged(theEvent: NSEvent, location:NSPoint, view:NSView) {
@@ -565,6 +585,8 @@ class ViewController: NSViewController {
             IMPDisplayTimer.execute(duration: duration, options: .EaseInOut, update: { (atTime) in
                 self.warp.destinationQuad = startQuad.lerp(final: finalQuad, t: atTime.float)
                 self.crop.region = startCrop.lerp(final: finalCrop, t: atTime.float)
+                }, complete: { (flag) in
+                    self.updateConfig()
             })
         }
         else {
@@ -580,6 +602,8 @@ class ViewController: NSViewController {
             IMPDisplayTimer.execute(duration: duration, options: .EaseInOut, update: { (atTime) in
                 self.warp.destinationQuad = startQuad.lerp(final: self.lastStrechedQuad, t: atTime.float)
                 self.crop.region = startCrop.lerp(final: finalCrop, t: atTime.float)
+                }, complete: { (flag) in
+                    self.updateConfig()
             })
         }
 
@@ -609,6 +633,8 @@ class ViewController: NSViewController {
             
             }, complete: { (flag) in
                 self.toolBar.gridSize = 50
+                self.updateConfig()
+                self.saveConfig()
         })
     }
     
@@ -637,15 +663,59 @@ class ViewController: NSViewController {
     }
 
     override func viewWillDisappear() {
-        //NSUserDefaults.standardUserDefaults().setValue(NSStringFromRect(view.frame), forKey: "View-Position")
-        //NSUserDefaults.standardUserDefaults().synchronize()
+        saveConfig()
     }
     
-    override func viewWillAppear() {
-//        if let f = NSUserDefaults.standardUserDefaults().valueForKey("View-Position") as? String {
-//            //view.frame = NSRectFromString(f)
-//        }
+    var currentImageFile:String? = nil {
+        willSet {
+            self.saveConfig()
+        }
     }
+    
+    var configKey:String? {
+        if let file = self.currentImageFile {
+            return "IMTL-CONFIG-" + file
+        }
+        return nil
+    }
+    
+    func restoreConfig() {
+        
+        if let key = self.configKey {
+            let json =  NSUserDefaults.standardUserDefaults().valueForKey(key) as? String
+            if let m = Mapper<IMTLConfig>().map(json) {
+                config = m
+            }
+        }
+        else{
+            config = IMTLConfig()
+        }
+        
+        let startCrop = crop.region
+        let startQuad = warp.destinationQuad
+        
+        IMPDisplayTimer.cancelAll()
+        IMPDisplayTimer.execute(duration: duration, options: .EaseOut, update: { (atTime) in
+            self.warp.destinationQuad = startQuad.lerp(final: self.config.quad, t: atTime.float)
+            self.crop.region = startCrop.lerp(final: self.config.crop, t: atTime.float)
+            
+        })
+    }
+    
+    func updateConfig() {
+        config.quad = warp.destinationQuad
+        config.crop = crop.region
+    }
+    
+    func saveConfig(){
+        if let key = self.configKey {
+            let json =  Mapper().toJSONString(config, prettyPrint: true)            
+            NSUserDefaults.standardUserDefaults().setValue(json, forKey: key)
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+    }
+    
+    lazy var config = IMTLConfig()
 }
 
 public func == (left:NSPoint, right:NSPoint) -> Bool{
@@ -684,4 +754,75 @@ extension IMPJpegProvider {
         return metadata
     }
 }
+
+public class IMTLConfig:Mappable {
+    
+    var quad = IMPQuad()
+    var crop = IMPRegion()
+    
+    public init(){}
+    
+    required public init?(_ map: Map) {
+    }
+    
+    public func mapping(map: Map) {
+        quad <- (map["quad"],transformQuad)
+        crop <- (map["crop"],transformRegion)
+    }
+    
+    
+    let transformQuad = TransformOf<IMPQuad, [String:[Float]]>(fromJSON: { (value: [String:[Float]]?) -> IMPQuad? in
+        
+        if let value = value {
+            let left_bottom  = value["left_bottom"]!
+            let left_top     = value["left_top"]!
+            let right_bottom = value["right_bottom"]!
+            let right_top    = value["right_top"]!
+            let object = IMPQuad(
+                left_bottom:  float2(left_bottom[0],left_bottom[1]),
+                left_top:     float2(left_top[0],left_top[1]),
+                right_bottom: float2(right_bottom[0],right_bottom[1]),
+                right_top:    float2(right_top[0],right_top[1]))
+            return object
+        }
+        return nil
+        }, toJSON: { (value: IMPQuad?) -> [String:[Float]]? in
+            if let quad = value {
+                let json = [
+                    "left_bottom":  [quad.left_bottom.x, quad.left_bottom.y],
+                    "left_top":     [quad.left_top.x,    quad.left_top.y],
+                    "right_bottom": [quad.right_bottom.x,quad.right_bottom.y],
+                    "right_top":    [quad.right_top.x,   quad.right_top.y],
+                ]
+                return json
+            }
+            return nil
+    })
+    
+    let transformRegion = TransformOf<IMPRegion, [String:Float]>(fromJSON: { (value: [String:Float]?) -> IMPRegion? in
+        
+        if let value = value {
+            return IMPRegion(
+                left:   value["left"]!,
+                right:  value["right"]!,
+                top:    value["top"]!,
+                bottom: value["bottom"]!)
+        }
+        return nil
+        }, toJSON: { (value: IMPRegion?) -> [String:Float]? in
+            if let region = value {
+                let json = [
+                    "left":  region.left,
+                    "right": region.right,
+                    "top":   region.top,
+                    "bottom":  region.bottom,
+                ]
+                return json
+            }
+            return nil
+    })
+
+}
+
+
 

@@ -4,7 +4,8 @@ use_frameworks!
 target 'ImageMetalling-12' do
     platform :osx, '10.11'
     pod 'SnapKit'
-    pod 'IMProcessing', :path => '../../degradr/IMProcessing'
+    pod 'ObjectMapper'
+    pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
 end
 
 post_install do |installer|
