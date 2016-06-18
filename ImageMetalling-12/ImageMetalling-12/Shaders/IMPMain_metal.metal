@@ -18,7 +18,8 @@ fragment float4 fragment_gridGenerator(
                                        const device float4  &gridColor    [[ buffer(2) ]],
                                        const device float4  &gridSubDivColor [[ buffer(3) ]],
                                        const device float4  &spotAreaColor  [[ buffer(4) ]],
-                                       const device IMPRegion  &spotArea    [[ buffer(5) ]]
+                                       const device IMPRegion  &spotArea    [[ buffer(5) ]],
+                                       const device uint     &spotAreaType    [[ buffer(6) ]]
                                        ) {
     
     constexpr sampler s(address::clamp_to_edge, filter::linear, coord::normalized);
@@ -47,7 +48,7 @@ fragment float4 fragment_gridGenerator(
             if (x % 2 != 0 && y % 2 != 0) color = inColor;
         }
         
-        if (isBoxed) {
+        if (spotAreaType == 0 && isBoxed) {
             color = IMProcessing::blendNormal(color, spotAreaColor);
         }
 
@@ -61,11 +62,15 @@ fragment float4 fragment_gridGenerator(
             if (x % 2 != 0 && y % 2 != 0) color = inColor;
         }
         
-        if (isBoxed) {
+        if (spotAreaType == 0 && isBoxed) {
             color = IMProcessing::blendNormal(color, spotAreaColor);
         }
 
     }
-    
+
+    if (spotAreaType == 1 && isBoxed) {
+        color = IMProcessing::blendNormal(color, spotAreaColor);
+    }
+
     return color;
 }

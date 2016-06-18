@@ -12,6 +12,11 @@ import IMProcessing
 
 public class IMTLGridGenerator: IMPTransformFilter {
     
+    public enum SpotAreaType: Int {
+        case Grid  = 0
+        case Solid = 1
+    }
+    
     public struct Adjustment{
         public var step              = uint(50)           // step point
         public var color             = float4(1)          // color
@@ -19,6 +24,7 @@ public class IMTLGridGenerator: IMPTransformFilter {
         public var subDivisionColor  = float4(0,0,0,1)    // sub division color
         public var spotAreaColor     = float4(1,1,1,0.8)  // light spot area color
         public var spotArea          = IMPRegion.null     // light spot area
+        public var spotAreaType      = SpotAreaType.Grid  // light spot area type
     }
     
     public var adjustment = Adjustment() {
@@ -29,6 +35,8 @@ public class IMTLGridGenerator: IMPTransformFilter {
             memcpy(bufferSDivColor.contents(), &adjustment.subDivisionColor, bufferSDivColor.length)
             memcpy(bufferSpotAreaColor.contents(), &adjustment.spotAreaColor, bufferSpotAreaColor.length)
             memcpy(bufferSpotArea.contents(), &adjustment.spotArea, bufferSpotArea.length)
+            var t = adjustment.spotAreaType.rawValue
+            memcpy(bufferSpotAreaType.contents(), &t, bufferSpotAreaType.length)
             dirty = true
         }
     }
@@ -51,17 +59,18 @@ public class IMTLGridGenerator: IMPTransformFilter {
         array.append(self.bufferSDivColor)
         array.append(self.bufferSpotAreaColor)
         array.append(self.bufferSpotArea)
+        array.append(self.bufferSpotAreaType)
         return array
     }()
     
     lazy var bufferOffset:[Int] = [Int](count: self.buffers.count, repeatedValue: 0)
     
     lazy var bufferStep:MTLBuffer = self.context.device.newBufferWithBytes(&self.adjustment.step,
-                                                                           length: sizeof(Int),
+                                                                           length: sizeof(uint),
                                                                            options: .CPUCacheModeDefaultCache)
     
     lazy var bufferSDiv:MTLBuffer = self.context.device.newBufferWithBytes(&self.adjustment.subDivisionStep,
-                                                                           length: sizeof(Int),
+                                                                           length: sizeof(uint),
                                                                            options: .CPUCacheModeDefaultCache)
     
     lazy var bufferColor:MTLBuffer = self.context.device.newBufferWithBytes(&self.adjustment.color,
@@ -71,11 +80,18 @@ public class IMTLGridGenerator: IMPTransformFilter {
     lazy var bufferSDivColor:MTLBuffer = self.context.device.newBufferWithBytes(&self.adjustment.subDivisionColor,
                                                                                 length: sizeof(float4),
                                                                                 options: .CPUCacheModeDefaultCache)
+    
     lazy var bufferSpotAreaColor:MTLBuffer = self.context.device.newBufferWithBytes(&self.adjustment.spotAreaColor,
                                                                                length: sizeof(float4),
                                                                                options: .CPUCacheModeDefaultCache)
+    
     lazy var bufferSpotArea:MTLBuffer = self.context.device.newBufferWithBytes(&self.adjustment.spotArea,
                                                                                length: sizeof(IMPRegion),
                                                                                options: .CPUCacheModeDefaultCache)
+    
+    lazy var bufferSpotAreaType:MTLBuffer = self.context.device.newBufferWithBytes(&self.adjustment.spotAreaType,
+                                                                           length: sizeof(uint),
+                                                                           options: .CPUCacheModeDefaultCache)
+    
 
 }

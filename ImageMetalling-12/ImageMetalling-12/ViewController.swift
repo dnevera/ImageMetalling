@@ -66,6 +66,17 @@ public extension IMPQuad {
     }
 }
 
+public extension NSRect {
+    mutating func setRegion(region:IMPRegion){
+        let x = region.left.cgfloat*size.width
+        let y = region.top.cgfloat*size.height
+        self = NSRect(x: origin.x+x,
+                      y: origin.y+y,
+                      width: size.width*(1-region.right)-x,
+                      height: size.height*(1-region.bottom)-y)
+    }
+}
+
 class ViewController: NSViewController {
 
     let duration:NSTimeInterval = 0.2
@@ -133,10 +144,22 @@ class ViewController: NSViewController {
         g.adjustment.subDivisionColor = float4(0,0,0,1)
         return g
     }()
+    
+    lazy var imageSpots:IMTLGridGenerator = {
+        let g = IMTLGridGenerator(context: self.context)
+        g.enabled = self.grid.enabled
+        g.adjustment.step  = 50
+        g.adjustment.color = float4(0)
+        g.adjustment.subDivisionColor = float4(0)
+        g.adjustment.spotAreaColor = float4(1,1,1,0.3)
+        g.adjustment.spotAreaType = .Solid
+        return g
+    }()
 
     lazy var filter:IMPFilter = {
         let f = IMPFilter(context: self.context)
         f.addFilter(self.imageGrid)
+        f.addFilter(self.imageSpots)
         f.addFilter(self.warp)
         f.addFilter(self.crop)
         f.addFilter(self.grid)
@@ -158,7 +181,7 @@ class ViewController: NSViewController {
                 self.localMouseMoved(event, location:location, view:view)
             case .MouseExited:
                 if !self.touched {
-                    self.grid.adjustment.spotArea = IMPRegion.null
+                    self.imageSpots.adjustment.spotArea = IMPRegion.null
                 }
             case .LeftMouseDragged:
                 self.localMouseDragged(event, location:location, view:view)
@@ -313,19 +336,31 @@ class ViewController: NSViewController {
         case Undefined
     }
     
-    func convertPoint(point:NSPoint) -> NSPoint {
-        let p  = float4(point.x.float,point.y.float,0,1)
-        let pn =  warp.model * p
-        print(" new point = \(pn.xy, point)")
-        return NSPoint(x: pn.x.cgfloat,y: pn.y.cgfloat)
+    func convertPoint(point:NSPoint, fromFrame:NSRect, toFrame:NSRect) -> NSPoint {
+        
+        let transform = warp.destinationQuad.transformTo(destination: warp.sourceQuad)
+        let size = float2(toFrame.size.width.float,toFrame.size.height.float)
+
+        let x = (point.x/fromFrame.size.width - 0.5 ) * 2
+        let y = (point.y/fromFrame.size.height - 0.5 ) * 2
+        
+        var p = ((transform * float4(x.float,y.float,0,1)).xy/2) + float2(0.5)
+        p = p * size
+        
+        return NSPoint(x: p.x.cgfloat,y: p.y.cgfloat)
     }
     
     var pointerPlace:PointerPlace = .Undefined
     
     func getPointerPlace(point:NSPoint, view:NSView) ->  PointerPlace {
         
-        let w = view.frame.size.width.float
-        let h = view.frame.size.height.float
+        var frame = view.frame
+        
+        frame.setRegion(warp.sourceQuad.croppedRegion(warp.destinationQuad))
+        let w = frame.size.width.float
+        let h = frame.size.height.float
+        
+        let point = convertPoint(point, fromFrame: view.frame, toFrame: frame)
         
         if point.x > w/3 && point.x < w*2/3 && point.y < h/3 {
             return .Bottom
@@ -362,32 +397,35 @@ class ViewController: NSViewController {
 
         let point = location
         
+        var spotArea = IMPRegion.null
         
         switch getPointerPlace(point,view:view) {
             
         case .LeftBottom:
-            grid.adjustment.spotArea = IMPRegion(left: 0, right: 2/3, top: 0, bottom: 2/3)
+            spotArea = IMPRegion(left: 0, right: 2/3, top: 0, bottom: 2/3)
         case .Left:
-            grid.adjustment.spotArea = IMPRegion(left: 0, right: 2/3, top: 1/3, bottom: 1/3)
+            spotArea = IMPRegion(left: 0, right: 2/3, top: 1/3, bottom: 1/3)
         case .LeftTop:
-            grid.adjustment.spotArea = IMPRegion(left: 0, right: 2/3, top: 2/3, bottom: 0)
+            spotArea = IMPRegion(left: 0, right: 2/3, top: 2/3, bottom: 0)
             
         case .Top:
-            grid.adjustment.spotArea = IMPRegion(left: 1/3, right: 1/3, top: 2/3, bottom: 0)
+            spotArea = IMPRegion(left: 1/3, right: 1/3, top: 2/3, bottom: 0)
         case .RightTop:
-            grid.adjustment.spotArea = IMPRegion(left: 2/3, right: 0, top: 2/3, bottom: 0)
+            spotArea = IMPRegion(left: 2/3, right: 0, top: 2/3, bottom: 0)
         case .Right:
-            grid.adjustment.spotArea = IMPRegion(left: 2/3, right: 0, top: 1/3, bottom: 1/3)
+            spotArea = IMPRegion(left: 2/3, right: 0, top: 1/3, bottom: 1/3)
    
         case .RightBottom:
-            grid.adjustment.spotArea = IMPRegion(left: 2/3, right: 0, top: 0, bottom: 2/3)
+            spotArea = IMPRegion(left: 2/3, right: 0, top: 0, bottom: 2/3)
         case .Bottom:
-            grid.adjustment.spotArea = IMPRegion(left: 1/3, right: 1/3, top: 0, bottom: 2/3)
+            spotArea = IMPRegion(left: 1/3, right: 1/3, top: 0, bottom: 2/3)
 
         default:
-            grid.adjustment.spotArea = IMPRegion.null
+            spotArea = IMPRegion.null
             break
         }
+        
+        imageSpots.adjustment.spotArea = spotArea
     }
 
     func localMouseDown(theEvent: NSEvent, location:NSPoint, view:NSView) {
@@ -405,7 +443,7 @@ class ViewController: NSViewController {
         
         touched = false
         deltaStrechedQuad = warp.destinationQuad-deltaStrechedQuad
-        grid.adjustment.spotArea = IMPRegion.null
+        imageSpots.adjustment.spotArea = IMPRegion.null
         
         if toolBar.enabledAspectRatio {
             stretchWarp()
@@ -625,7 +663,6 @@ public func - (left:NSPoint, right:NSPoint) -> NSPoint {
 public func + (left:NSPoint, right:NSPoint) -> NSPoint {
     return NSPoint(x: left.x+right.x, y: left.y+right.y)
 }
-
 
 extension IMPJpegProvider {
     
