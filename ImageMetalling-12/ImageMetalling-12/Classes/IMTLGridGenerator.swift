@@ -10,6 +10,8 @@ import Foundation
 import IMProcessing
 
 
+/// Генератор сетки на объекте.
+/// Не делает ничего интересного кроме установки настроек и передачи их в фрагментный шейдер
 public class IMTLGridGenerator: IMPTransformFilter {
     
     public enum SpotAreaType: Int {
@@ -42,6 +44,9 @@ public class IMTLGridGenerator: IMPTransformFilter {
     }
     
     convenience public required init(context: IMPContext) {
+        //
+        // новый фрагментный шейдер fragment_gridGenerator
+        //
         self.init(context: context, vertex: "vertex_transformation", fragment: "fragment_gridGenerator")
     }
     

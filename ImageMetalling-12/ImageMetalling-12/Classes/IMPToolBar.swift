@@ -10,6 +10,11 @@ import Cocoa
 import IMProcessing
 import SnapKit
 
+//
+// Всякая UI - шелуха 
+//
+
+
 class IMPSeparator: NSView {
     init() {
         super.init(frame: NSRect(x: 0, y: 0, width: 1, height: 40))

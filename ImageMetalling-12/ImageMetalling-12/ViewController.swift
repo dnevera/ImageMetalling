@@ -17,6 +17,7 @@ import ImageIO
 import MediaLibrary
 import ObjectMapper
 
+// MARK: - Расширяем многоугольник полезными утилитами
 public extension IMPQuad {
     
     public func differenceRegion(quad:IMPQuad) -> IMPRegion {
@@ -39,12 +40,18 @@ public extension IMPQuad {
         diff.bottom = diff.bottom > 0 ? 0 : diff.bottom
         return diff
     }
-    
+
+    ///
+    ///  Прямоугольный регион между многоугольниками
+    ///
     public func croppedRegion(quad:IMPQuad) -> IMPRegion {
         let diff = fit2source(differenceRegion(quad))
         return IMPRegion(left: abs(diff.left)/2, right: abs(diff.right)/2, top: abs(diff.top)/2, bottom: abs(diff.bottom)/2)
     }
     
+    ///
+    ///  Прямоугольный многоугольник растянутый до соотношения сторон исходного
+    ///
     public func strechedQuad(quad:IMPQuad) -> IMPQuad {
         
         let diff = fit2source(differenceRegion(quad))
@@ -67,56 +74,21 @@ public extension IMPQuad {
     }
 }
 
-public extension NSRect {
-    mutating func setRegion(region:IMPRegion){
-        let x = region.left.cgfloat*size.width
-        let y = region.top.cgfloat*size.height
-        self = NSRect(x: origin.x+x,
-                      y: origin.y+y,
-                      width: size.width*(1-region.right)-x,
-                      height: size.height*(1-region.bottom)-y)
-    }
-}
-
 class ViewController: NSViewController {
 
-    let duration:NSTimeInterval = 0.2
-
-    lazy var toolBar:IMPToolBar = {
-        let t = IMPToolBar(frame: NSRect(x: 0,y: 0,width: 100,height: 20))
- 
-        t.enableFilterHandler = { (flag) in
-            self.filter.enabled = flag
-            self.grid.enabled = t.enabledGrid
-        }
-        
-        t.enableAspectRatioHandler = { (flag) in
-            self.aspectRatio(flag)
-        }
-        
-        t.enableGridHandler = { (flag) in
-            self.grid.enabled = flag
-        }
-        
-        t.gridSizeHendler = { (step) in
-            self.grid.adjustment.step = uint(step)
-        }
-        
-        t.resetHandler = {
-            self.reset()
-        }
-        
-        return t
-    }()
 
     var context = IMPContext()
     
+    /// Основной фильтр коррекции геометрических искажений
     lazy var warp:IMPWarpFilter = {
         let w = IMPWarpFilter(context: self.context)
         w.backgroundColor = IMPColor(color: IMPPrefs.colors.background)
         return w
     }()
 
+    
+    /// Для визуализации кропа будем использовать фильтр виньетирования.
+    /// Просто выставим резкие границы.
     lazy var crop:IMPVignetteFilter = {
         let f = IMPVignetteFilter(context:self.context, type:.Frame)
         f.adjustment.blending.opacity = 0.8
@@ -126,6 +98,7 @@ class ViewController: NSViewController {
         return f
     }()
 
+    /// Квадратная сетка
     lazy var grid:IMTLGridGenerator = {
         let g = IMTLGridGenerator(context: self.context)
         g.enabled = self.toolBar.enabledGrid
@@ -135,6 +108,7 @@ class ViewController: NSViewController {
         return g
     }()
     
+    /// Подсвечивание областей за которые можно тянуть картинку во время коррекции
     lazy var imageSpots:IMTLGridGenerator = {
         let g = IMTLGridGenerator(context: self.context)
         g.enabled = self.grid.enabled
@@ -146,11 +120,16 @@ class ViewController: NSViewController {
         return g
     }()
 
+    /// Композитный фильтры
     lazy var filter:IMPFilter = {
         let f = IMPFilter(context: self.context)
+        /// Первый слой с подсветкой будет трансфоримироваться с основной картинкой
         f.addFilter(self.imageSpots)
+        /// Корректор
         f.addFilter(self.warp)
+        /// "Кроп"
         f.addFilter(self.crop)
+        /// Сетка
         f.addFilter(self.grid)
         return f
     }()
@@ -160,6 +139,7 @@ class ViewController: NSViewController {
         v.filter = self.filter
         v.backgroundColor = IMPColor(color: IMPPrefs.colors.background)
         
+        /// События от курсора экрана обрабатываем для манипуляции с геометрией
         v.addMouseEventObserver({ (event, location, view) in
             switch event.type {
             case .LeftMouseDown:
@@ -338,6 +318,13 @@ class ViewController: NSViewController {
     var touched = false
     var warpDelta:Float = 0.005
     
+    ///  Зона действия курсора.
+    ///  Подразумеваем 8 зон за которые нам можно тянуть фотопластину:
+    ///  - угловые зоны позволяют исправлять угловые искажения
+    ///  - центральные по краяем парралельные стороным прямоугольника основного 
+    ///    "рабочего стола"
+    ///  Кждая зона 1/3 фотопластины.
+    ///
     enum PointerPlace: Int {
         case LeftBottom
         case LeftTop
@@ -350,11 +337,15 @@ class ViewController: NSViewController {
         case Undefined
     }
     
+    /// Конвертируем абсолютное значение текущего курсора в координаты скорректированного объекта
     func convertPoint(point:NSPoint, fromFrame:NSRect, toFrame:NSRect) -> NSPoint {
         
+        /// получаем трансформацию обратную выполненной
         let transform = warp.destinationQuad.transformTo(destination: warp.sourceQuad)
         let size = float2(toFrame.size.width.float,toFrame.size.height.float)
 
+        /// приводим в соответствие с относительными координатами вершин объекта
+        ///
         let x = (point.x/fromFrame.size.width - 0.5 ) * 2
         let y = (point.y/fromFrame.size.height - 0.5 ) * 2
         
@@ -366,6 +357,7 @@ class ViewController: NSViewController {
     
     var pointerPlace:PointerPlace = .Undefined
     
+    /// Вычисляем зону где находится курсор
     func getPointerPlace(point:NSPoint, view:NSView) ->  PointerPlace {
         
         var frame = view.frame
@@ -468,9 +460,10 @@ class ViewController: NSViewController {
         }
     }
     
+    ///Растягиваем до исходного соотношения сторон
     func stretchWarp(){
         if !touched {
-            let start =  warp.destinationQuad
+            let start = warp.destinationQuad
             let final = warp.sourceQuad.strechedQuad(warp.destinationQuad)
             
             IMPDisplayTimer.cancelAll()
@@ -482,6 +475,7 @@ class ViewController: NSViewController {
         }
     }
     
+    /// Подрезаем без сохранения соотношений сторон
     func cropWarp() {
         if !touched {
             let start  = crop.region
@@ -544,7 +538,10 @@ class ViewController: NSViewController {
             destinationQuad.right_top.x = destinationQuad.right_top.x - distancex
             destinationQuad.right_top.y = destinationQuad.right_top.y - distancey
         }
-                
+        
+        ///  
+        /// Основное действие - трансфоримируем в искомый многоугольник!
+        ///
         warp.destinationQuad = destinationQuad
         updateConfig()
     }
@@ -554,7 +551,6 @@ class ViewController: NSViewController {
         localMouseMoved(theEvent, location:location, view:view)
     }
     
-    
     func enableFilter(sender:NSButton){
         if sender.state == 1 {
             filter.enabled = true
@@ -563,7 +559,6 @@ class ViewController: NSViewController {
             filter.enabled = false
         }
     }
-    
 
     var lastCropRegion = IMPRegion()
     var lastStrechedQuad = IMPQuad()
@@ -611,7 +606,6 @@ class ViewController: NSViewController {
        
     func reset(){
         
-        
         lastCropRegion    = IMPRegion()
         lastStrechedQuad  = IMPQuad()
         deltaStrechedQuad = IMPQuad.null
@@ -651,6 +645,34 @@ class ViewController: NSViewController {
         }
     }
     
+    let duration:NSTimeInterval = 0.2
+    
+    lazy var toolBar:IMPToolBar = {
+        let t = IMPToolBar(frame: NSRect(x: 0,y: 0,width: 100,height: 20))
+        
+        t.enableFilterHandler = { (flag) in
+            self.filter.enabled = flag
+            self.grid.enabled = t.enabledGrid
+        }
+        
+        t.enableAspectRatioHandler = { (flag) in
+            self.aspectRatio(flag)
+        }
+        
+        t.enableGridHandler = { (flag) in
+            self.grid.enabled = flag
+        }
+        
+        t.gridSizeHendler = { (step) in
+            self.grid.adjustment.step = uint(step)
+        }
+        
+        t.resetHandler = {
+            self.reset()
+        }
+        
+        return t
+    }()
 
     var q = dispatch_queue_create("ViewController", DISPATCH_QUEUE_CONCURRENT)
 
@@ -718,6 +740,22 @@ class ViewController: NSViewController {
     lazy var config = IMTLConfig()
 }
 
+///
+/// Всякие полезные и в целом понятные уитилитарные расширения
+///
+
+
+public extension NSRect {
+    mutating func setRegion(region:IMPRegion){
+        let x = region.left.cgfloat*size.width
+        let y = region.top.cgfloat*size.height
+        self = NSRect(x: origin.x+x,
+                      y: origin.y+y,
+                      width: size.width*(1-region.right)-x,
+                      height: size.height*(1-region.bottom)-y)
+    }
+}
+
 public func == (left:NSPoint, right:NSPoint) -> Bool{
     return left.x==right.x && left.y==right.y
 }
@@ -755,6 +793,10 @@ extension IMPJpegProvider {
     }
 }
 
+/// https://github.com/Hearst-DD/ObjectMapper
+///
+/// Мапинг объектов в JSON для сохранения контекста редактирования файла, просто для удобства
+///
 public class IMTLConfig:Mappable {
     
     var quad = IMPQuad()
