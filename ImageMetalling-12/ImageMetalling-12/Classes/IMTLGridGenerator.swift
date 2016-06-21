@@ -41,14 +41,17 @@ public class IMTLGridGenerator: IMPTransformFilter {
             memcpy(bufferSpotAreaType.contents(), &t, bufferSpotAreaType.length)
             dirty = true
         }
-    }
+    }        
     
-    convenience public required init(context: IMPContext) {
+    public required init(context: IMPContext) {
+        super.init(context: context)
         //
         // новый фрагментный шейдер fragment_gridGenerator
         //
-        self.init(context: context, vertex: "vertex_transformation", fragment: "fragment_gridGenerator")
+        addGraphics(graphics)
     }
+    
+    private lazy var graphics:IMPGraphics = IMPGraphics(context: self.context, fragment: "fragment_gridGenerator")
     
     override public func configureGraphics(graphics: IMPGraphics, command: MTLRenderCommandEncoder) {
         if graphics == self.graphics {

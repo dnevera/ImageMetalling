@@ -13,7 +13,7 @@ using namespace metal;
 ///
 /// Отрисовка сетки на текстуре объекта
 ///
-fragment float4 fragment_gridGenerator(
+fragment float4 fragment_gridGeneratorExample(
                                        // поток вершин
                                        IMPVertexOut in [[stage_in]],
                                        // текстура фото-пластины

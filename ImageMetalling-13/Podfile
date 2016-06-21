@@ -1,0 +1,20 @@
+
+use_frameworks!
+
+target 'ImageMetalling-13' do
+    platform :osx, '10.11'
+    pod 'SnapKit'
+    pod 'ObjectMapper'
+    #pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
+    pod 'IMProcessing', :path => '../../degradr/IMProcessing'
+end
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['DYLIB_COMPATIBILITY_VERSION'] = ''
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
+        end
+    end
+end
+
