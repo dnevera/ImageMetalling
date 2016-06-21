@@ -62,11 +62,11 @@ class ViewController: NSViewController {
     }()
     
 
-    /// Композитный фильтры
+    /// Композитный фильтр
     lazy var filter:IMPFilter = {
         let f = IMPFilter(context: self.context)
         
-        /// Деформатор
+        /// Деформатор в пространстве Bezier кривых 
         f.addFilter(self.freeWarp)
         
         /// Первый слой с подсветкой будет трансфоримироваться с основной картинкой

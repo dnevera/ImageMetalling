@@ -9,7 +9,66 @@
 import Foundation
 import IMProcessing
 
+public class IMLTBezierWarpFilter: IMPTransformFilter {
+    
+    /// Контрольные точки сетки поверххности Bezier 4x4.
+    /// Сдвиг точки относительно позиции (0,0) описывает сдвиг сетки
+    public var points = IMPFloat2x4x4() {
+        didSet{
+            controlPoints = IMLTBezierWarpFilter.baseControlPoints
+            for i in 0..<4 {
+                for j in 0..<4 {
+                    controlPoints[i,j] += points[i,j]
+                }
+            }
+            memcpy(buffer.contents(), &controlPoints, buffer.length)
+            dirty = true
+        }
+    }
+    
+    /// Базовая сетка поверхности
+    public static let baseControlPoints = IMPFloat2x4x4(vectors: (
+        (float2(0,0),   float2(1/3,0),   float2(2/3,0),   float2(1, 0)),
+        (float2(0,1/3), float2(1/3,1/3), float2(2/3,1/3), float2(1, 1/3)),
+        (float2(0,2/3), float2(1/3,2/3), float2(2/3,2/3), float2(1, 2/3)),
+        (float2(0,1),   float2(1/3,1),   float2(2/3,1),   float2(1, 1)))
+    )
+    
+    /// Контрольные точки в координатах изображения
+    var controlPoints:IMPFloat2x4x4 = IMLTBezierWarpFilter.baseControlPoints
+    
+    override public var backgroundColor: IMPColor {
+        didSet{
+            var c = backgroundColor.rgba
+            memcpy(bgColorBuffer.contents(), &c, bgColorBuffer.length)
+            dirty = true
+        }
+    }
+    
+    public required init(context: IMPContext) {
+        super.init(context: context)
+        addGraphics(graphics)
+    }
+    
+    private lazy var graphics:IMPGraphics = IMPGraphics(context: self.context, fragment: "fragment_bezierWarpTransformation")
 
+    override public func configureGraphics(graphics: IMPGraphics, command: MTLRenderCommandEncoder) {
+        if graphics == self.graphics {
+            command.setFragmentBuffer(buffer, offset: 0, atIndex: 0)
+            command.setFragmentBuffer(bgColorBuffer, offset: 0, atIndex: 1)
+        }
+    }
+
+    lazy var bgColorBuffer:MTLBuffer = self.context.device.newBufferWithLength(sizeof(float4),
+                                                                         options: .CPUCacheModeDefaultCache)
+
+    lazy var buffer:MTLBuffer = self.context.device.newBufferWithBytes(&self.controlPoints,
+                                                                       length: sizeof(IMPFloat2x4x4),
+                                                                       options: .CPUCacheModeDefaultCache)
+}
+
+
+// MARK: - Итератор тензора
 public extension IMPFloat2x4x4 {
     
     public subscript(i:Int,j:Int) -> float2 {
@@ -41,7 +100,7 @@ public extension IMPFloat2x4x4 {
             memcpy(&vectors, &mem, sizeofValue(vectors))
         }
     }
-
+    
     public func lerp(final final:IMPFloat2x4x4, t:Float) -> IMPFloat2x4x4 {
         var result = IMPFloat2x4x4()
         for i in 0..<4 {
@@ -51,60 +110,4 @@ public extension IMPFloat2x4x4 {
         }
         return result
     }
-}
-
-public class IMLTBezierWarpFilter: IMPTransformFilter {
-    
-    public var points = IMPFloat2x4x4() {
-        didSet{
-            controlPoints = IMLTBezierWarpFilter.baseControlPoints
-
-            for i in 0..<4 {
-                for j in 0..<4 {
-                    controlPoints[i,j] += points[i,j]
-                }
-            }
-
-            memcpy(buffer.contents(), &controlPoints, buffer.length)
-            dirty = true
-        }
-    }
-    
-    public static let baseControlPoints = IMPFloat2x4x4(vectors: (
-        (float2(0,0),   float2(1/3,0),   float2(2/3,0),   float2(1, 0)),
-        (float2(0,1/3), float2(1/3,1/3), float2(2/3,1/3), float2(1, 1/3)),
-        (float2(0,2/3), float2(1/3,2/3), float2(2/3,2/3), float2(1, 2/3)),
-        (float2(0,1),   float2(1/3,1),   float2(2/3,1),   float2(1, 1)))
-    )
-    
-    var controlPoints:IMPFloat2x4x4 = IMLTBezierWarpFilter.baseControlPoints
-    
-    override public var backgroundColor: IMPColor {
-        didSet{
-            var c = backgroundColor.rgba
-            memcpy(bgColorBuffer.contents(), &c, bgColorBuffer.length)
-            dirty = true
-        }
-    }
-    
-    public required init(context: IMPContext) {
-        super.init(context: context)
-        addGraphics(graphics)
-    }
-    
-    private lazy var graphics:IMPGraphics = IMPGraphics(context: self.context, fragment: "fragment_bezierWarpTransformation")
-
-    override public func configureGraphics(graphics: IMPGraphics, command: MTLRenderCommandEncoder) {
-        if graphics == self.graphics {
-            command.setFragmentBuffer(buffer, offset: 0, atIndex: 0)
-            command.setFragmentBuffer(bgColorBuffer, offset: 0, atIndex: 1)
-        }
-    }
-
-    lazy var bgColorBuffer:MTLBuffer = self.context.device.newBufferWithLength(sizeof(float4),
-                                                                         options: .CPUCacheModeDefaultCache)
-
-    lazy var buffer:MTLBuffer = self.context.device.newBufferWithBytes(&self.controlPoints,
-                                                                       length: sizeof(IMPFloat2x4x4),
-                                                                       options: .CPUCacheModeDefaultCache)
 }
