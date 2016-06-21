@@ -14,7 +14,6 @@ import SnapKit
 // Всякая UI - шелуха 
 //
 
-
 class IMPSeparator: NSView {
     init() {
         super.init(frame: NSRect(x: 0, y: 0, width: 1, height: 40))
@@ -32,6 +31,7 @@ class IMPSeparator: NSView {
 public class IMPToolBar: NSView {
     
     private let enableFilterButton = NSButton()
+    private let enableCropButton = NSButton()
     private let gridButton = NSButton()
     private let gridSlider = NSSlider()
 
@@ -64,7 +64,7 @@ public class IMPToolBar: NSView {
             make.left.equalTo(self.snp_left).offset(swidth)
         }
         
-        let separator = IMPSeparator()
+        var separator = IMPSeparator()
         addSubview(separator)
         
         separator.snp_makeConstraints { (make) -> Void in
@@ -72,6 +72,31 @@ public class IMPToolBar: NSView {
             make.width.equalTo(1)
             make.height.equalTo(30)
             make.left.equalTo(enableFilterButton.snp_right).offset(swidth)
+        }
+        
+    
+        enableCropButton.attributedTitle = NSAttributedString(string: "Warpping/Cropping", attributes: attributes)
+        enableCropButton.setButtonType(.SwitchButton)
+        enableCropButton.state = 0
+        
+        
+        enableCropButton.target = self
+        enableCropButton.action = #selector(self.enableCrop(_:))
+        addSubview(enableCropButton)
+        
+        enableCropButton.snp_makeConstraints { (make) -> Void in
+            make.centerY.equalTo(self.snp_centerY).offset(0)
+            make.left.equalTo(separator.snp_left).offset(swidth)
+        }
+        
+        separator = IMPSeparator()
+        addSubview(separator)
+        
+        separator.snp_makeConstraints { (make) -> Void in
+            make.centerY.equalTo(self.snp_centerY).offset(0)
+            make.width.equalTo(1)
+            make.height.equalTo(30)
+            make.left.equalTo(enableCropButton.snp_right).offset(swidth)
         }
         
         
@@ -126,7 +151,13 @@ public class IMPToolBar: NSView {
             handler(flag: Bool(sender.state))
         }
     }
-        
+    
+    @objc private func enableCrop(sender:NSButton)  {
+        if let handler = enableCropHandler {
+            handler(flag: Bool(sender.state))
+        }
+    }
+
     @objc private func enableGrid(sender:NSButton)  {
         if sender.state == 1 {
             gridSlider.enabled = true
@@ -153,12 +184,17 @@ public class IMPToolBar: NSView {
     
     
     public var enableFilterHandler:((flag:Bool)->Void)? = nil
+    public var enableCropHandler:((flag:Bool)->Void)? = nil
     public var enableGridHandler:((flag:Bool)->Void)? = nil
     public var gridSizeHendler:((step:Int)->Void)? = nil
     public var resetHandler:(()->Void)? = nil
     
     public var enabledFilter:Bool {
         return Bool(enableFilterButton.state)
+    }
+ 
+    public var enabledCrop:Bool {
+        return Bool(enableCropButton.state)
     }
     
     public var enabledGrid:Bool {

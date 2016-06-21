@@ -50,6 +50,18 @@ class ViewController: NSViewController {
         return g
     }()
 
+    /// Для визуализации кропа будем использовать фильтр виньетирования.
+    /// Просто выставим резкие границы.
+    lazy var cropView:IMPVignetteFilter = {
+        let f = IMPVignetteFilter(context:self.context, type:.Frame)
+        f.adjustment.blending.opacity = 0.9
+        f.adjustment.start = 0
+        f.adjustment.end = 0
+        f.adjustment.color = IMPPrefs.colors.background.rgb
+        return f
+    }()
+    
+
     /// Композитный фильтры
     lazy var filter:IMPFilter = {
         let f = IMPFilter(context: self.context)
@@ -60,6 +72,9 @@ class ViewController: NSViewController {
         /// Первый слой с подсветкой будет трансфоримироваться с основной картинкой
         f.addFilter(self.imageSpots)
 
+        /// Визуализация кропа
+        f.addFilter(self.cropView)
+        
         /// Сетка
         f.addFilter(self.grid)
         
@@ -183,8 +198,13 @@ class ViewController: NSViewController {
                     
                     let filter = IMPFilter(context: IMPContext())
                     let warp   = IMLTBezierWarpFilter(context: filter.context)
-                    filter.addFilter(warp)
                     warp.points = self.freeWarp.points
+
+                    let crop   = IMPCropFilter(context: filter.context)
+                    crop.region = self.cropView.region
+                    
+                    filter.addFilter(warp)
+                    filter.addFilter(crop)
                     
                     filter.source = image
                     
@@ -391,19 +411,57 @@ class ViewController: NSViewController {
         
         let distancex = 1/w * mouse_point_offset.x.float
         let distancey = 1/h * mouse_point_offset.y.float
-        
-        for i in 0..<4 {
-            for j in 0..<4{
-                let p = IMLTBezierWarpFilter.baseControlPoints[i,j]
-                var d = 1-distance(position, p)
-                let pd = d
-                d = d < 0.5 ? 0 : pow(d, 3)
-                print("\(p) ddd = \(d,pd)")
-                freeWarp.points[i,j] += float2(distancex,-distancey) * d
+
+        if toolBar.enabledCrop {
+            
+            var cropArea = cropView.region
+            
+            switch pointerPlace {
+                
+            case .LeftBottom:
+                cropArea = cropArea + IMPRegion(left: -distancex, right: 0, top: 0, bottom: -distancey)
+            case .Left:
+                cropArea = cropArea + IMPRegion(left: -distancex, right: 0, top: 0, bottom: 0)
+            case .LeftTop:
+                cropArea = cropArea + IMPRegion(left: -distancex, right: 0, top: distancey, bottom: 0)
+                
+            case .Top:
+                cropArea = cropArea + IMPRegion(left: 0, right: 0, top: distancey, bottom: 0)
+            case .RightTop:
+                cropArea = cropArea + IMPRegion(left: 0, right: distancex, top: distancey, bottom: 0)
+            case .Right:
+                cropArea = cropArea + IMPRegion(left: 0, right: distancex, top: 0, bottom: 0)
+                
+            case .RightBottom:
+                cropArea = cropArea + IMPRegion(left: 0, right: distancex, top: 0, bottom: -distancey)
+            case .Bottom:
+                cropArea = cropArea + IMPRegion(left: 0, right: 0, top: 0, bottom: -distancey)
+                
+            case .Center:
+                cropArea = cropArea + IMPRegion(left: -distancex/2, right: distancex/2, top: distancey/2, bottom: -distancey/2)
+                
+            default:
+                break
+            }
+
+            cropArea.left = cropArea.left < 0 ? 0 : cropArea.left > 0.49 ? 0.49 : cropArea.left
+            cropArea.right = cropArea.right < 0 ? 0 : cropArea.right > 0.49 ? 0.49 : cropArea.right
+            cropArea.bottom = cropArea.bottom < 0 ? 0 : cropArea.bottom > 0.49 ? 0.49 : cropArea.bottom
+            cropArea.top = cropArea.top < 0 ? 0 : cropArea.top > 0.49 ? 0.49 : cropArea.top
+            
+            cropView.region  = cropArea
+        }
+        else {
+            for i in 0..<4 {
+                for j in 0..<4{
+                    let p = IMLTBezierWarpFilter.baseControlPoints[i,j]
+                    var d = 1-distance(position, p)
+                    d = d < 0.5 ? 0 : pow(d, 2)
+                    freeWarp.points[i,j] += float2(distancex,-distancey) * d
+                }
             }
         }
         
-        print(" ---- ")
         updateConfig()
     }
     
@@ -427,10 +485,14 @@ class ViewController: NSViewController {
         let startWarp = freeWarp.points
         let finalWarp = IMPFloat2x4x4()
         
+        let startCrop = cropView.region
+        let finalCrop = IMPRegion()
+        
         IMPDisplayTimer.cancelAll()
         IMPDisplayTimer.execute(duration: duration, options: .EaseInOut, update: { (atTime) in
             
             self.freeWarp.points = startWarp.lerp(final: finalWarp, t: atTime.float)
+            self.cropView.region = startCrop.lerp(final: finalCrop, t: atTime.float)
             self.toolBar.gridSize = Int(startSlider.lerp(final: 50, t: atTime.float))
             
             }, complete: { (flag) in
@@ -520,15 +582,18 @@ class ViewController: NSViewController {
         }
         
         let startWarp = freeWarp.points
+        let startCrop = cropView.region
         
         IMPDisplayTimer.cancelAll()
         IMPDisplayTimer.execute(duration: duration, options: .EaseOut, update: { (atTime) in
            self.freeWarp.points = startWarp.lerp(final: self.config.points, t: atTime.float)
+            self.cropView.region = startCrop.lerp(final: self.config.crop, t: atTime.float)
         })
     }
     
     func updateConfig() {
         config.points = freeWarp.points
+        config.crop = cropView.region
     }
     
     func saveConfig(){
@@ -602,7 +667,8 @@ extension IMPJpegProvider {
 public class IMTLConfig:Mappable {
     
     var points = IMPFloat2x4x4()
-    
+    var crop = IMPRegion()
+
     public init(){}
     
     required public init?(_ map: Map) {
@@ -610,9 +676,32 @@ public class IMTLConfig:Mappable {
     
     public func mapping(map: Map) {
         points <- (map["points"],transformTensor)
+        crop <- (map["crop"],transformRegion)
     }
-    
-    
+
+    let transformRegion = TransformOf<IMPRegion, [String:Float]>(fromJSON: { (value: [String:Float]?) -> IMPRegion? in
+        
+        if let value = value {
+            return IMPRegion(
+                left:   value["left"]!,
+                right:  value["right"]!,
+                top:    value["top"]!,
+                bottom: value["bottom"]!)
+        }
+        return nil
+        }, toJSON: { (value: IMPRegion?) -> [String:Float]? in
+            if let region = value {
+                let json = [
+                    "left":  region.left,
+                    "right": region.right,
+                    "top":   region.top,
+                    "bottom":  region.bottom,
+                ]
+                return json
+            }
+            return nil
+    })
+
     let transformTensor = TransformOf<IMPFloat2x4x4, [[Float]]>(fromJSON: { (value: [[Float]]?) -> IMPFloat2x4x4? in
 
         if let value = value {
