@@ -60,8 +60,8 @@ fragment float4 fragment_bezierWarpTransformation(
     //
     // Финальная трансформация через эквивалетное тензорное произведение
     //
-    // P(u,v) = (u^3,u^2,u,1)B[S]B(v^3,v^2,v,1)
-    // где [S] - тензор контрольных точек
+    // Q(u,v) = (u^3,u^2,u,1)B[P]B(v^3,v^2,v,1)
+    // где [P] - тензор контрольных точек
     // https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline
     // http://sernam.ru/book_mm3d.php?id=109
     // https://youtu.be/4sKocFWugiM
