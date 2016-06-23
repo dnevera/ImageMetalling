@@ -66,6 +66,9 @@ class ViewController: NSViewController {
     lazy var filter:IMPFilter = {
         let f = IMPFilter(context: self.context)
         
+        /// Сетка
+        f.addFilter(self.grid)
+        
         /// Деформатор в пространстве Bezier кривых 
         f.addFilter(self.freeWarp)
         
@@ -74,9 +77,6 @@ class ViewController: NSViewController {
 
         /// Визуализация кропа
         f.addFilter(self.cropView)
-        
-        /// Сетка
-        f.addFilter(self.grid)
         
         return f
     }()
@@ -383,8 +383,11 @@ class ViewController: NSViewController {
         self.spotArea(spotArea)
     }
 
+    var mouse_point_touched = NSPoint()
+    
     func localMouseDown(theEvent: NSEvent, location:NSPoint, view:NSView) {
         
+        mouse_point_touched = location
         mouse_point = location
         mouse_point_before = mouse_point
         mouse_point_offset = NSPoint(x: 0,y: 0)
@@ -408,6 +411,7 @@ class ViewController: NSViewController {
         let w = view.frame.size.width.float
         let h = view.frame.size.height.float
         let position = float2(mouse_point.x.float,h-mouse_point.y.float)/float2(w,h)
+        let position_touched = float2(mouse_point_touched.x.float,h-mouse_point_touched.y.float)/float2(w,h)
         
         let distancex = 1/w * mouse_point_offset.x.float
         let distancey = 1/h * mouse_point_offset.y.float
@@ -455,9 +459,11 @@ class ViewController: NSViewController {
             for i in 0..<4 {
                 for j in 0..<4{
                     let p = IMLTBezierWarpFilter.baseControlPoints[i,j]
-                    var d = 1-distance(position, p)
-                    d = d < 0.5 ? 0 : pow(d, 2)
-                    freeWarp.points[i,j] += float2(distancex,-distancey) * d
+                    var d = distance(position_touched, p)
+                    let r:Float = 1/3
+                    d = d > r ? 0 : d < 0 ? 0 : pow(1-d,3)
+                    let offset = float2(distancex,-distancey)
+                    freeWarp.points[i,j] += offset * d
                 }
             }
         }
