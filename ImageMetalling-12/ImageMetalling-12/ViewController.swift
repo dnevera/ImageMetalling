@@ -619,7 +619,7 @@ class ViewController: NSViewController {
         let startSlider = Float(toolBar.gridSize)
         
         IMPDisplayTimer.cancelAll()
-        IMPDisplayTimer.execute(duration: duration, options: .EaseInOut, update: { (atTime) in
+        IMPDisplayTimer.execute(duration: duration, options: .EaseOut, update: { (atTime) in
             
             self.warp.destinationQuad = startDestination.lerp(final: finalWarp, t: atTime.float)
             self.crop.region = startCrop.lerp(final: finalCrop, t: atTime.float)
@@ -645,7 +645,7 @@ class ViewController: NSViewController {
         }
     }
     
-    let duration:NSTimeInterval = 0.2
+    let duration:NSTimeInterval = 1
     
     lazy var toolBar:IMPToolBar = {
         let t = IMPToolBar(frame: NSRect(x: 0,y: 0,width: 100,height: 20))
@@ -751,8 +751,8 @@ public extension NSRect {
         let y = region.top.cgfloat*size.height
         self = NSRect(x: origin.x+x,
                       y: origin.y+y,
-                      width: size.width*(1-region.right)-x,
-                      height: size.height*(1-region.bottom)-y)
+                      width: size.width*(1-region.right.cgfloat)-x,
+                      height: size.height*(1-region.bottom.cgfloat)-y)
     }
 }
 

@@ -5,6 +5,7 @@ target 'ImageMetalling-09' do
     platform :osx, '10.11'
     pod 'SnapKit'
     pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
+    
 end
 
 post_install do |installer|

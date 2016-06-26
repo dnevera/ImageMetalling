@@ -1,13 +1,17 @@
 
 use_frameworks!
 
-target 'ImageMetalling-12' do
+target 'ImageMetalling-14' do
     platform :osx, '10.11'
     pod 'SnapKit'
     pod 'ObjectMapper'
     #pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
     pod 'IMProcessing', :path => '../../degradr/IMProcessing'
 end
+
+#target 'PlaygroundWithDependencies' do
+#    
+#end
 
 post_install do |installer|
     installer.pods_project.targets.each do |target|
