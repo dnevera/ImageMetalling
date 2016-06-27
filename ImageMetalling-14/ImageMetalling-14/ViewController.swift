@@ -25,12 +25,20 @@ class ViewController: NSViewController {
     lazy var contrast:IMTLAutoContrastFilter = {
         let c = IMTLAutoContrastFilter(context: self.context)
         c.addDestinationObserver(destination: { (destination) in
+            
+            if c.autoContrastEnabled {
+                self.curvesView["Red"]?.controlPoints = c.curvesFilter.splines.redControls
+                self.curvesView["Green"]?.controlPoints = c.curvesFilter.splines.greenControls
+                self.curvesView["Blue"]?.controlPoints = c.curvesFilter.splines.blueControls
+            }
+            
             dispatch_async(dispatch_get_main_queue(), {
                 self.curvesView["Red"]?.curve = c.curvesFilter.splines.redCurve
                 self.curvesView["Green"]?.curve = c.curvesFilter.splines.greenCurve
                 self.curvesView["Blue"]?.curve = c.curvesFilter.splines.blueCurve
                 self.curvesView.display()
             })
+            
         })
         return c
     }()
@@ -53,11 +61,27 @@ class ViewController: NSViewController {
     
     lazy var curvesView:IMPCurvesView = {
         let v = IMPCurvesView(frame: self.view.bounds)
+        
+        v.didControlPointsUpdate = { (info) in
+            
+            self.contrast.autoContrastEnabled = false
+            
+            if info.id == "Red" {
+                self.contrast.curvesFilter.splines.redControls = info.controlPoints
+            }
+            else if info.id == "Green" {
+                self.contrast.curvesFilter.splines.greenControls = info.controlPoints
+            }
+            else if info.id == "Blue" {
+                self.contrast.curvesFilter.splines.blueControls = info.controlPoints
+            }
+        }
+        
         v.wantsLayer = true
         v.layer?.backgroundColor = IMPColor.clearColor().CGColor
-        v["Red"]   = IMPCurvesCanvasView.CurveInfo(name: "Red",   color:  IMPColor(red: 1,   green: 0.2, blue: 0.2, alpha: 0.8))
-        v["Green"] = IMPCurvesCanvasView.CurveInfo(name: "Green", color:  IMPColor(red: 0,   green: 1,   blue: 0,   alpha: 0.6))
-        v["Blue"]  = IMPCurvesCanvasView.CurveInfo(name: "Blue",  color:  IMPColor(red: 0.2, green: 0.2, blue: 1,   alpha: 0.8))
+        v["Red"]   = IMPCurvesCanvasView.CurveInfo(name: "Red",   color:  IMPColor(red: 1,   green: 0.2, blue: 0.2, alpha: 0.8), maxControls:2)
+        v["Green"] = IMPCurvesCanvasView.CurveInfo(name: "Green", color:  IMPColor(red: 0,   green: 1,   blue: 0,   alpha: 0.6), maxControls:2)
+        v["Blue"]  = IMPCurvesCanvasView.CurveInfo(name: "Blue",  color:  IMPColor(red: 0.2, green: 0.2, blue: 1,   alpha: 0.8), maxControls:2)
         return v
     }()
     
@@ -274,6 +298,7 @@ class ViewController: NSViewController {
         }
         
         t.slideHandler = { (step) in
+            self.contrast.autoContrastEnabled = true
             self.contrast.degree = step.float/100
         }
         

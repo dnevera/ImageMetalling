@@ -10,22 +10,30 @@ import Foundation
 import IMProcessing
 import Accelerate
 
-public class IMPBezierCurvesFilter:IMPFilter,IMPAdjustmentProtocol{
+
+public class IMTLCurvesFilter:IMPFilter,IMPAdjustmentProtocol{
     
     public class Splines: IMPTextureProvider,IMPContextProvider {
         
+        public typealias Function = ((controls:[float2])-> [Float])
+        
+        public var function:Function = { (controls) in
+            return Splines.defaultRange.cubicBezierSpline(controls) as [Float]
+        }
+        
         public var context:IMPContext!
-        
-        public static let scale:Float    = 1
-        public static let minValue = 0
-        public static let maxValue = 1
+        public static let scale:Float = 1
+        public static let minValue    = 0
+        public static let maxValue    = 1
         public static let defaultControls = [float2(minValue.float,minValue.float),float2(maxValue.float,maxValue.float)]
-        public static let defaultRange    = Float.range(start: 0, step: 1/255, end: 1)
-        public static let defaultCurve    = defaultRange.cubicBezierSpline(c1: Splines.defaultControls[0], c2: Splines.defaultControls[1]) as [Float]
         
-        var _redCurve:[Float]   = Splines.defaultCurve
-        var _greenCurve:[Float] = Splines.defaultCurve
-        var _blueCurve:[Float]  = Splines.defaultCurve
+        public static let defaultRange    = Float.range(start: 0, step: 1/256, end: 1)
+        
+        lazy var defaultCurve:[Float] = self.function(controls:Splines.defaultControls)
+        
+        lazy var _redCurve:[Float]   = self.defaultCurve
+        lazy var _greenCurve:[Float] = self.defaultCurve
+        lazy var _blueCurve:[Float]  = self.defaultCurve
         
         public var channelCurves:[[Float]]{
             get{
@@ -51,29 +59,29 @@ public class IMPBezierCurvesFilter:IMPFilter,IMPAdjustmentProtocol{
         var doNotUpdate = false
         public var redControls   = Splines.defaultControls {
             didSet{
-                _redCurve = Splines.defaultRange.cubicBezierSpline(c1: redControls[0], c2: redControls[1]) as [Float]
+                _redCurve = function(controls: redControls)
                 if !doNotUpdate {
                     updateTexture()
                 }
             }
         }
-        public var greenControls = Splines.defaultControls{
+        public var greenControls = Splines.defaultControls {
             didSet{
-                _greenCurve = Splines.defaultRange.cubicBezierSpline(c1: greenControls[0], c2: greenControls[1]) as [Float]
+                _greenCurve = function(controls: greenControls)
                 if !doNotUpdate {
                     updateTexture()
                 }
             }
         }
-        public var blueControls  = Splines.defaultControls{
+        public var blueControls  = Splines.defaultControls {
             didSet{
-                _blueCurve = Splines.defaultRange.cubicBezierSpline(c1: blueControls[0], c2: blueControls[1]) as [Float]
+                _blueCurve = function(controls: blueControls)
                 if !doNotUpdate {
                     updateTexture()
                 }
             }
         }
-        public var compositeControls = Splines.defaultControls{
+        public var compositeControls = Splines.defaultControls {
             didSet{
                 doNotUpdate = true
                 redControls   = compositeControls
@@ -145,52 +153,67 @@ public class IMPBezierCurvesFilter:IMPFilter,IMPAdjustmentProtocol{
 
 public class IMTLAutoContrastFilter: IMPFilter {
 
+    public var autoContrastEnabled = true {
+        didSet{
+            dirty = true
+        }
+    }
+    
     var rangeSolver = IMPHistogramRangeSolver() {
         didSet{
             dirty = true
         }
     }
 
-    public lazy var curvesFilter:IMPBezierCurvesFilter = {
-        return IMPBezierCurvesFilter(context:self.context)
+    public lazy var curvesFilter:IMTLCurvesFilter = {
+        let f = IMTLCurvesFilter(context:self.context)        
+        //f.splines.function = { (controls) in
+        //    return IMTLCurvesFilter.Splines.defaultRange.cubicSpline(controls)
+        //}
+        return f
     }()
     
     lazy var analyzer:IMPHistogramAnalyzer = {
         let a = IMPHistogramAnalyzer(context: self.context)
         a.addSolver(self.rangeSolver)
+        
         a.addUpdateObserver({ (histogram) in
-            
-            let lowlimit:Float = 0.1
-            let highlimit:Float = 0.9
-            let f = 2 * self.degree
-            var m = self.rangeSolver.minimum.a * f
-            var M = 1 - (1-self.rangeSolver.maximum.a) * f
-            
-            m = m < 0 ? 0 : m > highlimit ? highlimit : m
-            M = M < lowlimit ? lowlimit : M > 1 ? 1 : M
-
-            var r = self.rangeSolver.minimum.r * f
-            var R = 1 - (1-self.rangeSolver.maximum.r) * f
-
-            var g = self.rangeSolver.minimum.g * f
-            var G = 1 - (1-self.rangeSolver.maximum.g) * f
-
-            var b = self.rangeSolver.minimum.b * f
-            var B = 1 - (1-self.rangeSolver.maximum.b) * f
-
-            r = r < 0 ? 0 : r > highlimit ? highlimit : r
-            R = R < lowlimit ? lowlimit : R > 1 ? 1 : R
-
-            g = g < 0 ? 0 : g > highlimit ? highlimit : g
-            G = G < lowlimit ? lowlimit : G > 1 ? 1 : G
-
-            b = b < 0 ? 0 : b > highlimit ? highlimit : b
-            B = B < lowlimit ? lowlimit : B > 1 ? 1 : B
-
-
-            self.curvesFilter.splines.redControls = [float2(r,0), float2(R,1)]
-            self.curvesFilter.splines.greenControls = [float2(g,0), float2(G,1)]
-            self.curvesFilter.splines.blueControls = [float2(b,0), float2(B,1)]
+        
+            if self.autoContrastEnabled {
+                
+                let lowlimit:Float = 0.1
+                let highlimit:Float = 0.9
+                
+                let f = 2 * self.degree
+                var m = self.rangeSolver.minimum.a * f
+                var M = 1 - (1-self.rangeSolver.maximum.a) * f
+                
+                m = m < 0 ? 0 : m > highlimit ? highlimit : m
+                M = M < lowlimit ? lowlimit : M > 1 ? 1 : M
+                
+                var r = self.rangeSolver.minimum.r * f
+                var R = 1 - (1-self.rangeSolver.maximum.r) * f
+                
+                var g = self.rangeSolver.minimum.g * f
+                var G = 1 - (1-self.rangeSolver.maximum.g) * f
+                
+                var b = self.rangeSolver.minimum.b * f
+                var B = 1 - (1-self.rangeSolver.maximum.b) * f
+                
+                r = r < 0 ? 0 : r > highlimit ? highlimit : r
+                R = R < lowlimit ? lowlimit : R > 1 ? 1 : R
+                
+                g = g < 0 ? 0 : g > highlimit ? highlimit : g
+                G = G < lowlimit ? lowlimit : G > 1 ? 1 : G
+                
+                b = b < 0 ? 0 : b > highlimit ? highlimit : b
+                B = B < lowlimit ? lowlimit : B > 1 ? 1 : B
+                
+                
+                self.curvesFilter.splines.redControls = [float2(r,0), float2(R,1)]
+                self.curvesFilter.splines.greenControls = [float2(g,0), float2(G,1)]
+                self.curvesFilter.splines.blueControls = [float2(b,0), float2(B,1)]
+            }
         })
         return a
     }()
