@@ -166,7 +166,7 @@ public class IMTLAutoContrastFilter: IMPFilter {
     }
 
     public lazy var curvesFilter:IMTLCurvesFilter = {
-        let f = IMTLCurvesFilter(context:self.context)        
+        let f = IMTLCurvesFilter(context:self.context)
         //f.splines.function = { (controls) in
         //    return IMTLCurvesFilter.Splines.defaultRange.cubicSpline(controls)
         //}
