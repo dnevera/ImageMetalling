@@ -486,12 +486,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             IMPDisplayTimer.cancelAll()
             imageView.animationDuration = 0
-            IMPDisplayTimer.execute(duration: animateDuration, options: .Linear, update: { (atTime) in
+            IMPDisplayTimer.execute(duration: animateDuration, options: .EaseOut, update: { (atTime) in
                 ///
                 /// Отрезаем с анимацией
                 ///
-                ///
                 self.photoEditor.crop = start.lerp(final: final, t: atTime.float)
+                
                 }, complete: { (flag) in
                     self.imageView.animationDuration = self.animateDuration
                     if flag {
