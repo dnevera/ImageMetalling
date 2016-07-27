@@ -5,7 +5,10 @@ target 'ImageMetalling-11' do
     platform :ios, '9.0'
     pod 'SnapKit'
     pod 'ScalePicker'
-    pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git'
+#    pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing.git', :branch => 'develop'
+#    pod 'IMProcessingUI', :git => 'https://bitbucket.org/degrader/improcessingui.git', :branch => 'develop'
+    pod 'IMProcessing', :path => '../../degradr/IMProcessing'
+    pod 'IMProcessingUI', :path => '../../degradr/IMProcessingUI'
 end
 
 post_install do |installer|

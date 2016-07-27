@@ -8,6 +8,7 @@
 
 import UIKit
 import IMProcessing
+import IMProcessingUI
 import ScalePicker
 import SnapKit
 import ImageIO
@@ -376,8 +377,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             p  =  model.transform(point: p)
             
-            new_point.x = (p.x.cgfloat+1)/2 * w
-            new_point.y = (p.y.cgfloat+1)/2 * h
+            new_point.x = (p.x.cgfloat+1)/2 * w.cgfloat
+            new_point.y = (p.y.cgfloat+1)/2 * h.cgfloat
         }
         else {
             if o == .LandscapeLeft {
@@ -391,8 +392,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             p  =  model.transform(point: p)
             
-            new_point.x = (p.x.cgfloat+1)/2 * h
-            new_point.y = (p.y.cgfloat+1)/2 * w
+            new_point.x = (p.x.cgfloat+1)/2 * h.cgfloat
+            new_point.y = (p.y.cgfloat+1)/2 * w.cgfloat
         }
         
         return new_point
@@ -544,7 +545,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         cropAngleScaleView.showTickLabels = false
         cropAngleScaleView.gradientMaskEnabled = true
         cropAngleScaleView.sidePadding = 20.0
-        cropAngleScaleView.pickerPadding = 0.0
+        cropAngleScaleView.sidePadding = 0.0
         cropAngleScaleView.showCurrentValue = true
         cropAngleScaleView.tickColor = UIColor.whiteColor()
         
@@ -695,9 +696,9 @@ public func / (left:CGPoint, right:CGPoint) -> CGPoint {
 }
 
 public func * (left:CGPoint, right:Float) -> CGPoint {
-    return CGPoint(x: left.x*right, y: left.y*right)
+    return CGPoint(x: left.x*right.cgfloat, y: left.y*right.cgfloat)
 }
 
 public func / (left:CGPoint, right:Float) -> CGPoint {
-    return CGPoint(x: left.x/right, y: left.y/right)
+    return CGPoint(x: left.x/right.cgfloat, y: left.y/right.cgfloat)
 }

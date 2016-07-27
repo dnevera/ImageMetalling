@@ -9,6 +9,7 @@
 #include <metal_stdlib>
 using namespace metal;
 
-#include "IMPStdlib_metal.h"
+#include "IMProcessing_metal.h"
+#include "IMProcessingUI_metal.h"
 
 
