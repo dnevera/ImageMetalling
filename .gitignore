@@ -1,6 +1,8 @@
 Breakpoints_v2.xcbkptlist
 Podfile.lock
 Pods
+Build
+Index
 */**/*.xcuserstate
 */**/*.xcbkptlist
 *.xcbkptlist
