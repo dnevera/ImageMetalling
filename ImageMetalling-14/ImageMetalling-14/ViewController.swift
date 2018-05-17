@@ -14,7 +14,7 @@ import SnapKit
 
 class ViewController: NSViewController {
     
-    var patch = PatchNode(size: 20)
+    lazy var patch:PatchNode = PatchNode(size: CGFloat(self.patchColors.regionSize))
     
     var context = IMPContext()
     
@@ -94,12 +94,20 @@ class ViewController: NSViewController {
     }
     
     private lazy var patchColors:IMPColorObserver = {
-        let f = IMPColorObserver(context: self.context)        
+        let f = IMPColorObserver(context: self.context)   
+        f.regionSize = 20
         f.addObserver(destinationUpdated: { (destination) in
+            
             var rgb = self.patchColors.colors[0] 
             let color = NSColor(color: float4(rgb.r,rgb.g,rgb.b,1))
+            
+            let inverted_rgb = float3(1) - rgb 
+            let inverted_color = NSColor(color: float4(inverted_rgb.r,inverted_rgb.g,inverted_rgb.b,1))
+            
             rgb = rgb * float3(255)
+            
             DispatchQueue.main.async {
+                self.patch.strokeColor = inverted_color
                 self.colorLabel.backgroundColor = color
                 self.colorLabel.stringValue = String(format: "%3.0f, %3.0f, %3.0f", rgb.r, rgb.g, rgb.b)
             }
