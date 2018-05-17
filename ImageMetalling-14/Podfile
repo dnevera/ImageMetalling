@@ -1,0 +1,20 @@
+
+use_frameworks!
+
+target 'ImageMetalling-14' do
+    platform :osx, '10.13'
+    pod 'SnapKit' 
+    pod 'Surge', :git => 'https://github.com/dnevera/Surge.git', :branch => 'develop-swift4'
+    pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing', :branch => 'develop-swift4'
+    pod 'IMProcessingUI', :git => 'https://bitbucket.org/degrader/improcessingui', :branch => 'develop-swift4'
+end
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['DYLIB_COMPATIBILITY_VERSION'] = ''
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
+        end
+    end
+end
+
