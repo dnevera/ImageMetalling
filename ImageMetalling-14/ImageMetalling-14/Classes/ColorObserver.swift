@@ -97,7 +97,7 @@ public class ColorObserver:IMPFilter {
     
     /// Создаем кернел чтения
     private lazy var patchColorsKernel:IMPFunction = {
-        let f = IMPFunction(context: self.context, kernelName: "get_patchColors")
+        let f = IMPFunction(context: self.context, kernelName: "kernel_regionColors")
         
         // определяем параметры, которые передаем в кернел чтения текстуры  
         f.optionsHandler = { (function,command,source,destination) in

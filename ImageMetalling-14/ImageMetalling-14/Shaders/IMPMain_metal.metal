@@ -41,7 +41,7 @@ inline float3 avrgColor(int startx,   // начало области по x
 // Ядро чтения семплов текстуры с точностью до индекса и вычисление среднего значения цвета областей с центрами 
 // в пространстве RGB 
 //
-kernel void get_patchColors(
+kernel void kernel_regionColors(
                             // исходная текстура
                             metal::texture2d<float, metal::access::sample> source [[texture(0)]],
                             // список центров в которых нужно проситать семплы
