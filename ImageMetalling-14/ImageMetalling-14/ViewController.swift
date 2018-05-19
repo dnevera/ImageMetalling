@@ -41,12 +41,15 @@ class ViewController: NSViewController {
             // Читаем изображение
             let image = IMPImage(context: context, path: path)
             
-            // 
+            // Исходная текстура изображения для анализа
             patchColors.source = image
+            
+            // Она же для отображения
             targetView.processingView.image = IMPImage(context: context, path: path)
             
             let size  = image.size ?? NSSize(width: 700, height: 500)
             
+            // Просто магия для адоптации размеров изображения к viewport окна
             self.targetView.processingView.fitViewSize(size: size, to: self.targetView.bounds.size, moveCenter: false)
             self.targetView.sizeFit()
             
