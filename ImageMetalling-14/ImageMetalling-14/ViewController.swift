@@ -12,20 +12,36 @@ import IMProcessing
 import IMProcessingUI
 import SnapKit
 
+
+///
+/// Основной констроллер, в котором будем указывать квадратную область картинки, 
+/// читать цвета всех пикселов внутри и вычислять средний цвет это области
+///
 class ViewController: NSViewController {
-    
+        
+    ///
+    /// Патч который экспонируем поверх картинки для получения области считывания 
+    /// пикселей текстуры
+    ///
     lazy var patch:PatchNode = PatchNode(size: CGFloat(self.patchColors.regionSize))
     
+    /// Контекст процессинга
     var context = IMPContext()
     
+    
+    /// 
+    /// Путь к изображению 
+    ///
     var imagePath:String? {
         didSet{
             guard  let path = imagePath else {
                 return
             }            
             
+            // Читаем изображение
             let image = IMPImage(context: context, path: path)
             
+            // 
             patchColors.source = image
             targetView.processingView.image = IMPImage(context: context, path: path)
             
@@ -41,6 +57,48 @@ class ViewController: NSViewController {
         }
     }
     
+    /// Создаем фильтр обзёрвера цветов текстуры 
+    private lazy var patchColors:ColorObserver = {
+        let f = ColorObserver(context: self.context)
+        //
+        // Размер прямоугольной (квадратной) области по которой мы интерполируем 
+        // (на самом деле усредняем) цвет текстуры
+        //
+        f.regionSize = 20
+        
+        //
+        // Добавляем к фильтру обработку событий пересчета целевой тектстуры,
+        // которая на самом деле не пересчитывается и читает в шейдере в буфер её RGB-смеплы
+        //
+        f.addObserver(destinationUpdated: { (destination) in
+          
+            // 
+            // Поскольку мы читаем только одну область то берем первый элемент массива 
+            // прочитаных семполов цветов
+            // 
+            var rgb = f.colors[0]
+            
+            // представление [0-1] в NSColor
+            let color = NSColor(color: float4(rgb.r,rgb.g,rgb.b,1))
+            
+            // инвертируем цвет
+            let inverted_rgb = float3(1) - rgb 
+            let inverted_color = NSColor(color: float4(inverted_rgb.r,inverted_rgb.g,inverted_rgb.b,1))
+            
+            // для отображения в textfield переведем в 8-битное представление
+            rgb = rgb * float3(255)
+            
+            DispatchQueue.main.async {
+                // просто рисуем 
+                self.patch.strokeColor = inverted_color                
+                self.colorLabel.backgroundColor = color
+                self.colorLabel.stringValue = String(format: "%3.0f, %3.0f, %3.0f", rgb.r, rgb.g, rgb.b)
+            }
+        })        
+        return f
+    }()
+    
+    /// Все как обычно
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -74,6 +132,8 @@ class ViewController: NSViewController {
         }
     }
     
+    
+    /// Тут просто рисуем картинку с возможностью скрола и зума
     public lazy var targetView:TargetView = {
         let v = TargetView(frame: self.view.bounds)
         return v
@@ -83,6 +143,8 @@ class ViewController: NSViewController {
     private lazy var scene:SKScene = SKScene(size: self.skview.bounds.size)
     private lazy var panGesture:NSPanGestureRecognizer = NSPanGestureRecognizer(target: self, action: #selector(panHandler(recognizer:)))
     
+    
+    /// Возим патч по окну мышкой    
     @objc private func panHandler(recognizer:NSPanGestureRecognizer)  {
         let position:NSPoint = recognizer.location(in: skview)
         patch.position = position
@@ -93,39 +155,16 @@ class ViewController: NSViewController {
         patchColors.centers = [point]
     }
     
-    private lazy var patchColors:IMPColorObserver = {
-        let f = IMPColorObserver(context: self.context)   
-        f.regionSize = 20
-        f.addObserver(destinationUpdated: { (destination) in
-            
-            var rgb = self.patchColors.colors[0] 
-            let color = NSColor(color: float4(rgb.r,rgb.g,rgb.b,1))
-            
-            let inverted_rgb = float3(1) - rgb 
-            let inverted_color = NSColor(color: float4(inverted_rgb.r,inverted_rgb.g,inverted_rgb.b,1))
-            
-            rgb = rgb * float3(255)
-            
-            DispatchQueue.main.async {
-                self.patch.strokeColor = inverted_color
-                self.colorLabel.backgroundColor = color
-                self.colorLabel.stringValue = String(format: "%3.0f, %3.0f, %3.0f", rgb.r, rgb.g, rgb.b)
-            }
-        })        
-        return f
-    }()
-    
-    private lazy var colorLabel:NSTextField = self.makeLabel(frame: self.view.bounds)
-    
-    private func makeLabel(frame:NSRect) -> NSTextField {
-        let label = NSTextField(frame:frame)
+    /// Отобрахаем то, что прочитали в текстуре 
+    private lazy var colorLabel:NSTextField = {
+        let label = NSTextField(frame:self.view.frame)
         label.alignment = .center
         label.cell?.lineBreakMode = .byTruncatingMiddle
         label.backgroundColor = NSColor.clear
         label.isEditable = false        
         label.isBezeled = false
         label.font =  NSFont(name: "Courier New", size: 12)
-        return label
-    }
+        return label        
+    }()            
 }
 

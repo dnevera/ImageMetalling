@@ -14,12 +14,13 @@
 		3122044620AC27300025D3A3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3122044520AC27300025D3A3 /* ViewController.swift */; };
 		3122044820AC27310025D3A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3122044720AC27310025D3A3 /* Assets.xcassets */; };
 		3122044B20AC27310025D3A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3122044920AC27310025D3A3 /* Main.storyboard */; };
+		31B977B220B028FF009DA07D /* ColorObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B977B120B028FF009DA07D /* ColorObserver.swift */; };
 		9873B159847903CD4D7AD80C /* Pods_ImageMetalling_14.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DA6684B5841C0D1E6D8EA26 /* Pods_ImageMetalling_14.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0DA6684B5841C0D1E6D8EA26 /* Pods_ImageMetalling_14.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_14.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		311782A920AC426300C2731C /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; };
+		311782A920AC426300C2731C /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		311782AC20AC586500C2731C /* PatchNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchNode.swift; sourceTree = "<group>"; };
 		311782AE20AD83A100C2731C /* TargetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetView.swift; sourceTree = "<group>"; };
 		3122044020AC27300025D3A3 /* ImageMetalling-14.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-14.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -29,6 +30,7 @@
 		3122044A20AC27310025D3A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3122044C20AC27310025D3A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3122044D20AC27310025D3A3 /* ImageMetalling_14.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ImageMetalling_14.entitlements; sourceTree = "<group>"; };
+		31B977B120B028FF009DA07D /* ColorObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorObserver.swift; sourceTree = "<group>"; };
 		78C3DACB9037DD4E66D66252 /* Pods-ImageMetalling-14.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-14.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-14/Pods-ImageMetalling-14.release.xcconfig"; sourceTree = "<group>"; };
 		914A392C85517E6C048EED9E /* Pods-ImageMetalling-14.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-14.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-14/Pods-ImageMetalling-14.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,6 +60,7 @@
 			children = (
 				311782AC20AC586500C2731C /* PatchNode.swift */,
 				311782AE20AD83A100C2731C /* TargetView.swift */,
+				31B977B120B028FF009DA07D /* ColorObserver.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -230,6 +233,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				311782AD20AC586500C2731C /* PatchNode.swift in Sources */,
+				31B977B220B028FF009DA07D /* ColorObserver.swift in Sources */,
 				3122044620AC27300025D3A3 /* ViewController.swift in Sources */,
 				311782AA20AC426300C2731C /* IMPMain_metal.metal in Sources */,
 				311782AF20AD83A100C2731C /* TargetView.swift in Sources */,
