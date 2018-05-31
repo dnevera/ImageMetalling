@@ -24,7 +24,6 @@ typedef struct  {
 typedef struct {    
     float3 position  [[ attribute(SCNVertexSemanticPosition) ]];
     float3 normal    [[ attribute(SCNVertexSemanticNormal) ]];
-    float2 texCoords [[ attribute(SCNVertexSemanticTexcoord0) ]];
 } VertexInput;
 
 
@@ -39,21 +38,24 @@ typedef struct {
 
 // Основной вершинный шейдер программы
 vertex VertexOutput projectionVertex(VertexInput in [[ stage_in ]],
-                                          texture3d<float, access::sample> lut3d  [[texture(0)]],
-                                          constant SCNSceneBuffer &scn_frame     [[buffer(0)]],
-                                          constant NodeBuffer   &scn_node      [[buffer(1)]]
-                                          )
+                                     texture3d<float, access::sample> lut3d  [[texture(0)]],
+                                     constant SCNSceneBuffer &scn_frame     [[buffer(0)]],
+                                     constant NodeBuffer   &scn_node      [[buffer(1)]]
+                                     )
 {    
     VertexOutput vert;
     
+    // конвертируем координаты [-1:1] в представление цветов: [0:1]
     vert.rgb =  (in.position+1) * 0.5;
-            
-    float3 rgb = lut3d.sample(IMProcessing::lutSampler, vert.rgb).rgb;    
-    vert.rgb = rgb;
     
-    float3 pos = (rgb - 0.5) * 2;
-    vert.position   = scn_node.modelViewProjectionTransform * float4( pos, 1.0);    
-    vert.texCoords  = in.texCoords;
+    // прикладываем LUT
+    vert.rgb = lut3d.sample(IMProcessing::lutSampler, vert.rgb).rgb;
+    
+    // вычисляем новую позицию вершины 
+    float3 pos = (vert.rgb - 0.5) * 2;
+    
+    // позиционируем в соответствии с проекцией
+    vert.position   = scn_node.modelViewProjectionTransform * float4(pos, 1.0);
     
     return vert;
 }
@@ -62,5 +64,5 @@ vertex VertexOutput projectionVertex(VertexInput in [[ stage_in ]],
 fragment float4 materialFragment(VertexOutput in [[stage_in]])
 {
     // текущий семпл    
-    return float4(in.rgb, 1)/2;
+    return float4(in.rgb/2, 0.7);
 }

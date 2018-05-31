@@ -603,6 +603,12 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" id="HyV-fh-RgO">
                                     <items>
+                                        <menuItem title="Reset View" keyEquivalent="r" id="s0r-Xw-WBT">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                            <connections>
+                                                <action selector="resetView:" target="Voe-Tx-rLC" id="uiq-Dh-eXv"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Show Toolbar" keyEquivalent="t" id="snW-S8-Cw5">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>

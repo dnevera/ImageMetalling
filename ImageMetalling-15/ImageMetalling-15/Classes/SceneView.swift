@@ -14,28 +14,31 @@ import Cocoa
 
 import SceneKit
 
-/// Базовый view сцены, всякая настроечная шняга
+///
+/// Базовый view сцены, всякая настроечная шняга и взаимодействие с тачпадом или мышкой.
+/// Покрутить и отзумить то что лежит в constraintNode. Ноду задаем в конкретной сцене.
+///
 open class SceneView: NSView {
     
+    // Стандартный угол обзора
     static var defaultFov:CGFloat = 35
-        
-    public let operation:OperationQueue = {
-        let o = OperationQueue()
-        o.maxConcurrentOperationCount = OperationQueue.defaultMaxConcurrentOperationCount
-        return o
-    }()
-    
-    public var padding:CGFloat        = 10 {
-        didSet{
-            needsDisplay = true
-        }
+            
+    // Просто отступы для сцены от рамок основного окна
+    public var padding:CGFloat    = 10 {
+        didSet{ needsDisplay = true }
     }
     
+    // Соотношение сторон сцены 
     public var viewPortAspect:CGFloat = 0 {
-        didSet{
-            needsDisplay = true
-        }
+        didSet{ needsDisplay = true }
     }     
+    
+    public func reset(node:SCNNode) {
+        updateFov(SceneView.defaultFov)
+        node.pivot = SCNMatrix4Identity
+        node.transform = SCNMatrix4Identity
+        node.scale = SCNVector3(0.5, 0.5, 0.5)        
+    }
     
     public func resetView(animate:Bool = true, duration:CFTimeInterval = 0.15, complete: ((_ node:SCNNode)->Void)?=nil) {
         let node = constraintNode()
@@ -44,9 +47,7 @@ open class SceneView: NSView {
             complete?(node)
         }
         SCNTransaction.animationDuration = duration
-        updateFov(SceneView.defaultFov)
-        node.pivot = SCNMatrix4Identity
-        node.transform = SCNMatrix4Identity
+        reset(node: node)
         SCNTransaction.commit()
     }
     

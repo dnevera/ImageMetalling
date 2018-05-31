@@ -11,7 +11,9 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
+    @IBAction func resetView(_ sender: NSMenuItem) {(NSApplication.shared.keyWindow?.contentViewController as? ViewController)?.resetView()
+    }    
+    
     @IBAction func openLut(_ sender: NSMenuItem) {
         if openPanel.runModal() == NSApplication.ModalResponse.OK {
             if let url = openPanel.urls.first{

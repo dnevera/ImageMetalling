@@ -18,14 +18,10 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad() 
     }
-    
+                
     var lut:IMPCLut? {
-        set {
-            lutView.lut = newValue
-        }
-        get{
-            return lutView.lut
-        }
+        set { lutView.lut = newValue }
+        get{ return lutView.lut }
     }
     
     var lutUrl:URL? {
@@ -63,6 +59,9 @@ class ViewController: NSViewController {
         }
     }
 
-
+    func resetView() {
+        lutView.resetView()
+    }
+    
 }
 

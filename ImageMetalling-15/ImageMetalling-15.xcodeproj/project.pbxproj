@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		318CBDC620B8471D0040407E /* MetalNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318CBDC520B8471D0040407E /* MetalNode.swift */; };
 		31BEB13920B6DAB900C0F2C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB13820B6DAB900C0F2C5 /* AppDelegate.swift */; };
 		31BEB13B20B6DAB900C0F2C5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB13A20B6DAB900C0F2C5 /* ViewController.swift */; };
 		31BEB13D20B6DABA00C0F2C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31BEB13C20B6DABA00C0F2C5 /* Assets.xcassets */; };
@@ -21,7 +20,6 @@
 
 /* Begin PBXFileReference section */
 		3126686720BC817B00922C18 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
-		318CBDC520B8471D0040407E /* MetalNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalNode.swift; sourceTree = "<group>"; };
 		31BEB13520B6DAB900C0F2C5 /* ImageMetalling-15.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-15.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31BEB13820B6DAB900C0F2C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		31BEB13A20B6DAB900C0F2C5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -97,7 +95,6 @@
 			children = (
 				31BEB14F20B6F11800C0F2C5 /* SceneView.swift */,
 				31BEB15120B6F19E00C0F2C5 /* LutView.swift */,
-				318CBDC520B8471D0040407E /* MetalNode.swift */,
 				3126686720BC817B00922C18 /* Bridging-Header.h */,
 			);
 			path = Classes;
@@ -241,7 +238,6 @@
 				31BEB13B20B6DAB900C0F2C5 /* ViewController.swift in Sources */,
 				31BEB15420B6F20000C0F2C5 /* WindowController.swift in Sources */,
 				31BEB14D20B6DB8E00C0F2C5 /* IMPMain_metal.metal in Sources */,
-				318CBDC620B8471D0040407E /* MetalNode.swift in Sources */,
 				31BEB15220B6F19E00C0F2C5 /* LutView.swift in Sources */,
 				31BEB13920B6DAB900C0F2C5 /* AppDelegate.swift in Sources */,
 				31BEB15020B6F11800C0F2C5 /* SceneView.swift in Sources */,
