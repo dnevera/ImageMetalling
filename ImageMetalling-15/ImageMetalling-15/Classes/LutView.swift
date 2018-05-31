@@ -184,7 +184,7 @@ class LutView: SceneView, SCNSceneRendererDelegate {
         let p = SCNProgram()
         p.vertexFunctionName   = "projectionVertex"
         p.fragmentFunctionName = "materialFragment"
-        p.isOpaque = false;
+        p.isOpaque = false;                
         return p
     }()
     

@@ -27,11 +27,13 @@ typedef struct {
     float2 texCoords [[ attribute(SCNVertexSemanticTexcoord0) ]];
 } VertexInput;
 
+
 // Результат вершинного шейдера 
 typedef struct {
     float4 position [[position]];
     float2 texCoords;
     float3 rgb;
+    float3 surfaceColor;
 } VertexOutput;
 
 

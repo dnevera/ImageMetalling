@@ -18,15 +18,7 @@ import SceneKit
 open class SceneView: NSView {
     
     static var defaultFov:CGFloat = 35
-    
-    static public let fadeIn = SCNAction.fadeOpacity(to: 1, duration: 0.05)
-    static public let fadeOut = SCNAction.fadeOpacity(to: 0.3, duration: 0.15)
-    static public let scaleIn = SCNAction.scale(to: 1, duration: 0.1)
-    static public let scaleOut = SCNAction.scale(to: 2, duration: 0.1)
-    
-    static public let pulse = SCNAction.repeat(SCNAction.sequence([fadeOut, fadeIn]), count: 2)
-    static public let scalePulse = SCNAction.repeat(SCNAction.sequence([scaleOut, scaleIn]), count: 2)
-    
+        
     public let operation:OperationQueue = {
         let o = OperationQueue()
         o.maxConcurrentOperationCount = OperationQueue.defaultMaxConcurrentOperationCount
@@ -75,6 +67,18 @@ open class SceneView: NSView {
     private lazy var camera:SCNCamera = {
         let c = SCNCamera()
         c.fieldOfView = self.fov
+        
+        c.automaticallyAdjustsZRange = true
+        
+        c.vignettingPower = 0.6
+
+        c.bloomIntensity = 1.4
+        c.bloomBlurRadius = 1.0
+        
+        c.wantsDepthOfField = true
+        c.focalBlurSampleCount = 30
+        c.focusDistance = 1.0
+        
         return c
     }()
     
@@ -154,13 +158,13 @@ open class SceneView: NSView {
     
     private lazy var _cameraNode:SCNNode = {
         let n = SCNNode()
-        n.camera = self.camera
-        n.camera?.automaticallyAdjustsZRange = true
         
         //initial camera setup
         n.position = SCNVector3(x: 0, y: 0, z: 3.0)
         n.eulerAngles.y = -2 * CGFloat.pi * self.lastWidthRatio
         n.eulerAngles.x = -CGFloat.pi * self.lastHeightRatio
+
+        n.camera = self.camera      
         
         let constraint = SCNLookAtConstraint(target: self.constraintNode())
         n.constraints = [constraint]

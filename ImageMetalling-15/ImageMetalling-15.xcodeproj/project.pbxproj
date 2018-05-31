@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		318CBDC420B8441F0040407E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318CBDC320B8441F0040407E /* Extensions.swift */; };
 		318CBDC620B8471D0040407E /* MetalNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318CBDC520B8471D0040407E /* MetalNode.swift */; };
 		31BEB13920B6DAB900C0F2C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB13820B6DAB900C0F2C5 /* AppDelegate.swift */; };
 		31BEB13B20B6DAB900C0F2C5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB13A20B6DAB900C0F2C5 /* ViewController.swift */; };
@@ -21,8 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3126686720BC817B00922C18 /* ImageMetalling-15-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageMetalling-15-Bridging-Header.h"; sourceTree = "<group>"; };
-		318CBDC320B8441F0040407E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		3126686720BC817B00922C18 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		318CBDC520B8471D0040407E /* MetalNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalNode.swift; sourceTree = "<group>"; };
 		31BEB13520B6DAB900C0F2C5 /* ImageMetalling-15.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-15.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31BEB13820B6DAB900C0F2C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -99,9 +97,8 @@
 			children = (
 				31BEB14F20B6F11800C0F2C5 /* SceneView.swift */,
 				31BEB15120B6F19E00C0F2C5 /* LutView.swift */,
-				318CBDC320B8441F0040407E /* Extensions.swift */,
 				318CBDC520B8471D0040407E /* MetalNode.swift */,
-				3126686720BC817B00922C18 /* ImageMetalling-15-Bridging-Header.h */,
+				3126686720BC817B00922C18 /* Bridging-Header.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -248,7 +245,6 @@
 				31BEB15220B6F19E00C0F2C5 /* LutView.swift in Sources */,
 				31BEB13920B6DAB900C0F2C5 /* AppDelegate.swift in Sources */,
 				31BEB15020B6F11800C0F2C5 /* SceneView.swift in Sources */,
-				318CBDC420B8441F0040407E /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,7 +395,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Dehancer.ImageMetalling-15";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-15/Classes/ImageMetalling-15-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-15/Classes/Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 			};
@@ -425,7 +421,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Dehancer.ImageMetalling-15";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-15/Classes/ImageMetalling-15-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-15/Classes/Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
