@@ -64,5 +64,5 @@ vertex VertexOutput projectionVertex(VertexInput in [[ stage_in ]],
 fragment float4 materialFragment(VertexOutput in [[stage_in]])
 {
     // текущий семпл    
-    return float4(in.rgb/2, 0.7);
+    return float4(in.rgb, 0.6);
 }

@@ -15,7 +15,19 @@ import SceneKit
 /// Рендеринг сцены RGB-куба в SCNView в соответствии с вубранным LUT
 ///
 class LutView: SceneView, SCNSceneRendererDelegate {
-
+    
+    /// Переключаем режим просмотра между стандартным рендерингом и в шейдере 
+    var renderCube = true { 
+        didSet {
+            if renderCube {
+                material.program = program
+            }
+            else {
+                material.program = nil
+            }
+        }        
+    }
+    
     /// Количество узловых точек грида RGB-куба в сцене
     let resolution = 16
 
@@ -87,7 +99,9 @@ class LutView: SceneView, SCNSceneRendererDelegate {
     /// Создаем материал который будем рендерить в шейдерах Metal 
     lazy var material:SCNMaterial = {
         let m = SCNMaterial()
-        m.program = self.program
+        if self.renderCube {
+            m.program = self.program
+        }
         return m
     }()
         

@@ -31,7 +31,7 @@ class ViewController: NSViewController {
                 return
             }            
             
-            view.window?.title = url.lastPathComponent
+            view.window?.title = "LUT:" + url.lastPathComponent
                         
             let cursor = NSCursor.pointingHand
                         

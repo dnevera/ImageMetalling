@@ -11,13 +11,35 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    @IBAction func resetView(_ sender: NSMenuItem) {(NSApplication.shared.keyWindow?.contentViewController as? ViewController)?.resetView()
+    var controller:ViewController! {
+        return (NSApplication.shared.keyWindow?.contentViewController as? ViewController)
+    }
+    
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        if let view = controller?.view {
+            view.window?.title = "LUT: Identity"
+            view.addCursorRect(view.bounds, cursor: NSCursor.pointingHand  )
+            view.wantsLayer = true
+            view.layer?.backgroundColor = NSColor.darkGray.cgColor
+        }
+    }
+    
+    @IBAction func toggleRendering(_ sender: NSMenuItem) {
+         controller.lutView.renderCube = !controller.lutView.renderCube 
+    }
+    
+    @IBAction func showStatistics(_ sender: NSMenuItem) {
+        controller.lutView.sceneView.showsStatistics = !controller.lutView.sceneView.showsStatistics
+    }
+    
+    @IBAction func resetView(_ sender: NSMenuItem) {
+        controller?.resetView()
     }    
     
     @IBAction func openLut(_ sender: NSMenuItem) {
         if openPanel.runModal() == NSApplication.ModalResponse.OK {
             if let url = openPanel.urls.first{
-                (NSApplication.shared.keyWindow?.contentViewController as? ViewController)?.lutUrl = url
+                controller?.lutUrl = url
             }
         }
     }
