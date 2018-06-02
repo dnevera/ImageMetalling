@@ -1,0 +1,449 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		31BEB13920B6DAB900C0F2C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB13820B6DAB900C0F2C5 /* AppDelegate.swift */; };
+		31BEB13B20B6DAB900C0F2C5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB13A20B6DAB900C0F2C5 /* ViewController.swift */; };
+		31BEB13D20B6DABA00C0F2C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31BEB13C20B6DABA00C0F2C5 /* Assets.xcassets */; };
+		31BEB14020B6DABA00C0F2C5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 31BEB13E20B6DABA00C0F2C5 /* Main.storyboard */; };
+		31BEB14D20B6DB8E00C0F2C5 /* IMPMain_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB14C20B6DB8E00C0F2C5 /* IMPMain_metal.metal */; };
+		31BEB15020B6F11800C0F2C5 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB14F20B6F11800C0F2C5 /* SceneView.swift */; };
+		31BEB15220B6F19E00C0F2C5 /* LutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB15120B6F19E00C0F2C5 /* LutView.swift */; };
+		31BEB15420B6F20000C0F2C5 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BEB15320B6F20000C0F2C5 /* WindowController.swift */; };
+		60FC1B266F0755242A10023D /* Pods_ImageMetalling_15.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33ACE5BDF51A6EBBE19F119D /* Pods_ImageMetalling_15.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3126686720BC817B00922C18 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
+		31BEB13520B6DAB900C0F2C5 /* ImageMetalling-15.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-15.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		31BEB13820B6DAB900C0F2C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		31BEB13A20B6DAB900C0F2C5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		31BEB13C20B6DABA00C0F2C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		31BEB13F20B6DABA00C0F2C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		31BEB14120B6DABB00C0F2C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		31BEB14220B6DABB00C0F2C5 /* ImageMetalling_15.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ImageMetalling_15.entitlements; sourceTree = "<group>"; };
+		31BEB14C20B6DB8E00C0F2C5 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; };
+		31BEB14F20B6F11800C0F2C5 /* SceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
+		31BEB15120B6F19E00C0F2C5 /* LutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LutView.swift; sourceTree = "<group>"; };
+		31BEB15320B6F20000C0F2C5 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		33ACE5BDF51A6EBBE19F119D /* Pods_ImageMetalling_15.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_15.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		342645EC4FFF3E41E21858DB /* Pods-ImageMetalling-15.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-15.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-15/Pods-ImageMetalling-15.release.xcconfig"; sourceTree = "<group>"; };
+		4363C958257721D97B3CBA5A /* Pods-ImageMetalling-15.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-15.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-15/Pods-ImageMetalling-15.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		31BEB13220B6DAB900C0F2C5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60FC1B266F0755242A10023D /* Pods_ImageMetalling_15.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		31BEB12C20B6DAB900C0F2C5 = {
+			isa = PBXGroup;
+			children = (
+				31BEB13720B6DAB900C0F2C5 /* ImageMetalling-15 */,
+				31BEB13620B6DAB900C0F2C5 /* Products */,
+				4E3426DD8A6D822B135E1408 /* Pods */,
+				A4EA70E8960426C78BA28587 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		31BEB13620B6DAB900C0F2C5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				31BEB13520B6DAB900C0F2C5 /* ImageMetalling-15.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		31BEB13720B6DAB900C0F2C5 /* ImageMetalling-15 */ = {
+			isa = PBXGroup;
+			children = (
+				31BEB14E20B6DCB700C0F2C5 /* Classes */,
+				31BEB14B20B6DB8E00C0F2C5 /* Shaders */,
+				31BEB13820B6DAB900C0F2C5 /* AppDelegate.swift */,
+				31BEB13A20B6DAB900C0F2C5 /* ViewController.swift */,
+				31BEB15320B6F20000C0F2C5 /* WindowController.swift */,
+				31BEB13C20B6DABA00C0F2C5 /* Assets.xcassets */,
+				31BEB13E20B6DABA00C0F2C5 /* Main.storyboard */,
+				31BEB14120B6DABB00C0F2C5 /* Info.plist */,
+				31BEB14220B6DABB00C0F2C5 /* ImageMetalling_15.entitlements */,
+			);
+			path = "ImageMetalling-15";
+			sourceTree = "<group>";
+		};
+		31BEB14B20B6DB8E00C0F2C5 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				31BEB14C20B6DB8E00C0F2C5 /* IMPMain_metal.metal */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		31BEB14E20B6DCB700C0F2C5 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				31BEB14F20B6F11800C0F2C5 /* SceneView.swift */,
+				31BEB15120B6F19E00C0F2C5 /* LutView.swift */,
+				3126686720BC817B00922C18 /* Bridging-Header.h */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		4E3426DD8A6D822B135E1408 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4363C958257721D97B3CBA5A /* Pods-ImageMetalling-15.debug.xcconfig */,
+				342645EC4FFF3E41E21858DB /* Pods-ImageMetalling-15.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		A4EA70E8960426C78BA28587 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				33ACE5BDF51A6EBBE19F119D /* Pods_ImageMetalling_15.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		31BEB13420B6DAB900C0F2C5 /* ImageMetalling-15 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 31BEB14520B6DABB00C0F2C5 /* Build configuration list for PBXNativeTarget "ImageMetalling-15" */;
+			buildPhases = (
+				6C1495A38ECEE8C1ABFA3F92 /* [CP] Check Pods Manifest.lock */,
+				31BEB13120B6DAB900C0F2C5 /* Sources */,
+				31BEB13220B6DAB900C0F2C5 /* Frameworks */,
+				31BEB13320B6DAB900C0F2C5 /* Resources */,
+				029680C925C59AC88F4801DC /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ImageMetalling-15";
+			productName = "ImageMetalling-15";
+			productReference = 31BEB13520B6DAB900C0F2C5 /* ImageMetalling-15.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		31BEB12D20B6DAB900C0F2C5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0930;
+				LastUpgradeCheck = 0930;
+				ORGANIZATIONNAME = Dehancer;
+				TargetAttributes = {
+					31BEB13420B6DAB900C0F2C5 = {
+						CreatedOnToolsVersion = 9.3.1;
+						LastSwiftMigration = 0930;
+					};
+				};
+			};
+			buildConfigurationList = 31BEB13020B6DAB900C0F2C5 /* Build configuration list for PBXProject "ImageMetalling-15" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 31BEB12C20B6DAB900C0F2C5;
+			productRefGroup = 31BEB13620B6DAB900C0F2C5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				31BEB13420B6DAB900C0F2C5 /* ImageMetalling-15 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		31BEB13320B6DAB900C0F2C5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31BEB13D20B6DABA00C0F2C5 /* Assets.xcassets in Resources */,
+				31BEB14020B6DABA00C0F2C5 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		029680C925C59AC88F4801DC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-15/Pods-ImageMetalling-15-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/IMProcessing/IMProcessing.framework",
+				"${BUILT_PRODUCTS_DIR}/IMProcessingUI/IMProcessingUI.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Surge/Surge.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IMProcessing.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IMProcessingUI.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Surge.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-15/Pods-ImageMetalling-15-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6C1495A38ECEE8C1ABFA3F92 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ImageMetalling-15-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		31BEB13120B6DAB900C0F2C5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31BEB13B20B6DAB900C0F2C5 /* ViewController.swift in Sources */,
+				31BEB15420B6F20000C0F2C5 /* WindowController.swift in Sources */,
+				31BEB14D20B6DB8E00C0F2C5 /* IMPMain_metal.metal in Sources */,
+				31BEB15220B6F19E00C0F2C5 /* LutView.swift in Sources */,
+				31BEB13920B6DAB900C0F2C5 /* AppDelegate.swift in Sources */,
+				31BEB15020B6F11800C0F2C5 /* SceneView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		31BEB13E20B6DABA00C0F2C5 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				31BEB13F20B6DABA00C0F2C5 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		31BEB14320B6DABB00C0F2C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		31BEB14420B6DABB00C0F2C5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		31BEB14620B6DABB00C0F2C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4363C958257721D97B3CBA5A /* Pods-ImageMetalling-15.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "ImageMetalling-15/ImageMetalling_15.entitlements";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TCA85S5T49;
+				INFOPLIST_FILE = "ImageMetalling-15/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MTL_HEADER_SEARCH_PATHS = "$(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-OSX/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-iOS/IMProcessing.framework/Headers $(inherited) $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI/IMProcessingUI.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-OSX/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI-OSX/IMProcessingUI.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-iOS/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI-iOS/IMProcessingUI.framework/Headers $(PROJECT_DIR)/$(PROJECT_NAME)/Common";
+				PRODUCT_BUNDLE_IDENTIFIER = "Dehancer.ImageMetalling-15";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-15/Classes/Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		31BEB14720B6DABB00C0F2C5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 342645EC4FFF3E41E21858DB /* Pods-ImageMetalling-15.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "ImageMetalling-15/ImageMetalling_15.entitlements";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TCA85S5T49;
+				INFOPLIST_FILE = "ImageMetalling-15/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MTL_HEADER_SEARCH_PATHS = "$(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-OSX/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-iOS/IMProcessing.framework/Headers $(inherited) $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI/IMProcessingUI.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-OSX/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI-OSX/IMProcessingUI.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-iOS/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI-iOS/IMProcessingUI.framework/Headers $(PROJECT_DIR)/$(PROJECT_NAME)/Common";
+				PRODUCT_BUNDLE_IDENTIFIER = "Dehancer.ImageMetalling-15";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-15/Classes/Bridging-Header.h";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		31BEB13020B6DAB900C0F2C5 /* Build configuration list for PBXProject "ImageMetalling-15" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31BEB14320B6DABB00C0F2C5 /* Debug */,
+				31BEB14420B6DABB00C0F2C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		31BEB14520B6DABB00C0F2C5 /* Build configuration list for PBXNativeTarget "ImageMetalling-15" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31BEB14620B6DABB00C0F2C5 /* Debug */,
+				31BEB14720B6DABB00C0F2C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 31BEB12D20B6DAB900C0F2C5 /* Project object */;
+}
