@@ -5,8 +5,8 @@ target 'ImageMetalling-15' do
     platform :osx, '10.13'
     pod 'SnapKit' 
     pod 'Surge', :git => 'https://github.com/dnevera/Surge.git', :branch => 'develop-swift4'
-    pod 'IMProcessing', :path => '../../Dehancer/IMProcessing-swift4' #:git => 'https://bitbucket.org/degrader/improcessing', :branch => 'develop-swift4'
-    pod 'IMProcessingUI', :path => '../../Dehancer/IMProcessingUI-swift4' #:git => 'https://bitbucket.org/degrader/improcessingui', :branch => 'develop-swift4'
+    pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing', :branch => 'develop-swift4'
+    pod 'IMProcessingUI', :git => 'https://bitbucket.org/degrader/improcessingui', :branch => 'develop-swift4'
 end
 
 post_install do |installer|
