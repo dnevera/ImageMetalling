@@ -57,7 +57,6 @@ class GridView: NSView {
     }
     
     @objc private func pressHandler(recognizer:NSPanGestureRecognizer)  {
-        let location:NSPoint = recognizer.location(in: skview)
         if lastNode != nil && lastIndex >= 0 {
             (lastNode as? KnotNode)?.isPinned = true
         }        
@@ -84,11 +83,14 @@ class GridView: NSView {
             do {
                 
                 for i in 0..<knotsGrid.children.count {
-                    if i == lastIndex { continue }
+                    //if i == lastIndex { continue }
 
                     let msl = try MSLSolver(point: knotsGrid.children[i].position.convert(from: knotsGrid.box), 
                                             p: p,  
-                                            q: q) 
+                                            q: q,
+                                            kind: .similarity,
+                                            alpha: 1
+                    ) 
                     
                     knotsGrid.children[i].position = msl.value(at: knotsGrid.mlsPoints.sources[i]).convert(to: knotsGrid.box)
                 }                

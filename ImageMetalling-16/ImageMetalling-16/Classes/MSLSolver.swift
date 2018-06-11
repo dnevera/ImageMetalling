@@ -29,28 +29,36 @@ public extension float2 {
     }
 }
 
+private extension float2 {
+    var slashReflect:float2 {
+        return float2(-y,x)
+    }
+}
+
 public class MSLSolver {
     
+    public enum Kind {
+        case affine
+        case similarity
+    }
+    
+    public enum Error:Swift.Error {
+        case diffSize
+    }
+    
+    public let kind:Kind
     public let alpha:Float
     public let count:Int
     public let point:float2
     public let p:[float2]
     public let q:[float2]
-    public var w:[Float] = []
-    public var weight:Float = Float.ulpOfOne
-    public var pStar:float2 = float2()
-    public var qStar:float2 = float2()
-    public var pHat:[float2] = []
-    public var qHat:[float2] = []
     
-    
-    public var M:float2x2 = float2x2(diagonal: float2(1))
-    
-    public init(point:float2, p:[float2], q:[float2], alpha:Float = 1) throws {
+    public init(point:float2, p:[float2], q:[float2], kind:Kind = .affine, alpha:Float = 1) throws {
         if p.count != q.count {
-            throw SolverError.diffSize
+            throw Error.diffSize
         }
         
+        self.kind = kind
         self.alpha = alpha
         self.count = p.count
         
@@ -83,13 +91,9 @@ public class MSLSolver {
         
         for i in 0..<count {
             
-            //var d =  distance(p[i], point) // length(p[i] - point)
-            //d = powf(d, 2*alpha) 
-              
-            let dx = p[i].x - point.x
-            let dy = p[i].y - point.y
-            var d = dx * dx + dy * dy
-            
+            var d =  distance(p[i], point) 
+            d = powf(d, 2*alpha) 
+                          
             if d < Float.ulpOfOne { d = Float.ulpOfOne}
             
             w[i] = 1.0 / d
@@ -115,43 +119,104 @@ public class MSLSolver {
     private func solveHat(){        
         pHat = [float2](repeating: float2(0), count: count)
         qHat = [float2](repeating: float2(0), count: count)
-        
-        for i in 0..<count {            
-            pHat[i] = p[i] - pStar
+        mu = 0
+        for i in 0..<count {      
+            
+            pHat[i] = p[i] - pStar            
+            
             qHat[i] = q[i] - qStar
+            
+            mu += w[i]*dot(pHat[i], pHat[i])
         }
+        
+        if mu < Float.ulpOfOne { mu = Float.ulpOfOne }
+        
+        mu = 1/mu
     }
-    
+            
     private func solveM(){
-        M = Mi(point).inverse * Mj(point)
+        switch kind {
+        case .affine:
+            M = affineM(point)
+        case .similarity:
+            M = similarityM(point)
+        }
     }      
-    
-    private func Mj(_ value:float2) -> float2x2 {
-        var mj = float2x2(0)
+             
+    fileprivate var w:[Float] = []
+    fileprivate var weight:Float = Float.ulpOfOne
+    fileprivate var pStar:float2 = float2()
+    fileprivate var qStar:float2 = float2()
+    fileprivate var pHat:[float2] = []
+    fileprivate var qHat:[float2] = []
+        
+    fileprivate var mu:Float = 1
+
+    fileprivate var M:float2x2 = float2x2(diagonal: float2(1))
+            
+}
+
+//
+// Affine transformation Matrix
+//
+extension MSLSolver {
+    private func affineMj(_ value:float2) -> float2x2 {
+        var m = float2x2(0)
         for i in 0..<count {
             let p = w[i] * pHat[i]
             let q = qHat[i]
             let pt = float2x2(columns: (p, float2(0)))
             let qp = float2x2(rows: [q, float2(0)])
-            let m = pt * qp
-            mj += m
+            let mi = pt * qp
+            m += mi
         }
-        return mj
+        return m
     }
     
-    public func Mi(_ value:float2) -> float2x2 {
-        var mj = float2x2(0)
+    private func affineMi(_ value:float2) -> float2x2 {
+        var m = float2x2(0)
         for i in 0..<count {
             let p = pHat[i]
             let pt = float2x2(columns: (p, float2(0)))
             let pp = w[i] * float2x2(rows: [p, float2(0)])
-            let m = pt * pp
-            mj += m
+            let mi = pt * pp
+            m += mi
         }
-        return mj
+        return m
     }
-        
-    public enum SolverError:Error {
-        case diffSize
+    
+    fileprivate func affineM(_ value:float2) -> float2x2 {
+        return affineMi(point).inverse * affineMj(point)
     }
 }
+
+//
+// Similarity transformation Matrix
+//
+extension MSLSolver {        
+    fileprivate func similarityM(_ value:float2) -> float2x2 {
+        var m = float2x2(0)
+        for i in 0..<count {
+            let slashp = -1 * pHat[i].slashReflect
+            let _p = w[i] * float2x2(rows: [pHat[i], slashp])
+            
+            let slashq = -1 * qHat[i].slashReflect
+            let _q = float2x2(columns: (qHat[i], slashq))
+            
+            let mi = _p * _q
+            
+            m += mi
+        }
+        return  mu * m 
+    }
+}
+
+//
+// Rigid transformation Matrix
+//
+extension MSLSolver {        
+    fileprivate func rigidM(_ value:float2) -> float2x2 {
+       return float2x2(diagonal: float2(1))
+    }
+}
+
