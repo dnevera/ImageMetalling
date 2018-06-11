@@ -18,10 +18,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         
-                   
-    }
-    
-    func applicationDidBecomeActive(_ notification: Notification) {
         if controller.gridView.mslKind  == .affine {
             affineItem.state = .on
         }
@@ -30,7 +26,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } 
         else if controller.gridView.mslKind  == .rigid {
             rigidItem.state = .on
-        } 
+        }           
+    }
+    
+    func applicationDidBecomeActive(_ notification: Notification) {
+       
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
