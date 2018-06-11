@@ -13,7 +13,7 @@ import IMProcessing
 
 class GridView: NSView {
 
-    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width: 10, height: 10), radius:10, padding:0)
+    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width: 10, height: 10), radius:10, padding:20)
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -44,54 +44,54 @@ class GridView: NSView {
                 
         skview.addGestureRecognizer(panGesture)
         
+        pressGesture.numberOfTouchesRequired = 1    
+        skview.addGestureRecognizer(pressGesture)        
+
         addSubview(skview)
         
         skview.autoresizingMask = [.height, .width]
         skview.frame = NSInsetRect(bounds, 0, 0)
         skview.allowsTransparency = true
-        skview.presentScene(scene)               
+        skview.presentScene(scene)  
+                
+    }
+    
+    @objc private func pressHandler(recognizer:NSPanGestureRecognizer)  {
+        let location:NSPoint = recognizer.location(in: skview)
+        if lastNode != nil && lastIndex >= 0 {
+            (lastNode as? KnotNode)?.isPinned = true
+        }        
     }
     
     @objc private func panHandler(recognizer:NSPanGestureRecognizer)  {
-        let location:NSPoint = recognizer.location(in: skview)        
+        let location:NSPoint = recognizer.location(in: skview)
+        
         lastNode?.position = location    
         (lastNode as? KnotNode)?.isPinned = true
         
         if lastNode != nil && lastIndex >= 0 {
             
-            //knotsGrid.mlsPoints.setTarget(point: location, from: knotsGrid.box, at: lastIndex)
-            
-            var p = [float2]([float2(0), float2(0,1), float2(1,0), float2(1)])//[float2](knotsGrid.mlsPoints.sources)
-            var q = [float2]([float2(0), float2(0,1), float2(1,0), float2(1)])//[float2](knotsGrid.mlsPoints.sources)
+            var p = [float2]()
+            var q = [float2]()
 
             for (i,k) in knotsGrid.children.enumerated() {
                 if let kk = k as? KnotNode, kk.isPinned {
-                    //q[i] = kk.position.convert(from: knotsGrid.box)
                     q.append(k.position.convert(from: knotsGrid.box))
                     p.append(knotsGrid.mlsPoints.sources[i])
                 }
             }
-            
-            let point = location.convert(from: knotsGrid.box)                        
-            
+                        
             do {
-                //print(" ppp[\(lastIndex)] = \(msl.value(at: p), p)")                
                 
                 for i in 0..<knotsGrid.children.count {
                     if i == lastIndex { continue }
 
                     let msl = try MSLSolver(point: knotsGrid.children[i].position.convert(from: knotsGrid.box), 
-                                            p: p, //[float2(0), float2(0,1), float2(1,0), float2(1), p[lastIndex]], 
-                                            q: q) //[float2(0), float2(0,1), float2(1,0), float2(1), point])
-
-                    //knotsGrid.mlsPoints[i] = msl.value(at: knotsGrid.mlsPoints.sources[i])
-                    //let pos = knotsGrid.children[i].position.convert(from: knotsGrid.box)
-                    //knotsGrid.children[i].position = msl.value(at: pos).convert(to: knotsGrid.box)
+                                            p: p,  
+                                            q: q) 
                     
                     knotsGrid.children[i].position = msl.value(at: knotsGrid.mlsPoints.sources[i]).convert(to: knotsGrid.box)
-                }
-                
-                //knotsGrid.update()
+                }                
             }
             catch let error {
                 print("\(error)")
@@ -155,6 +155,9 @@ class GridView: NSView {
     
     private lazy var skview:SKView = SKView(frame: self.bounds)
     private lazy var scene:SKScene = SKScene(size: self.skview.bounds.size)
+        
+    private lazy var pressGesture:NSClickGestureRecognizer = NSClickGestureRecognizer(target: self, action: #selector(pressHandler(recognizer:)))
+    
     private lazy var panGesture:NSPanGestureRecognizer = NSPanGestureRecognizer(target: self, action: #selector(panHandler(recognizer:)))
 
 }

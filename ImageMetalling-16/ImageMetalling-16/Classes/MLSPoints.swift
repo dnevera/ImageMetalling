@@ -8,8 +8,6 @@
 
 import Foundation
 import simd
-import RxSwift
-import RxCocoa
 import IMProcessing
 import Surge
 
@@ -26,11 +24,7 @@ public class MLSPoints {
     public var count:Int {
         return targets.count
     }
-    
-    
-    public var positionAtIndex = Variable<(point:NSPoint,inBox:NSRect,index:Int)>((.zero,.zero,0))     
-    let bag = DisposeBag()
-
+        
     public init(dimension: (width:Int,height:Int), alpha:Float = 1.0){
         
         self.alpha = alpha
@@ -49,15 +43,7 @@ public class MLSPoints {
             }
         }
         
-        targets = [float2](_sources)                             
-        
-        positionAtIndex
-            .asObservable()
-            .subscribe { (event) in                
-                //let index = event.element!.index
-                //let box = event.element!.inBox                         
-            }
-            .disposed(by: bag)
+        targets = [float2](_sources)                                             
     }
            
     subscript(index:Int) -> float2 {

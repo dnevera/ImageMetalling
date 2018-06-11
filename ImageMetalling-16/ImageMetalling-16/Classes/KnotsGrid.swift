@@ -8,8 +8,6 @@
 
 import Cocoa
 import SpriteKit 
-import RxCocoa
-import RxSwift
 
 open class KnotsGrid: SKShapeNode { 
     
@@ -60,22 +58,26 @@ open class KnotsGrid: SKShapeNode {
                     knot.bounds = box
                     if !knot.isPinned {
                         knot.position = p
-                        //mlsPoints.setTarget(point: p, from: box, at: (x: x, y: y))            
                     }
                 }                    
                 else {
                     knot = KnotNode(bounds: box, radius: radius)
                     knot.position = p
                     knot.name = "\(index)"
-                    addChild(knot)         
-                                        
-//                    knot.rx
-//                        .observe(NSPoint.self, "position")
-//                        .map { (point) -> (point:NSPoint, inBox:NSRect,index:Int) in
-//                            return (point!,self.box,Int(knot.name!)!) 
-//                        }
-//                        .bind(to: self.mlsPoints.positionAtIndex)
-//                        .disposed(by: self.mlsPoints.bag)                                       
+                    addChild(knot)     
+                    
+                    if x == 0 && y == 0 {
+                        knot.isPinned = true
+                    }
+                    else if x == 0 && y == mlsPoints.dimension.height-1 {
+                        knot.isPinned = true
+                    }
+                    else if x == mlsPoints.dimension.width-1 && y == mlsPoints.dimension.height-1 {
+                        knot.isPinned = true
+                    }
+                    else if x == mlsPoints.dimension.width-1 && y == 0 {
+                        knot.isPinned = true
+                    }                    
                 }    
                 index += 1
             }
