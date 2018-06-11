@@ -9,6 +9,34 @@
 import Foundation
 import simd
 
+public class _MLSSolver: MLSSolverBridge {    
+    
+    public enum Error:Swift.Error {
+        case diffSize
+    }
+    
+    public init(point: float2, p:[float2], q:[float2], kind:MLSSolverKind = .affine, alpha:Float = 1.0) throws {
+        
+        if p.count != q.count {
+            throw Error.diffSize
+        }
+        
+        self.count = p.count
+        
+        self.p = [float2](p)
+        self.q = [float2](q)    
+        super.init(point, source: &self.p, destination: &self.q, count: Int32(p.count), kind: kind, alpha: alpha)
+    }
+        
+    public func value(at point:float2) -> float2 {
+        return self.value(point)
+    }
+    
+    public let count:Int
+    private var p = [float2]()
+    private var q = [float2]()
+}
+
 public extension NSPoint {    
     public func convert(from box: NSRect) -> float2 {
         if box == .zero {
@@ -35,7 +63,7 @@ private extension float2 {
     }
 }
 
-public class MSLSolver {
+public class MSLSolverSwift {
     
     public enum Kind {
         case affine
@@ -177,7 +205,7 @@ public class MSLSolver {
 //
 // Affine transformation Matrix
 //
-extension MSLSolver {
+extension MSLSolverSwift {
     
     private func affineMj(_ value:float2) -> float2x2 {
         var m = float2x2(0)
@@ -211,7 +239,7 @@ extension MSLSolver {
 //
 // Similarity transformation Matrix
 //
-extension MSLSolver {    
+extension MSLSolverSwift {    
     
     fileprivate func similarityMu(index i:Int) -> Float {
         return w[i]*dot(pHat[i], pHat[i])
@@ -233,7 +261,7 @@ extension MSLSolver {
 //
 // Rigid transformation Matrix
 //
-extension MSLSolver {        
+extension MSLSolverSwift {        
     fileprivate func rigidMu1(index i:Int) -> Float {
         return w[i]*dot(qHat[i], pHat[i])        
     }

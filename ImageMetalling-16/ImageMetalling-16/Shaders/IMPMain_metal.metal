@@ -12,6 +12,9 @@
 using namespace metal;
 #include <SceneKit/scn_metal> 
 
+#include "MLSSolver.hpp"
+#include "MLSSolverCommon.h"
+
 // Стандартные параметры модели (узла) 
 typedef struct  {
     float4x4 modelTransform;
@@ -64,5 +67,21 @@ vertex VertexOutput projectionVertex(VertexInput in [[ stage_in ]],
 fragment float4 materialFragment(VertexOutput in [[stage_in]])
 {
     // текущий семпл    
+            
     return float4(in.rgb, 0.6);
+}
+
+kernel void kernel_mlsSolver(
+                             constant float2  *input_points  [[buffer(0)]],
+                             device float2    *output_points [[buffer(1)]],
+                             constant float2  *p      [[buffer(2)]],
+                             constant float2  *q      [[buffer(3)]],
+                             constant int    &count   [[buffer(4)]],
+                             constant MLSSolverKind  &kind [[buffer(5)]],
+                             constant float    &alpha [[buffer(6)]],
+                             uint gid [[thread_position_in_grid]]
+                             ){
+    float2 point = input_points[gid];
+    //MLSSolver solver = MLSSolver(point,p,q,count,kind,alpha);
+    //output_points[gid] = point;/// solver.value(point);
 }

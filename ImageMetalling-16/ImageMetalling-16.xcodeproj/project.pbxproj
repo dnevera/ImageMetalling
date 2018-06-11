@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		310574C620CEB41300FD96FD /* MSLSolverSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310574C520CEB41200FD96FD /* MSLSolverSwift.swift */; };
+		310574CE20CEB82900FD96FD /* MLSSolverBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */; };
+		310574D120CEC93500FD96FD /* IMPMlsSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310574D020CEC93500FD96FD /* IMPMlsSolver.swift */; };
 		3109E70D20C800DF00063D97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70C20C800DF00063D97 /* AppDelegate.swift */; };
 		3109E70F20C800DF00063D97 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70E20C800DF00063D97 /* ViewController.swift */; };
 		3109E71120C800E000063D97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3109E71020C800E000063D97 /* Assets.xcassets */; };
@@ -19,12 +22,16 @@
 		314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */; };
 		314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */; };
 		314CA41220C834FA0084EFA4 /* MNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA41120C834FA0084EFA4 /* MNode.swift */; };
-		31E7456F20CE4EA900415E8F /* MSLSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7456E20CE4EA900415E8F /* MSLSolver.swift */; };
 		52DAE41814B8317BF5F33D06 /* Pods_ImageMetalling_16.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		28B7790A72024AAA44C184C2 /* Pods-ImageMetalling-16.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.release.xcconfig"; sourceTree = "<group>"; };
+		310574C520CEB41200FD96FD /* MSLSolverSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSLSolverSwift.swift; sourceTree = "<group>"; };
+		310574CC20CEB82900FD96FD /* MLSSolverBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLSSolverBridge.h; sourceTree = "<group>"; };
+		310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MLSSolverBridge.mm; sourceTree = "<group>"; };
+		310574CF20CEB90F00FD96FD /* MLSSolverCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLSSolverCommon.h; sourceTree = "<group>"; };
+		310574D020CEC93500FD96FD /* IMPMlsSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPMlsSolver.swift; sourceTree = "<group>"; };
 		3109E70920C800DF00063D97 /* ImageMetalling-16.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-16.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3109E70C20C800DF00063D97 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3109E70E20C800DF00063D97 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -40,7 +47,8 @@
 		314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotsGrid.swift; sourceTree = "<group>"; };
 		314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotRelationNode.swift; sourceTree = "<group>"; };
 		314CA41120C834FA0084EFA4 /* MNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNode.swift; sourceTree = "<group>"; };
-		31E7456E20CE4EA900415E8F /* MSLSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSLSolver.swift; sourceTree = "<group>"; };
+		3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageMetalling-16-Bridging-Header.h"; sourceTree = "<group>"; };
+		3154C1F420CEAB6000A005A3 /* MLSSolver.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MLSSolver.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		53CE4F19BCA57762039CC6B5 /* Pods-ImageMetalling-16.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.debug.xcconfig"; sourceTree = "<group>"; };
 		A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_16.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -86,6 +94,7 @@
 		3109E70B20C800DF00063D97 /* ImageMetalling-16 */ = {
 			isa = PBXGroup;
 			children = (
+				3154C1EE20CEA9B900A005A3 /* Common */,
 				314CA40020C801840084EFA4 /* Shaders */,
 				314CA3FF20C8017A0084EFA4 /* Classes */,
 				3109E70C20C800DF00063D97 /* AppDelegate.swift */,
@@ -102,8 +111,8 @@
 		314CA3FF20C8017A0084EFA4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				31E7456E20CE4EA900415E8F /* MSLSolver.swift */,
 				311DB7BE20CCF7E50074E560 /* MLSPoints.swift */,
+				310574C520CEB41200FD96FD /* MSLSolverSwift.swift */,
 				314CA41120C834FA0084EFA4 /* MNode.swift */,
 				314CA40320C815C60084EFA4 /* KnotNode.swift */,
 				314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */,
@@ -119,6 +128,19 @@
 				314CA40120C801840084EFA4 /* IMPMain_metal.metal */,
 			);
 			path = Shaders;
+			sourceTree = "<group>";
+		};
+		3154C1EE20CEA9B900A005A3 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */,
+				310574CF20CEB90F00FD96FD /* MLSSolverCommon.h */,
+				3154C1F420CEAB6000A005A3 /* MLSSolver.hpp */,
+				310574CC20CEB82900FD96FD /* MLSSolverBridge.h */,
+				310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */,
+				310574D020CEC93500FD96FD /* IMPMlsSolver.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 		E3036B9A302FC4D30B25B793 /* Pods */ = {
@@ -164,6 +186,7 @@
 				TargetAttributes = {
 					3109E70820C800DF00063D97 = {
 						CreatedOnToolsVersion = 9.4;
+						LastSwiftMigration = 0940;
 					};
 				};
 			};
@@ -252,13 +275,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				314CA41220C834FA0084EFA4 /* MNode.swift in Sources */,
-				31E7456F20CE4EA900415E8F /* MSLSolver.swift in Sources */,
+				310574D120CEC93500FD96FD /* IMPMlsSolver.swift in Sources */,
+				310574C620CEB41300FD96FD /* MSLSolverSwift.swift in Sources */,
 				3109E70F20C800DF00063D97 /* ViewController.swift in Sources */,
 				314CA40C20C817D00084EFA4 /* WindowController.swift in Sources */,
 				314CA40220C801840084EFA4 /* IMPMain_metal.metal in Sources */,
 				3109E70D20C800DF00063D97 /* AppDelegate.swift in Sources */,
 				311DB7BF20CCF7E50074E560 /* MLSPoints.swift in Sources */,
 				314CA40820C8167B0084EFA4 /* GridView.swift in Sources */,
+				310574CE20CEB82900FD96FD /* MLSSolverBridge.mm in Sources */,
 				314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */,
 				314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */,
 				314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */,
@@ -397,6 +422,7 @@
 			baseConfigurationReference = 53CE4F19BCA57762039CC6B5 /* Pods-ImageMetalling-16.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "ImageMetalling-16/ImageMetalling_16.entitlements";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -407,9 +433,12 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MTL_HEADER_SEARCH_PATHS = "$(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-OSX/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-iOS/IMProcessing.framework/Headers $(inherited) $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI/IMProcessingUI.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-OSX/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI-OSX/IMProcessingUI.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-iOS/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI-iOS/IMProcessingUI.framework/Headers $(PROJECT_DIR)/ImageMetalling-16/Common";
 				PRODUCT_BUNDLE_IDENTIFIER = "ImageMetalling.ImageMetalling-16";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-16/Common/ImageMetalling-16-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -419,6 +448,7 @@
 			baseConfigurationReference = 28B7790A72024AAA44C184C2 /* Pods-ImageMetalling-16.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "ImageMetalling-16/ImageMetalling_16.entitlements";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -429,9 +459,11 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MTL_HEADER_SEARCH_PATHS = "$(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-OSX/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-iOS/IMProcessing.framework/Headers $(inherited) $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI/IMProcessingUI.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-OSX/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI-OSX/IMProcessingUI.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessing-iOS/IMProcessing.framework/Headers $(PODS_CONFIGURATION_BUILD_DIR)/IMProcessingUI-iOS/IMProcessingUI.framework/Headers $(PROJECT_DIR)/ImageMetalling-16/Common";
 				PRODUCT_BUNDLE_IDENTIFIER = "ImageMetalling.ImageMetalling-16";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "ImageMetalling-16/Common/ImageMetalling-16-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
