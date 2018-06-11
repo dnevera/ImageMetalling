@@ -19,7 +19,7 @@ class GridView: NSView {
         }
     }
     
-    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width: 10, height: 10), radius:10, padding:20)
+    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width: 20, height: 20), radius:10, padding:20)
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

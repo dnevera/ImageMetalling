@@ -92,8 +92,7 @@ public class MSLSolver {
         
         for i in 0..<count {
             
-            var d =  distance(p[i], point) 
-            d = powf(d, 2*alpha) 
+            var d =  powf(distance(p[i], point), 2*alpha)
                           
             if d < Float.ulpOfOne { d = Float.ulpOfOne}
             
@@ -179,15 +178,15 @@ public class MSLSolver {
 // Affine transformation Matrix
 //
 extension MSLSolver {
+    
     private func affineMj(_ value:float2) -> float2x2 {
         var m = float2x2(0)
         for i in 0..<count {
-            let p = w[i] * pHat[i]
-            let q = qHat[i]
-            let pt = float2x2(columns: (p, float2(0)))
-            let qp = float2x2(rows: [q, float2(0)])
-            let mi = pt * qp
-            m += mi
+
+            let pt = float2x2(columns: (w[i] * pHat[i], float2(0)))
+            let qp = float2x2(rows: [qHat[i], float2(0)])
+
+            m += pt * qp
         }
         return m
     }
@@ -195,11 +194,11 @@ extension MSLSolver {
     private func affineMi(_ value:float2) -> float2x2 {
         var m = float2x2(0)
         for i in 0..<count {
-            let p = pHat[i]
-            let pt = float2x2(columns: (p, float2(0)))
-            let pp = w[i] * float2x2(rows: [p, float2(0)])
-            let mi = pt * pp
-            m += mi
+            
+            let pt =        float2x2(columns: (pHat[i], float2(0)))
+            let pp = w[i] * float2x2(rows:    [pHat[i], float2(0)])
+
+            m += pt * pp
         }
         return m
     }
@@ -221,15 +220,11 @@ extension MSLSolver {
     fileprivate func similarityM(_ value:float2) -> float2x2 {
         var m = float2x2(0)
         for i in 0..<count {
-            let slashp = -1 * pHat[i].slashReflect
-            let _p = w[i] * float2x2(rows: [pHat[i], slashp])
             
-            let slashq = -1 * qHat[i].slashReflect
-            let _q = float2x2(columns: (qHat[i], slashq))
-            
-            let mi = _p * _q
-            
-            m += mi
+            let _p = w[i] * float2x2(rows:    [pHat[i], -1 * pHat[i].slashReflect])            
+            let _q =        float2x2(columns: (qHat[i], -1 * qHat[i].slashReflect))
+                        
+            m += _p * _q
         }
         return  mu * m 
     }
@@ -244,7 +239,7 @@ extension MSLSolver {
     }
 
     fileprivate func rigidMu2(index i:Int) -> Float {
-        return w[i]*dot(qHat[i],  -1 * pHat[i].slashReflect)        
+        return w[i]*dot(qHat[i],  pHat[i].slashReflect)        
     }
 
 }
