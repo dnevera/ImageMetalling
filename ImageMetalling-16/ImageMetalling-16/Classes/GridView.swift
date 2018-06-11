@@ -12,25 +12,31 @@ import simd
 import IMProcessing
 
 class GridView: NSView {
-
+    
+    var mslKind:MSLSolver.Kind = .rigid {
+        didSet{
+            updatePoints()
+        }
+    }
+    
     lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width: 10, height: 10), radius:10, padding:20)
-
+    
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         config()
     }
-
+    
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
         config()
     }
-
-
+    
+    
     override func layout() {
         super.layout()
         knotsGrid.bounds = bounds    
     }    
-
+    
     func config() {
         
         wantsLayer = true
@@ -41,19 +47,55 @@ class GridView: NSView {
         scene.scaleMode       = .resizeFill
         scene.backgroundColor = NSColor(red: 0, green: 0, blue: 0, alpha: 0.0)
         scene.addChild(knotsGrid)
-                
+        
         skview.addGestureRecognizer(panGesture)
         
         pressGesture.numberOfTouchesRequired = 1    
         skview.addGestureRecognizer(pressGesture)        
-
+        
         addSubview(skview)
         
         skview.autoresizingMask = [.height, .width]
         skview.frame = NSInsetRect(bounds, 0, 0)
         skview.allowsTransparency = true
         skview.presentScene(scene)  
+        
+    }
+    
+    func updatePoints()  {
+        
+        var p = [float2]()
+        var q = [float2]()
+        
+        for (i,k) in knotsGrid.children.enumerated() {
+            if let kk = k as? KnotNode, kk.isPinned {
+                q.append(k.position.convert(from: knotsGrid.box))
+                p.append(knotsGrid.mlsPoints.sources[i])
+            }
+        }
+        
+        do {
+            
+            for i in 0..<knotsGrid.children.count {
                 
+                let knot = knotsGrid.children[i] as! KnotNode 
+                
+                if knot.isPinned { continue }
+                
+                let msl = try MSLSolver(point: knot.position.convert(from: knotsGrid.box), 
+                                        p: p,  
+                                        q: q,
+                                        kind: mslKind,
+                                        alpha: 1.5
+                ) 
+                
+                knot.position = msl.value(at: knotsGrid.mlsPoints.sources[i]).convert(to: knotsGrid.box)
+            }                
+        }
+        catch let error {
+            print("\(error)")
+        }
+        
     }
     
     @objc private func pressHandler(recognizer:NSPanGestureRecognizer)  {
@@ -65,39 +107,11 @@ class GridView: NSView {
     @objc private func panHandler(recognizer:NSPanGestureRecognizer)  {
         let location:NSPoint = recognizer.location(in: skview)
         
-        lastNode?.position = location    
-        (lastNode as? KnotNode)?.isPinned = true
-        
-        if lastNode != nil && lastIndex >= 0 {
+        if lastNode != nil && lastIndex >= 0 {            
+            lastNode?.position = location    
+            (lastNode as? KnotNode)?.isPinned = true
             
-            var p = [float2]()
-            var q = [float2]()
-
-            for (i,k) in knotsGrid.children.enumerated() {
-                if let kk = k as? KnotNode, kk.isPinned {
-                    q.append(k.position.convert(from: knotsGrid.box))
-                    p.append(knotsGrid.mlsPoints.sources[i])
-                }
-            }
-                        
-            do {
-                
-                for i in 0..<knotsGrid.children.count {
-                    //if i == lastIndex { continue }
-
-                    let msl = try MSLSolver(point: knotsGrid.children[i].position.convert(from: knotsGrid.box), 
-                                            p: p,  
-                                            q: q,
-                                            kind: .similarity,
-                                            alpha: 1
-                    ) 
-                    
-                    knotsGrid.children[i].position = msl.value(at: knotsGrid.mlsPoints.sources[i]).convert(to: knotsGrid.box)
-                }                
-            }
-            catch let error {
-                print("\(error)")
-            }
+            updatePoints()
         }
     }
     
@@ -126,7 +140,7 @@ class GridView: NSView {
             }
         }        
     }
-        
+    
     func findNode(at point:NSPoint, leaved: ((_ index:Int, _ node:SKNode?)->Void)? = nil, entered: ((_ index:Int, _ node:SKNode)->Void)) {
         
         let sceneTouchPoint = scene.convertPoint(fromView: point)
@@ -140,7 +154,7 @@ class GridView: NSView {
         
         if let name = node.name, let index = Int(name) {
             if index >= 0 {
-
+                
                 var n = node
                 if n.parent?.name != nil {
                     n = n.parent!
@@ -157,9 +171,9 @@ class GridView: NSView {
     
     private lazy var skview:SKView = SKView(frame: self.bounds)
     private lazy var scene:SKScene = SKScene(size: self.skview.bounds.size)
-        
+    
     private lazy var pressGesture:NSClickGestureRecognizer = NSClickGestureRecognizer(target: self, action: #selector(pressHandler(recognizer:)))
     
     private lazy var panGesture:NSPanGestureRecognizer = NSPanGestureRecognizer(target: self, action: #selector(panHandler(recognizer:)))
-
+    
 }

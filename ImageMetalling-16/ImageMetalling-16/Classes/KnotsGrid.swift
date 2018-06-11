@@ -42,7 +42,14 @@ open class KnotsGrid: SKShapeNode {
     private var isInitilized = false
     
     private let scalingFactor:CGFloat = 1
-        
+    
+    public func reset() {
+        mlsPoints.targets = [float2](mlsPoints.sources)
+        removeAllChildren()
+        isInitilized = false
+        update()
+    }    
+    
     public func update() {
         var index = 0
         let box = self.box

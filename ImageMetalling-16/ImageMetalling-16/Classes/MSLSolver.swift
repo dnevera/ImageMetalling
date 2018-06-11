@@ -40,6 +40,7 @@ public class MSLSolver {
     public enum Kind {
         case affine
         case similarity
+        case rigid
     }
     
     public enum Error:Swift.Error {
@@ -120,13 +121,31 @@ public class MSLSolver {
         pHat = [float2](repeating: float2(0), count: count)
         qHat = [float2](repeating: float2(0), count: count)
         mu = 0
+        
+        var _rmu1:Float = 0
+        var _rmu2:Float = 0
+        
         for i in 0..<count {      
             
-            pHat[i] = p[i] - pStar            
-            
+            pHat[i] = p[i] - pStar                        
             qHat[i] = q[i] - qStar
             
-            mu += w[i]*dot(pHat[i], pHat[i])
+            switch kind {            
+            case .similarity:
+                mu += similarityMu(index: i)
+            case .rigid:
+                _rmu1 += rigidMu1(index: i) 
+                _rmu2 += rigidMu2(index: i) 
+            default:
+                break
+            }
+        }
+        
+        switch kind {            
+        case .rigid:
+            mu = sqrt(_rmu1*_rmu1 + _rmu2*_rmu2)  
+        default:
+            break
         }
         
         if mu < Float.ulpOfOne { mu = Float.ulpOfOne }
@@ -138,7 +157,7 @@ public class MSLSolver {
         switch kind {
         case .affine:
             M = affineM(point)
-        case .similarity:
+        case .similarity, .rigid:
             M = similarityM(point)
         }
     }      
@@ -193,7 +212,12 @@ extension MSLSolver {
 //
 // Similarity transformation Matrix
 //
-extension MSLSolver {        
+extension MSLSolver {    
+    
+    fileprivate func similarityMu(index i:Int) -> Float {
+        return w[i]*dot(pHat[i], pHat[i])
+    }
+    
     fileprivate func similarityM(_ value:float2) -> float2x2 {
         var m = float2x2(0)
         for i in 0..<count {
@@ -215,8 +239,13 @@ extension MSLSolver {
 // Rigid transformation Matrix
 //
 extension MSLSolver {        
-    fileprivate func rigidM(_ value:float2) -> float2x2 {
-       return float2x2(diagonal: float2(1))
+    fileprivate func rigidMu1(index i:Int) -> Float {
+        return w[i]*dot(qHat[i], pHat[i])        
     }
+
+    fileprivate func rigidMu2(index i:Int) -> Float {
+        return w[i]*dot(qHat[i],  -1 * pHat[i].slashReflect)        
+    }
+
 }
 
