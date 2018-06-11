@@ -1,0 +1,463 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3109E70D20C800DF00063D97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70C20C800DF00063D97 /* AppDelegate.swift */; };
+		3109E70F20C800DF00063D97 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70E20C800DF00063D97 /* ViewController.swift */; };
+		3109E71120C800E000063D97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3109E71020C800E000063D97 /* Assets.xcassets */; };
+		3109E71420C800E000063D97 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3109E71220C800E000063D97 /* Main.storyboard */; };
+		311DB7BF20CCF7E50074E560 /* MLSPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311DB7BE20CCF7E50074E560 /* MLSPoints.swift */; };
+		314CA40220C801840084EFA4 /* IMPMain_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40120C801840084EFA4 /* IMPMain_metal.metal */; };
+		314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40320C815C60084EFA4 /* KnotNode.swift */; };
+		314CA40820C8167B0084EFA4 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40720C8167B0084EFA4 /* GridView.swift */; };
+		314CA40C20C817D00084EFA4 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40B20C817D00084EFA4 /* WindowController.swift */; };
+		314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */; };
+		314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */; };
+		314CA41220C834FA0084EFA4 /* MNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA41120C834FA0084EFA4 /* MNode.swift */; };
+		31E7456F20CE4EA900415E8F /* MSLSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7456E20CE4EA900415E8F /* MSLSolver.swift */; };
+		52DAE41814B8317BF5F33D06 /* Pods_ImageMetalling_16.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		28B7790A72024AAA44C184C2 /* Pods-ImageMetalling-16.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.release.xcconfig"; sourceTree = "<group>"; };
+		3109E70920C800DF00063D97 /* ImageMetalling-16.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-16.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3109E70C20C800DF00063D97 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3109E70E20C800DF00063D97 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3109E71020C800E000063D97 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3109E71320C800E000063D97 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3109E71520C800E000063D97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3109E71620C800E000063D97 /* ImageMetalling_16.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ImageMetalling_16.entitlements; sourceTree = "<group>"; };
+		311DB7BE20CCF7E50074E560 /* MLSPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSPoints.swift; sourceTree = "<group>"; };
+		314CA40120C801840084EFA4 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; };
+		314CA40320C815C60084EFA4 /* KnotNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotNode.swift; sourceTree = "<group>"; };
+		314CA40720C8167B0084EFA4 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
+		314CA40B20C817D00084EFA4 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotsGrid.swift; sourceTree = "<group>"; };
+		314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotRelationNode.swift; sourceTree = "<group>"; };
+		314CA41120C834FA0084EFA4 /* MNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNode.swift; sourceTree = "<group>"; };
+		31E7456E20CE4EA900415E8F /* MSLSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MSLSolver.swift; sourceTree = "<group>"; };
+		53CE4F19BCA57762039CC6B5 /* Pods-ImageMetalling-16.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.debug.xcconfig"; sourceTree = "<group>"; };
+		A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_16.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3109E70620C800DF00063D97 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52DAE41814B8317BF5F33D06 /* Pods_ImageMetalling_16.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		112165475EA1F5AF09CBB183 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3109E70020C800DF00063D97 = {
+			isa = PBXGroup;
+			children = (
+				3109E70B20C800DF00063D97 /* ImageMetalling-16 */,
+				3109E70A20C800DF00063D97 /* Products */,
+				E3036B9A302FC4D30B25B793 /* Pods */,
+				112165475EA1F5AF09CBB183 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3109E70A20C800DF00063D97 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3109E70920C800DF00063D97 /* ImageMetalling-16.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3109E70B20C800DF00063D97 /* ImageMetalling-16 */ = {
+			isa = PBXGroup;
+			children = (
+				314CA40020C801840084EFA4 /* Shaders */,
+				314CA3FF20C8017A0084EFA4 /* Classes */,
+				3109E70C20C800DF00063D97 /* AppDelegate.swift */,
+				3109E70E20C800DF00063D97 /* ViewController.swift */,
+				314CA40B20C817D00084EFA4 /* WindowController.swift */,
+				3109E71020C800E000063D97 /* Assets.xcassets */,
+				3109E71220C800E000063D97 /* Main.storyboard */,
+				3109E71520C800E000063D97 /* Info.plist */,
+				3109E71620C800E000063D97 /* ImageMetalling_16.entitlements */,
+			);
+			path = "ImageMetalling-16";
+			sourceTree = "<group>";
+		};
+		314CA3FF20C8017A0084EFA4 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				31E7456E20CE4EA900415E8F /* MSLSolver.swift */,
+				311DB7BE20CCF7E50074E560 /* MLSPoints.swift */,
+				314CA41120C834FA0084EFA4 /* MNode.swift */,
+				314CA40320C815C60084EFA4 /* KnotNode.swift */,
+				314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */,
+				314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */,
+				314CA40720C8167B0084EFA4 /* GridView.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		314CA40020C801840084EFA4 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				314CA40120C801840084EFA4 /* IMPMain_metal.metal */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		E3036B9A302FC4D30B25B793 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				53CE4F19BCA57762039CC6B5 /* Pods-ImageMetalling-16.debug.xcconfig */,
+				28B7790A72024AAA44C184C2 /* Pods-ImageMetalling-16.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3109E70820C800DF00063D97 /* ImageMetalling-16 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3109E71920C800E000063D97 /* Build configuration list for PBXNativeTarget "ImageMetalling-16" */;
+			buildPhases = (
+				2D828ADAC0B6219C42B1DC8C /* [CP] Check Pods Manifest.lock */,
+				3109E70520C800DF00063D97 /* Sources */,
+				3109E70620C800DF00063D97 /* Frameworks */,
+				3109E70720C800DF00063D97 /* Resources */,
+				E4F7B4CF5F6940612C79DA80 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ImageMetalling-16";
+			productName = "ImageMetalling-16";
+			productReference = 3109E70920C800DF00063D97 /* ImageMetalling-16.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3109E70120C800DF00063D97 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0940;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = ImageMetalling;
+				TargetAttributes = {
+					3109E70820C800DF00063D97 = {
+						CreatedOnToolsVersion = 9.4;
+					};
+				};
+			};
+			buildConfigurationList = 3109E70420C800DF00063D97 /* Build configuration list for PBXProject "ImageMetalling-16" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3109E70020C800DF00063D97;
+			productRefGroup = 3109E70A20C800DF00063D97 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3109E70820C800DF00063D97 /* ImageMetalling-16 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3109E70720C800DF00063D97 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3109E71120C800E000063D97 /* Assets.xcassets in Resources */,
+				3109E71420C800E000063D97 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2D828ADAC0B6219C42B1DC8C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ImageMetalling-16-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E4F7B4CF5F6940612C79DA80 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/IMProcessing/IMProcessing.framework",
+				"${BUILT_PRODUCTS_DIR}/IMProcessingUI/IMProcessingUI.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Surge/Surge.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IMProcessing.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IMProcessingUI.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Surge.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3109E70520C800DF00063D97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				314CA41220C834FA0084EFA4 /* MNode.swift in Sources */,
+				31E7456F20CE4EA900415E8F /* MSLSolver.swift in Sources */,
+				3109E70F20C800DF00063D97 /* ViewController.swift in Sources */,
+				314CA40C20C817D00084EFA4 /* WindowController.swift in Sources */,
+				314CA40220C801840084EFA4 /* IMPMain_metal.metal in Sources */,
+				3109E70D20C800DF00063D97 /* AppDelegate.swift in Sources */,
+				311DB7BF20CCF7E50074E560 /* MLSPoints.swift in Sources */,
+				314CA40820C8167B0084EFA4 /* GridView.swift in Sources */,
+				314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */,
+				314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */,
+				314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3109E71220C800E000063D97 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3109E71320C800E000063D97 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3109E71720C800E000063D97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3109E71820C800E000063D97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		3109E71A20C800E000063D97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 53CE4F19BCA57762039CC6B5 /* Pods-ImageMetalling-16.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "ImageMetalling-16/ImageMetalling_16.entitlements";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TCA85S5T49;
+				INFOPLIST_FILE = "ImageMetalling-16/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "ImageMetalling.ImageMetalling-16";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		3109E71B20C800E000063D97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28B7790A72024AAA44C184C2 /* Pods-ImageMetalling-16.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "ImageMetalling-16/ImageMetalling_16.entitlements";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TCA85S5T49;
+				INFOPLIST_FILE = "ImageMetalling-16/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "ImageMetalling.ImageMetalling-16";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3109E70420C800DF00063D97 /* Build configuration list for PBXProject "ImageMetalling-16" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3109E71720C800E000063D97 /* Debug */,
+				3109E71820C800E000063D97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3109E71920C800E000063D97 /* Build configuration list for PBXNativeTarget "ImageMetalling-16" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3109E71A20C800E000063D97 /* Debug */,
+				3109E71B20C800E000063D97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3109E70120C800DF00063D97 /* Project object */;
+}
