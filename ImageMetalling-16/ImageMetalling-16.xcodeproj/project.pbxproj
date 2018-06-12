@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		310574C620CEB41300FD96FD /* MSLSolverSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310574C520CEB41200FD96FD /* MSLSolverSwift.swift */; };
 		310574CE20CEB82900FD96FD /* MLSSolverBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */; };
 		310574D120CEC93500FD96FD /* IMPMLSSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310574D020CEC93500FD96FD /* IMPMLSSolver.swift */; };
 		3109E70D20C800DF00063D97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70C20C800DF00063D97 /* AppDelegate.swift */; };
 		3109E70F20C800DF00063D97 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70E20C800DF00063D97 /* ViewController.swift */; };
 		3109E71120C800E000063D97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3109E71020C800E000063D97 /* Assets.xcassets */; };
 		3109E71420C800E000063D97 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3109E71220C800E000063D97 /* Main.storyboard */; };
-		311DB7BF20CCF7E50074E560 /* MLSPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311DB7BE20CCF7E50074E560 /* MLSPoints.swift */; };
+		311DB7BF20CCF7E50074E560 /* MLSMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311DB7BE20CCF7E50074E560 /* MLSMesh.swift */; };
+		314651AB20CFC24A00144A5F /* MLSSolverSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */; };
 		314CA40220C801840084EFA4 /* IMPMain_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40120C801840084EFA4 /* IMPMain_metal.metal */; };
 		314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40320C815C60084EFA4 /* KnotNode.swift */; };
 		314CA40820C8167B0084EFA4 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40720C8167B0084EFA4 /* GridView.swift */; };
@@ -22,12 +22,12 @@
 		314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */; };
 		314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */; };
 		314CA41220C834FA0084EFA4 /* MNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA41120C834FA0084EFA4 /* MNode.swift */; };
+		316C88FD20CFBA050027B437 /* MLSControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C88FC20CFBA050027B437 /* MLSControls.swift */; };
 		52DAE41814B8317BF5F33D06 /* Pods_ImageMetalling_16.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		28B7790A72024AAA44C184C2 /* Pods-ImageMetalling-16.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.release.xcconfig"; sourceTree = "<group>"; };
-		310574C520CEB41200FD96FD /* MSLSolverSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSLSolverSwift.swift; sourceTree = "<group>"; };
 		310574CC20CEB82900FD96FD /* MLSSolverBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLSSolverBridge.h; sourceTree = "<group>"; };
 		310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MLSSolverBridge.mm; sourceTree = "<group>"; };
 		310574CF20CEB90F00FD96FD /* MLSSolverCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLSSolverCommon.h; sourceTree = "<group>"; };
@@ -39,7 +39,8 @@
 		3109E71320C800E000063D97 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3109E71520C800E000063D97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3109E71620C800E000063D97 /* ImageMetalling_16.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ImageMetalling_16.entitlements; sourceTree = "<group>"; };
-		311DB7BE20CCF7E50074E560 /* MLSPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSPoints.swift; sourceTree = "<group>"; };
+		311DB7BE20CCF7E50074E560 /* MLSMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSMesh.swift; sourceTree = "<group>"; };
+		314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MLSSolverSwift.swift; sourceTree = "<group>"; };
 		314CA40120C801840084EFA4 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; };
 		314CA40320C815C60084EFA4 /* KnotNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotNode.swift; sourceTree = "<group>"; };
 		314CA40720C8167B0084EFA4 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
@@ -49,6 +50,7 @@
 		314CA41120C834FA0084EFA4 /* MNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNode.swift; sourceTree = "<group>"; };
 		3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageMetalling-16-Bridging-Header.h"; sourceTree = "<group>"; };
 		3154C1F420CEAB6000A005A3 /* MLSSolver.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MLSSolver.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		316C88FC20CFBA050027B437 /* MLSControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSControls.swift; sourceTree = "<group>"; };
 		53CE4F19BCA57762039CC6B5 /* Pods-ImageMetalling-16.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.debug.xcconfig"; sourceTree = "<group>"; };
 		A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_16.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -111,8 +113,7 @@
 		314CA3FF20C8017A0084EFA4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				311DB7BE20CCF7E50074E560 /* MLSPoints.swift */,
-				310574C520CEB41200FD96FD /* MSLSolverSwift.swift */,
+				311DB7BE20CCF7E50074E560 /* MLSMesh.swift */,
 				314CA41120C834FA0084EFA4 /* MNode.swift */,
 				314CA40320C815C60084EFA4 /* KnotNode.swift */,
 				314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */,
@@ -136,8 +137,10 @@
 				3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */,
 				310574CF20CEB90F00FD96FD /* MLSSolverCommon.h */,
 				3154C1F420CEAB6000A005A3 /* MLSSolver.hpp */,
+				316C88FC20CFBA050027B437 /* MLSControls.swift */,
 				310574CC20CEB82900FD96FD /* MLSSolverBridge.h */,
 				310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */,
+				314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */,
 				310574D020CEC93500FD96FD /* IMPMLSSolver.swift */,
 			);
 			path = Common;
@@ -276,15 +279,16 @@
 			files = (
 				314CA41220C834FA0084EFA4 /* MNode.swift in Sources */,
 				310574D120CEC93500FD96FD /* IMPMLSSolver.swift in Sources */,
-				310574C620CEB41300FD96FD /* MSLSolverSwift.swift in Sources */,
 				3109E70F20C800DF00063D97 /* ViewController.swift in Sources */,
+				316C88FD20CFBA050027B437 /* MLSControls.swift in Sources */,
 				314CA40C20C817D00084EFA4 /* WindowController.swift in Sources */,
 				314CA40220C801840084EFA4 /* IMPMain_metal.metal in Sources */,
 				3109E70D20C800DF00063D97 /* AppDelegate.swift in Sources */,
-				311DB7BF20CCF7E50074E560 /* MLSPoints.swift in Sources */,
+				311DB7BF20CCF7E50074E560 /* MLSMesh.swift in Sources */,
 				314CA40820C8167B0084EFA4 /* GridView.swift in Sources */,
 				310574CE20CEB82900FD96FD /* MLSSolverBridge.mm in Sources */,
 				314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */,
+				314651AB20CFC24A00144A5F /* MLSSolverSwift.swift in Sources */,
 				314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */,
 				314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */,
 			);

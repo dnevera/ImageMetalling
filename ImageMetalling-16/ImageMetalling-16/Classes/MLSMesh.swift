@@ -11,7 +11,7 @@ import simd
 import IMProcessing
 import Surge
 
-public class MLSPoints {
+public class MLSMesh {
         
     public let alpha:Float
     
@@ -44,6 +44,10 @@ public class MLSPoints {
         }
         
         targets = [float2](_sources)                                             
+    }
+    
+    public func reset(_ newTragers:[float2]?=nil) {
+        targets = [float2](newTragers ?? sources)
     }
            
     subscript(index:Int) -> float2 {
@@ -84,7 +88,7 @@ public class MLSPoints {
     }  
 
     public func setTarget(point: NSPoint, from box: NSRect, at index:Int) {
-        targets[index] = point.convert(from: box) //float2(px,1-py)        
+        targets[index] = point.convert(from: box)         
     }
     
     public func setTarget(point: NSPoint, from box: NSRect, at position:(x:Int,y:Int)) {
@@ -101,7 +105,7 @@ public class MLSPoints {
         return target(to: box, at: position.y * dimension.width + position.x)
     } 
     
-    public var targets:[float2] = []
+    private var targets:[float2] = []
     
     fileprivate var _sources:[float2]     
 }

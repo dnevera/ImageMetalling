@@ -19,7 +19,7 @@ open class KnotsGrid: SKShapeNode {
     static public let scaleOut   = SKAction.scale(to: 1.3, duration: 0.1)
     static public let scalePulse = SKAction.repeat(SKAction.sequence([scaleOut,scaleIn]), count: 2)
     
-    public var mlsPoints:MLSPoints
+    public var mesh:MLSMesh
     
     public var box:NSRect { return  NSInsetRect(self.bounds, padding, padding) }
     public var bounds:NSRect { didSet{ update() } }
@@ -27,7 +27,7 @@ open class KnotsGrid: SKShapeNode {
     public var padding:CGFloat { didSet{ update() } }
     
     public init(bounds: NSRect, dimension: (width:Int,height:Int), radius:CGFloat=5, padding:CGFloat=20) {
-        mlsPoints = MLSPoints(dimension: dimension)
+        mesh = MLSMesh(dimension: dimension)
         self.bounds = bounds
         self.radius = radius
         self.padding = padding
@@ -44,20 +44,25 @@ open class KnotsGrid: SKShapeNode {
     private let scalingFactor:CGFloat = 1
     
     public func reset() {
-        mlsPoints.targets = [float2](mlsPoints.sources)
+        mesh.reset()
         removeAllChildren()
         isInitilized = false
         update()
     }    
     
-    public func update() {
+    public func update(_ newTargets:[float2]? = nil) {
+        
+        if let t = newTargets {
+            mesh.reset(t)
+        }
+        
         var index = 0
         let box = self.box
                 
-        for y in 0..<mlsPoints.dimension.height {
-            for x in 0..<mlsPoints.dimension.width {
+        for y in 0..<mesh.dimension.height {
+            for x in 0..<mesh.dimension.width {
                 
-                let p =  mlsPoints.target(to: box, at: (x: x, y: y)) 
+                let p =  mesh.target(to: box, at: (x: x, y: y)) 
         
                 var knot:KnotNode
                 if isInitilized {
@@ -76,13 +81,13 @@ open class KnotsGrid: SKShapeNode {
                     if x == 0 && y == 0 {
                         knot.isPinned = true
                     }
-                    else if x == 0 && y == mlsPoints.dimension.height-1 {
+                    else if x == 0 && y == mesh.dimension.height-1 {
                         knot.isPinned = true
                     }
-                    else if x == mlsPoints.dimension.width-1 && y == mlsPoints.dimension.height-1 {
+                    else if x == mesh.dimension.width-1 && y == mesh.dimension.height-1 {
                         knot.isPinned = true
                     }
-                    else if x == mlsPoints.dimension.width-1 && y == 0 {
+                    else if x == mesh.dimension.width-1 && y == 0 {
                         knot.isPinned = true
                     }                    
                 }    

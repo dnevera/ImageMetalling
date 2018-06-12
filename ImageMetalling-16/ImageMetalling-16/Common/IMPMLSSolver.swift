@@ -9,20 +9,9 @@
 import Foundation
 import IMProcessing
 
-public class IMPMLSSolver:IMPContextProvider{
-    public struct Controls {
-        let p:[float2]
-        let q:[float2]
-        let kind:MLSSolverKind
-        let alpha:Float
-        
-        public init(p: [float2], q: [float2], kind:MLSSolverKind = .affine, alpha:Float = 1.0){
-            self.p = p
-            self.q = q
-            self.kind = kind
-            self.alpha = alpha
-        }
-    }
+public class IMPMLSSolver:IMPContextProvider, MLSSolverProtocol{
+    
+    public typealias Controls=MLSControls
     
     public var points:[float2] = []  {
         didSet{
@@ -45,15 +34,17 @@ public class IMPMLSSolver:IMPContextProvider{
             outputPointsBuffer = context.device.makeBuffer(length: points_length, options: options)       
         }
     }   
-    //public var controls:Controls = Controls(p: [], q: []) 
     
     public let context: IMPContext
     
-    public init(context:IMPContext, controls:Controls?=nil, complete:((_ points:[float2])->Void)? = nil){
+    public init(context:IMPContext, points:[float2]?=nil, controls:Controls?=nil, complete:((_ points:[float2])->Void)? = nil){
         self.context = context
         defer {
+            if let s = points {
+                self.points = s
+            }
             if let controls = controls {
-                if controls.p.count == controls.q.count && controls.p.count > 0 && points.count > 0 {
+                if controls.p.count == controls.q.count && controls.p.count > 0 && self.points.count > 0 {
                     process(controls: controls, complete: complete)
                 }
             }

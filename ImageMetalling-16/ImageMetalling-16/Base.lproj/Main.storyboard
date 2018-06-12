@@ -152,6 +152,25 @@
                                                 <action selector="toggleRigid:" target="Voe-Tx-rLC" id="GNf-kI-bg5"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="Tj5-oU-57n"/>
+                                        <menuItem title="Swift" id="333-kM-O6o">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="solveInSwift:" target="Voe-Tx-rLC" id="t2J-DN-QMq"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="C++" id="GGt-FZ-74O">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="solveInCpp:" target="Voe-Tx-rLC" id="Zjv-LU-26J"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Metal" id="C8C-Vv-qGL">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="solveInMetal:" target="Voe-Tx-rLC" id="bGp-bz-eQ9"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="hB3-LF-h0Y"/>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
@@ -208,8 +227,11 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="ImageMetalling_16" customModuleProvider="target">
                     <connections>
                         <outlet property="affineItem" destination="u51-On-N4O" id="9Gs-5B-8E7"/>
+                        <outlet property="cpp" destination="GGt-FZ-74O" id="fXw-GH-lxI"/>
+                        <outlet property="metal" destination="C8C-Vv-qGL" id="JVC-6m-1ao"/>
                         <outlet property="rigidItem" destination="Xap-1c-FbD" id="fRV-p7-R5a"/>
                         <outlet property="singularityItem" destination="kol-k0-Ime" id="Oze-q0-N0l"/>
+                        <outlet property="swift" destination="333-kM-O6o" id="zsG-Gi-HB0"/>
                     </connections>
                 </customObject>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>

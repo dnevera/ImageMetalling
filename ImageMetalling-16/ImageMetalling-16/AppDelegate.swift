@@ -27,7 +27,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             } 
             else if self.controller.gridView.mlsKind  == .rigid {
                 self.rigidItem.state = .on
-            }                       
+            }   
+            
+            if self.controller.gridView.solverLang  == .swift {
+                self.swift.state = .on
+            }
+            else if self.controller.gridView.solverLang  == .cpp {
+                self.cpp.state = .on
+            } 
+            else if self.controller.gridView.solverLang  == .metal {
+                self.metal.state = .on
+            }   
         }
     }
     
@@ -43,7 +53,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var singularityItem: NSMenuItem!    
     @IBOutlet weak var rigidItem: NSMenuItem!
     
+    @IBOutlet weak var swift: NSMenuItem!    
+    @IBOutlet weak var cpp: NSMenuItem!    
+    @IBOutlet weak var metal: NSMenuItem!
+    
     lazy var items: [NSMenuItem] = [self.affineItem, self.singularityItem, self.rigidItem] 
+    lazy var langItems: [NSMenuItem] = [self.swift, self.cpp, self.metal] 
     
     @IBAction func reset(_ sender: NSMenuItem) {
         controller.gridView.knotsGrid.reset()
@@ -69,5 +84,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         controller.gridView.mlsKind = .rigid
     }
     
+    @IBAction func solveInSwift(_ sender: NSMenuItem) {
+        for m in langItems { m.state = .off }
+        swift.state = .on
+        controller.gridView.solverLang = .swift
+    }
+    
+    @IBAction func solveInMetal(_ sender: NSMenuItem) {
+        for m in langItems { m.state = .off }
+        cpp.state = .on
+        controller.gridView.solverLang = .metal
+    }
+    
+    @IBAction func solveInCpp(_ sender: NSMenuItem) {
+        for m in langItems { m.state = .off }
+        metal.state = .on
+        controller.gridView.solverLang = .cpp
+    }
 }
 
