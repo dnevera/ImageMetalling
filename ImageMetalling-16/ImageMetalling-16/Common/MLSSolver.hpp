@@ -15,7 +15,7 @@
 
 #include <simd/simd.h>
 
-#define MLS_MAXIMUM_POINTS 1024
+#define MLS_MAXIMUM_POINTS 4096
 
 #else
 
@@ -118,6 +118,13 @@ public:
 #endif
     }    
     
+    
+    /**
+     Return new position for source point
+
+     @param point source point
+     @return new position
+     */
     float2 value(float2 point) {
         if (count_ <= 0) return point;   
         return (point - pStar_) * M + qStar_;    
@@ -180,8 +187,8 @@ private:
         qStar_ = float2(0);
         
         for (int i=0; i<count_; i++) {
-            pStar_ += float2(w_[i]) * p_[i];
-            qStar_ += float2(w_[i]) * q_[i];
+            pStar_ += w_[i] * p_[i];
+            qStar_ += w_[i] * q_[i];
         }
         
         pStar_ = pStar_ / weight_;                
@@ -243,14 +250,13 @@ private:
         
         for (int i=0; i<count_; i++) {
             
-            float2   p = w_[i] * pHat_[i];
-            float2x2 pt({p, float2(0)});
+            float2x2 pt({w_[i] * pHat_[i], float2(0)});
             float2x2 qp({(float2){qHat_[i].x, 0.0}, (float2){qHat_[i].y, 0.0}});
             
 #ifdef __METAL_VERSION__
             m = m + pt * qp;
 #else
-            float2x2 mi = matrix_multiply(pt,qp);
+            float2x2 mi = pt * qp; 
             m = matrix_add(m, mi);
 #endif
         }
@@ -262,9 +268,8 @@ private:
         
         for (int i=0; i<count_; i++) {
             
-            float2   p = pHat_[i];
-            float2x2 pt({p, float2(0)});
-            float2x2 pp({(float2){w_[i] * pHat_[i].x, 0.0}, (float2){w_[i] * qHat_[i].y, 0.0}});
+            float2x2 pt({pHat_[i], float2(0)});
+            float2x2 pp({(float2){w_[i] * pHat_[i].x, 0.0}, (float2){w_[i] * pHat_[i].y, 0.0}});
             
 #ifdef __METAL_VERSION__
             m = m + pt * pp;

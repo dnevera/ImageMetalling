@@ -17,8 +17,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { 
+                
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            
+            guard self.controller != nil else {
+                return
+            }
+
             if self.controller.gridView.mlsKind  == .affine {
                 self.affineItem.state = .on
             }
@@ -92,13 +97,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func solveInMetal(_ sender: NSMenuItem) {
         for m in langItems { m.state = .off }
-        cpp.state = .on
+        metal.state = .on
         controller.gridView.solverLang = .metal
     }
     
     @IBAction func solveInCpp(_ sender: NSMenuItem) {
         for m in langItems { m.state = .off }
-        metal.state = .on
+        cpp.state = .on
         controller.gridView.solverLang = .cpp
     }
 }

@@ -30,19 +30,6 @@ public class MLSSolverCpp:MLSSolverProtocol {
             self.points = [float2](s)
         }
     }
-    
-//    public init(point: float2, p:[float2], q:[float2], kind:MLSSolverKind = .affine, alpha:Float = 1.0) throws {
-//        
-//        if p.count != q.count {
-//            throw Error.diffSize
-//        }
-//        
-//        self.count = p.count
-//        
-//        self.p = [float2](p)
-//        self.q = [float2](q)    
-//        super.init(point, source: &self.p, destination: &self.q, count: Int32(p.count), kind: kind, alpha: alpha)
-//    }
         
     public func process(controls:Controls, complete:((_ points:[float2])->Void)?=nil) {
         
@@ -54,22 +41,10 @@ public class MLSSolverCpp:MLSSolverProtocol {
         
         for (i,p) in points.enumerated() {            
             guard let mls = MLSSolverBridge(p, source: &cp, destination: &cq, count: count, kind: controls.kind, alpha: controls.alpha) else {continue}
-            //solve(point: p, controls: controls)
-            //result.append(mls.value(p))
             result[i] = mls.value(p)
         }
         complete?(result)
-    }
-    
-//    public func value(at point:float2) -> float2 {
-//        return self.value(point)
-//    }
-    
-    //private var bridge:MLSSolverBridge!
-    
-    //public let count:Int
-    //private var p = [float2]()
-    //private var q = [float2]()
+    }    
 }
 
 public class MLSSolverSwift: MLSSolverProtocol {
@@ -100,7 +75,7 @@ public class MLSSolverSwift: MLSSolverProtocol {
     }
     
     private func solve(point:float2, controls:Controls) {
-        self.kind = controls.kind
+        self.kind_ = controls.kind
         self.alpha = controls.alpha
         self.count = controls.p.count
         
@@ -161,7 +136,7 @@ public class MLSSolverSwift: MLSSolverProtocol {
             pHat_[i] = p[i] - pStar_                        
             qHat_[i] = q[i] - qStar_
             
-            switch kind {            
+            switch kind_ {            
             case .similarity:
                 mu_ += similarityMu(index: i)
             case .rigid:
@@ -172,7 +147,7 @@ public class MLSSolverSwift: MLSSolverProtocol {
             }
         }
         
-        switch kind {            
+        switch kind_ {            
         case .rigid:
             mu_ = sqrt(_rmu1*_rmu1 + _rmu2*_rmu2)  
         default:
@@ -185,7 +160,7 @@ public class MLSSolverSwift: MLSSolverProtocol {
     }
             
     private func solveM(){
-        switch kind {
+        switch kind_ {
         case .affine:
             M = affineM()
         case .similarity, .rigid:
@@ -204,7 +179,7 @@ public class MLSSolverSwift: MLSSolverProtocol {
 
     fileprivate var M:float2x2 = float2x2(diagonal: float2(1))
       
-    private var kind:Kind = .affine
+    private var kind_:Kind = .affine
     private var alpha:Float = 1
     private var count:Int = 0
     private var point:float2 = float2()
@@ -235,7 +210,7 @@ extension MLSSolverSwift {
         for i in 0..<count {
             
             let pt =        float2x2(columns: (pHat_[i], float2(0)))
-            let pp = w_[i] * float2x2(rows:    [pHat_[i], float2(0)])
+            let pp = w_[i] * float2x2(rows:   [pHat_[i], float2(0)])
 
             m += pt * pp
         }

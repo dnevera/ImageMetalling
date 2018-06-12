@@ -21,6 +21,12 @@ class GridView: NSView {
         case metal
     }
     
+    var solverAlpha:Float = 0.5 {
+        didSet{
+            updatePoints()
+        }
+    }
+
     var solverLang:SolverLang = .metal {
         didSet{
             updatePoints()
@@ -33,7 +39,7 @@ class GridView: NSView {
         }
     }
     
-    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width: 10, height: 10), radius:10, padding:20)
+    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width:10, height: 10), radius:10, padding:20)
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -93,7 +99,7 @@ class GridView: NSView {
             }
         }
         
-        let controls = IMPMLSSolver.Controls(p: p, q: q, kind: mlsKind, alpha: 0.5) 
+        let controls = IMPMLSSolver.Controls(p: p, q: q, kind: mlsKind, alpha: solverAlpha) 
         
         switch solverLang {
         case .cpp:

@@ -49,7 +49,7 @@
 		314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotRelationNode.swift; sourceTree = "<group>"; };
 		314CA41120C834FA0084EFA4 /* MNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNode.swift; sourceTree = "<group>"; };
 		3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageMetalling-16-Bridging-Header.h"; sourceTree = "<group>"; };
-		3154C1F420CEAB6000A005A3 /* MLSSolver.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MLSSolver.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		3154C1F420CEAB6000A005A3 /* MLSSolver.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MLSSolver.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		316C88FC20CFBA050027B437 /* MLSControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSControls.swift; sourceTree = "<group>"; };
 		53CE4F19BCA57762039CC6B5 /* Pods-ImageMetalling-16.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.debug.xcconfig"; sourceTree = "<group>"; };
 		A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_16.framework; sourceTree = BUILT_PRODUCTS_DIR; };
