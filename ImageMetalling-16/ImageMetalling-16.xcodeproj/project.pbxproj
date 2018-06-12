@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		310574C620CEB41300FD96FD /* MSLSolverSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310574C520CEB41200FD96FD /* MSLSolverSwift.swift */; };
 		310574CE20CEB82900FD96FD /* MLSSolverBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */; };
-		310574D120CEC93500FD96FD /* IMPMlsSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310574D020CEC93500FD96FD /* IMPMlsSolver.swift */; };
+		310574D120CEC93500FD96FD /* IMPMLSSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310574D020CEC93500FD96FD /* IMPMLSSolver.swift */; };
 		3109E70D20C800DF00063D97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70C20C800DF00063D97 /* AppDelegate.swift */; };
 		3109E70F20C800DF00063D97 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70E20C800DF00063D97 /* ViewController.swift */; };
 		3109E71120C800E000063D97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3109E71020C800E000063D97 /* Assets.xcassets */; };
@@ -31,7 +31,7 @@
 		310574CC20CEB82900FD96FD /* MLSSolverBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLSSolverBridge.h; sourceTree = "<group>"; };
 		310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MLSSolverBridge.mm; sourceTree = "<group>"; };
 		310574CF20CEB90F00FD96FD /* MLSSolverCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLSSolverCommon.h; sourceTree = "<group>"; };
-		310574D020CEC93500FD96FD /* IMPMlsSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPMlsSolver.swift; sourceTree = "<group>"; };
+		310574D020CEC93500FD96FD /* IMPMLSSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPMLSSolver.swift; sourceTree = "<group>"; };
 		3109E70920C800DF00063D97 /* ImageMetalling-16.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-16.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3109E70C20C800DF00063D97 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3109E70E20C800DF00063D97 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -138,7 +138,7 @@
 				3154C1F420CEAB6000A005A3 /* MLSSolver.hpp */,
 				310574CC20CEB82900FD96FD /* MLSSolverBridge.h */,
 				310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */,
-				310574D020CEC93500FD96FD /* IMPMlsSolver.swift */,
+				310574D020CEC93500FD96FD /* IMPMLSSolver.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -275,7 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				314CA41220C834FA0084EFA4 /* MNode.swift in Sources */,
-				310574D120CEC93500FD96FD /* IMPMlsSolver.swift in Sources */,
+				310574D120CEC93500FD96FD /* IMPMLSSolver.swift in Sources */,
 				310574C620CEB41300FD96FD /* MSLSolverSwift.swift in Sources */,
 				3109E70F20C800DF00063D97 /* ViewController.swift in Sources */,
 				314CA40C20C817D00084EFA4 /* WindowController.swift in Sources */,

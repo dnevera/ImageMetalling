@@ -19,7 +19,7 @@ class GridView: NSView {
         }
     }
     
-    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width: 8, height: 8), radius:10, padding:20)
+    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width: 40, height: 40), radius:10, padding:20)
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -66,7 +66,7 @@ class GridView: NSView {
     
     let context = IMPContext()
     
-    lazy var mls_solver:IMPMlsSolver = IMPMlsSolver(context: self.context)
+    lazy var mls_solver:IMPMLSSolver = IMPMLSSolver(context: self.context)
     
     func updatePoints()  {
         
@@ -82,11 +82,9 @@ class GridView: NSView {
         
         do {
             
-            let controls = IMPMlsSolver.Controls(p: p, q: q, kind: mlsKind, alpha: 1.0) 
-            
-            mls_solver.controls = controls
-            
-            self.mls_solver.process { (points) in
+            let controls = IMPMLSSolver.Controls(p: p, q: q, kind: mlsKind, alpha: 0.5) 
+                        
+            self.mls_solver.process(controls: controls) { (points) in
                 DispatchQueue.main.async {
                     for i in 0..<points.count {
                         
@@ -171,11 +169,11 @@ class GridView: NSView {
         
         findNode(at: point, leaved: { (index, node) in
             if index >= 0 && index < self.knotsGrid.children.count {
-                node?.run(KnotsGrid.scaleIn)
+                //node?.run(KnotsGrid.scaleIn)
             }
         }) { (index, node) in
             if self.lastIndex < 0 {
-                node.run(KnotsGrid.scaleOut)
+                //node.run(KnotsGrid.scaleOut)
             }
         }        
     }

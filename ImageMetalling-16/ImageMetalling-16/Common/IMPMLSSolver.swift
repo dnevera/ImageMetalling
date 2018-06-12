@@ -9,7 +9,7 @@
 import Foundation
 import IMProcessing
 
-public class IMPMlsSolver:IMPContextProvider{
+public class IMPMLSSolver:IMPContextProvider{
     public struct Controls {
         let p:[float2]
         let q:[float2]
@@ -45,20 +45,22 @@ public class IMPMlsSolver:IMPContextProvider{
             outputPointsBuffer = context.device.makeBuffer(length: points_length, options: options)       
         }
     }   
-    public var controls:Controls = Controls(p: [], q: []) 
+    //public var controls:Controls = Controls(p: [], q: []) 
     
     public let context: IMPContext
     
-    public init(context:IMPContext, complete:((_ points:[float2])->Void)? = nil){
+    public init(context:IMPContext, controls:Controls?=nil, complete:((_ points:[float2])->Void)? = nil){
         self.context = context
         defer {
-            if controls.p.count == controls.q.count && controls.p.count > 0 && points.count > 0 {
-                process(complete: complete)
+            if let controls = controls {
+                if controls.p.count == controls.q.count && controls.p.count > 0 && points.count > 0 {
+                    process(controls: controls, complete: complete)
+                }
             }
         }
     }  
     
-    public func process(complete:((_ points:[float2])->Void)?=nil) {
+    public func process(controls:Controls, complete:((_ points:[float2])->Void)?=nil) {
         
         guard controls.p.count == controls.q.count && controls.p.count > 0 && points.count > 0 else {
             complete?([])
@@ -74,25 +76,25 @@ public class IMPMlsSolver:IMPContextProvider{
             
             self.threadgroups.width = self.points.count                       
 
-            let length = MemoryLayout<float2>.size * self.controls.p.count
+            let length = MemoryLayout<float2>.size * controls.p.count
             
             if self._points.count != self.points.count {
                 self._points = [float2](repeating: float2(0), count: self.points.count)
             }
             
             if self.pBuffer?.length == length {
-                memcpy(self.pBuffer?.contents(), self.controls.p, length)
-                memcpy(self.qBuffer?.contents(), self.controls.q, length)
+                memcpy(self.pBuffer?.contents(), controls.p, length)
+                memcpy(self.qBuffer?.contents(), controls.q, length)
             }
             else {
                 
                 self.pBuffer = self.context.device.makeBuffer(
-                    bytes: self.controls.p,
+                    bytes: controls.p,
                     length: length,
                     options: [])
                 
                 self.qBuffer = self.context.device.makeBuffer(
-                    bytes: self.controls.q,
+                    bytes: controls.q,
                     length: length,
                     options: [])
                 
@@ -110,13 +112,13 @@ public class IMPMlsSolver:IMPContextProvider{
             commandEncoder.setBuffer(_pBuffer, offset: 0, index: 2)
             commandEncoder.setBuffer(_qBuffer, offset: 0, index: 3)
 
-            var count = self.controls.p.count
+            var count = controls.p.count
             commandEncoder.setBytes(&count, length: MemoryLayout.stride(ofValue: count), index: 4)
 
-            var kind = self.controls.kind
+            var kind = controls.kind
             commandEncoder.setBytes(&kind, length: MemoryLayout.stride(ofValue: kind), index: 5)
 
-            var alpha = self.controls.alpha
+            var alpha = controls.alpha
             commandEncoder.setBytes(&alpha, length: MemoryLayout.stride(ofValue: alpha), index: 6)
 
             commandEncoder.dispatchThreadgroups(self.threadgroups, threadsPerThreadgroup: self.threads)
