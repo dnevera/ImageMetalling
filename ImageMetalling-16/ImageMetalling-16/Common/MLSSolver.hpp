@@ -28,7 +28,7 @@ using namespace simd;
 #include "IMPConstants-Bridging-Metal.h"
 
 #ifdef __METAL_VERSION__
-static inline float2x2 __inverse(const float2x2 _src) //, thread float2x2* _dst)
+static inline float2x2 __inverse(const float2x2 _src) 
 {    
 #ifdef __METAL_VERSION__
     float src[4] = {_src[0][0],_src[0][1],_src[1][0],_src[1][1]};
@@ -253,12 +253,7 @@ private:
             float2x2 pt({w_[i] * pHat_[i], float2(0)});
             float2x2 qp({(float2){qHat_[i].x, 0.0}, (float2){qHat_[i].y, 0.0}});
             
-#ifdef __METAL_VERSION__
-            m = m + pt * qp;
-#else
-            float2x2 mi = pt * qp; 
-            m = matrix_add(m, mi);
-#endif
+            m = m + (float2x2)(pt * qp);
         }
         return m;
     }
@@ -271,14 +266,8 @@ private:
             float2x2 pt({pHat_[i], float2(0)});
             float2x2 pp({(float2){w_[i] * pHat_[i].x, 0.0}, (float2){w_[i] * pHat_[i].y, 0.0}});
             
-#ifdef __METAL_VERSION__
-            m = m + pt * pp;
-#else
-            float2x2 mi = pt * pp;
-            m = matrix_add(m, mi);
-#endif
-        }
-        
+            m = m + (float2x2)(pt * pp);
+        }        
         return m;
     }
     
