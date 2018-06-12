@@ -127,6 +127,12 @@
                                                 <action selector="reset:" target="Voe-Tx-rLC" id="CFe-5t-6TP"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Pin edges" id="44F-Dv-4tN">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="pinEdges:" target="Voe-Tx-rLC" id="AvN-zd-Zng"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

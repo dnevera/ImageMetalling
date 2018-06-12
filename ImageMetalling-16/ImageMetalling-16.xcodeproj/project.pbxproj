@@ -14,6 +14,8 @@
 		3109E71120C800E000063D97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3109E71020C800E000063D97 /* Assets.xcassets */; };
 		3109E71420C800E000063D97 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3109E71220C800E000063D97 /* Main.storyboard */; };
 		311DB7BF20CCF7E50074E560 /* MLSMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311DB7BE20CCF7E50074E560 /* MLSMesh.swift */; };
+		3142A26020CFE487009B4440 /* TargetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3142A25F20CFE487009B4440 /* TargetView.swift */; };
+		3142A26320CFE71B009B4440 /* IMPColorPlaneFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3142A26220CFE71B009B4440 /* IMPColorPlaneFilter.swift */; };
 		314651AB20CFC24A00144A5F /* MLSSolverSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */; };
 		314CA40220C801840084EFA4 /* IMPMain_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40120C801840084EFA4 /* IMPMain_metal.metal */; };
 		314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40320C815C60084EFA4 /* KnotNode.swift */; };
@@ -40,6 +42,8 @@
 		3109E71520C800E000063D97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3109E71620C800E000063D97 /* ImageMetalling_16.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ImageMetalling_16.entitlements; sourceTree = "<group>"; };
 		311DB7BE20CCF7E50074E560 /* MLSMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSMesh.swift; sourceTree = "<group>"; };
+		3142A25F20CFE487009B4440 /* TargetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetView.swift; sourceTree = "<group>"; };
+		3142A26220CFE71B009B4440 /* IMPColorPlaneFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPColorPlaneFilter.swift; sourceTree = "<group>"; };
 		314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MLSSolverSwift.swift; sourceTree = "<group>"; };
 		314CA40120C801840084EFA4 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; };
 		314CA40320C815C60084EFA4 /* KnotNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotNode.swift; sourceTree = "<group>"; };
@@ -96,6 +100,7 @@
 		3109E70B20C800DF00063D97 /* ImageMetalling-16 */ = {
 			isa = PBXGroup;
 			children = (
+				3142A26120CFE6FB009B4440 /* Filters */,
 				3154C1EE20CEA9B900A005A3 /* Common */,
 				314CA40020C801840084EFA4 /* Shaders */,
 				314CA3FF20C8017A0084EFA4 /* Classes */,
@@ -108,6 +113,14 @@
 				3109E71620C800E000063D97 /* ImageMetalling_16.entitlements */,
 			);
 			path = "ImageMetalling-16";
+			sourceTree = "<group>";
+		};
+		3142A26120CFE6FB009B4440 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				3142A26220CFE71B009B4440 /* IMPColorPlaneFilter.swift */,
+			);
+			path = Filters;
 			sourceTree = "<group>";
 		};
 		314CA3FF20C8017A0084EFA4 /* Classes */ = {
@@ -142,6 +155,7 @@
 				310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */,
 				314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */,
 				310574D020CEC93500FD96FD /* IMPMLSSolver.swift */,
+				3142A25F20CFE487009B4440 /* TargetView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -285,12 +299,14 @@
 				314CA40220C801840084EFA4 /* IMPMain_metal.metal in Sources */,
 				3109E70D20C800DF00063D97 /* AppDelegate.swift in Sources */,
 				311DB7BF20CCF7E50074E560 /* MLSMesh.swift in Sources */,
+				3142A26020CFE487009B4440 /* TargetView.swift in Sources */,
 				314CA40820C8167B0084EFA4 /* GridView.swift in Sources */,
 				310574CE20CEB82900FD96FD /* MLSSolverBridge.mm in Sources */,
 				314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */,
 				314651AB20CFC24A00144A5F /* MLSSolverSwift.swift in Sources */,
 				314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */,
 				314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */,
+				3142A26320CFE71B009B4440 /* IMPColorPlaneFilter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -85,3 +85,61 @@ kernel void kernel_mlsSolver(
     MLSSolver solver = MLSSolver(point,p,q,count,kind,alpha);
     output_points[gid] = solver.value(point);
 }
+
+
+inline float4 color_plane(float2 xy, float3 color, IMPColorSpaceIndex space, uint2  spacePlanes, bool drawClipping) {
+    
+    float2 yrange = IMPgetColorSpaceRange (space, spacePlanes.x);
+    float2 zrange = IMPgetColorSpaceRange (space, spacePlanes.y);
+    
+    float3 nc = IMPConvertColor(IMPRgbSpace, space, color);    
+    
+    nc[spacePlanes.x] = xy.x * (yrange.y - yrange.x) + yrange.x;
+    nc[spacePlanes.y] = xy.y * (zrange.y - zrange.x) + zrange.x;
+    
+    nc = IMPConvertColor(space, IMPRgbSpace, nc);
+    
+    float4 result = float4(nc,1);
+    float  a = 1;
+    
+    if (drawClipping){
+        if (result.x<0 || result.x>1) {
+            a = 0.5;
+        }
+        
+        if (result.y<0 || result.y>1) {
+            a = 0.5;
+        }
+        
+        if (result.z<0 || result.z>1) {
+            a = 0.5;
+        }
+    }
+    
+    return mix(float4(0.5,0.5,0.5,1),result,float4(a));
+}
+
+kernel void kernel_mlsPlaneTransform(metal::texture2d<float, metal::access::sample> inTexture [[texture(0)]],
+                         metal::texture2d<float, metal::access::write> outTexture [[texture(1)]],
+                         constant float3              &color          [[buffer(0)]],
+                         constant IMPColorSpaceIndex  &space          [[buffer(1)]],
+                         constant uint2               &spacePlanes    [[buffer(2)]],
+                         
+                         constant float2  *p      [[buffer(3)]],
+                         constant float2  *q      [[buffer(4)]],
+                         constant int    &count   [[buffer(5)]],
+                         constant MLSSolverKind  &kind [[buffer(6)]],
+                         constant float    &alpha [[buffer(7)]],
+                         
+                         metal::uint2 gid [[thread_position_in_grid]]
+                         )
+{
+    float2 xy = float2(gid)/float2(outTexture.get_width(),outTexture.get_height());    
+    
+    MLSSolver solver = MLSSolver(xy, p, q, count, kind, alpha);
+    xy = solver.value(xy);
+    
+    float4 nc = color_plane(xy, color, space, spacePlanes, true);
+        
+    outTexture.write(nc, gid);    
+}

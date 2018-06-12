@@ -10,11 +10,12 @@ import Cocoa
 import SpriteKit
 import simd
 import IMProcessing
+import IMProcessingUI
 
 let USE_MOUSE_OVER = false
 let PRINT_TIME = false
 
-class GridView: NSView {
+class GridView: NSView, IMPDeferrable {
     
     public enum SolverLang {
         case cpp
@@ -22,7 +23,7 @@ class GridView: NSView {
         case metal
     }
     
-    let resolution = 16
+    let resolution = 8
     
     var solverAlpha:Float = 0.5 {
         didSet{
@@ -63,10 +64,10 @@ class GridView: NSView {
         knotsGrid.bounds = bounds    
     }    
     
+    var updateControls:((_ controls:MLSControls)->Void)?
+    
     func config() {
         
-        wantsLayer = true
-        layer?.backgroundColor = NSColor.darkGray.cgColor
         postsFrameChangedNotifications = true
         postsBoundsChangedNotifications = true
         
@@ -93,7 +94,9 @@ class GridView: NSView {
     lazy var mls_solver_swift:MLSSolverProtocol = MLSSolverSwift(points:self.knotsGrid.mesh.sources)
     lazy var mls_solver_cpp:MLSSolverProtocol   = MLSSolverCpp(points:self.knotsGrid.mesh.sources)
     
-    func updatePoints()  {
+    lazy var updateQ = DispatchQueue(label: "updateQ")
+    
+    func updatePoints(updatePlane:Bool = false)  {
         
         var p = [float2]()
         var q = [float2]()
@@ -106,8 +109,16 @@ class GridView: NSView {
         }
         
         let controls = IMPMLSSolver.Controls(p: p, q: q, kind: mlsKind, alpha: solverAlpha) 
-        
+                
         let tm = Date()
+
+        if updatePlane {
+            self.updateControls?(controls)
+        }
+        
+        if PRINT_TIME {
+            Swift.print(" ... updateControls   processing time \(-tm.timeIntervalSinceNow)")
+        }
         
         switch self.solverLang {
         case .cpp:
@@ -139,8 +150,9 @@ class GridView: NSView {
                         Swift.print(" ... metal processing time \(-tm.timeIntervalSinceNow)")
                     }
                 }
-            }   
-        }                        
+            }                   
+        }    
+        
     }        
     
     @objc private func pressHandler(recognizer:NSPanGestureRecognizer)  {
@@ -156,7 +168,7 @@ class GridView: NSView {
             lastNode?.position = location    
             (lastNode as? KnotNode)?.isPinned = true
             
-            updatePoints()
+            self.updatePoints(updatePlane: recognizer.state == .ended)
         }
     }
     

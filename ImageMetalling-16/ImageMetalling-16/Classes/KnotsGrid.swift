@@ -50,6 +50,24 @@ open class KnotsGrid: SKShapeNode {
         update()
     }    
     
+    public func pinEdges() {
+        var index = 0
+
+        for y in 0..<mesh.dimension.height {
+            for x in 0..<mesh.dimension.width {
+                let knot = children[index] as! KnotNode
+                if x == 0 || y == 0 {
+                    knot.isPinned = true
+                }
+                if x == mesh.dimension.width-1 || y == mesh.dimension.height-1 {
+                    knot.isPinned = true
+                }
+                index += 1
+            }
+        }
+            
+    }
+    
     public func update(_ newTargets:[float2]? = nil) {
         
         if let t = newTargets {

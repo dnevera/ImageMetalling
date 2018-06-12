@@ -8,9 +8,20 @@
 
 import Cocoa
 import SnapKit
+import IMProcessing
 
 class ViewController: NSViewController {
-
+    
+    let context = IMPContext(lazy:true)
+    
+    lazy var planeFilter:IMPColorPlaneFilter = IMPColorPlaneFilter(context:self.context)
+    
+    /// Тут просто рисуем картинку с возможностью скрола и зума
+    public lazy var targetView:TargetView = {
+        let v = TargetView(frame: self.view.bounds)
+        return v
+    }()
+    
     lazy var gridView = GridView(frame: self.view.bounds)
     
     lazy var alphaSlider = NSSlider(value: 1, minValue: 0, maxValue: 2, target: self, action: #selector(slider(sender:)))
@@ -18,8 +29,17 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()   
         
-        view.addSubview(gridView)
+        view.wantsLayer = true
+        view.layer?.backgroundColor = NSColor.darkGray.cgColor
+        
+        view.addSubview(targetView)        
         view.addSubview(alphaSlider)
+               
+        targetView.processingView.addSubview(gridView)        
+        
+        gridView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
         
         alphaSlider.snp.makeConstraints { (make) in
             make.left.equalToSuperview()
@@ -27,12 +47,37 @@ class ViewController: NSViewController {
             make.bottom.equalToSuperview()
         }
         
-        gridView.snp.makeConstraints { (make) in
+        targetView.snp.makeConstraints { (make) in
             make.top.equalToSuperview()
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.bottom.equalTo(alphaSlider.snp.top)
         }
+    }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        targetView.processingView.fitViewSize(size: NSSize(width: 1024, height: 1024), 
+                                              to: self.targetView.bounds.size, 
+                                              moveCenter: false)
+        targetView.sizeFit()  
+        
+        planeFilter.reference = float3(0.5,0.5,0.5)
+        targetView.processingView.image = planeFilter.destination
+        
+       
+        planeFilter.addObserver(destinationUpdated: { (image) in
+            self.targetView.processingView.image = image
+        })
+        
+        
+        gridView.updateControls = { controls in
+            self.planeFilter.context.runOperation(.async) {                
+                self.planeFilter.controls = controls   
+                self.planeFilter.process()
+            } 
+        }
+        
     }
     
     @objc func slider(sender:NSSlider)  {

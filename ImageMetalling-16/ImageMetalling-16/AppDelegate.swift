@@ -108,5 +108,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         cpp.state = .on
         controller.gridView.solverLang = .cpp
     }
+    
+    
+    @IBAction func pinEdges(_ sender: NSMenuItem) {
+        controller.gridView.knotsGrid.pinEdges()
+    }
 }
 
