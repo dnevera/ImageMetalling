@@ -69,6 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         controller.gridView.knotsGrid.reset()
         controller.alphaSlider.floatValue = 1
         controller.gridView.solverAlpha = 1
+        controller.gridView.updatePoints(updatePlane: true)
     }
     
     @IBAction func toggleAffine(_ sender: NSMenuItem) {

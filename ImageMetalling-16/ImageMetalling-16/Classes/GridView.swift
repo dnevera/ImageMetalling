@@ -27,19 +27,19 @@ class GridView: NSView, IMPDeferrable {
     
     var solverAlpha:Float = 0.5 {
         didSet{
-            updatePoints()
+            updatePoints(updatePlane: true)
         }
     }
     
     var solverLang:SolverLang = .metal {
         didSet{
-            updatePoints()
+            updatePoints(updatePlane: true)
         }
     }
     
     var mlsKind:MLSSolverSwift.Kind = .affine {
         didSet{
-            updatePoints()
+            updatePoints(updatePlane: true)
         }
     }
     

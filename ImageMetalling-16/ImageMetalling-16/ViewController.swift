@@ -34,7 +34,9 @@ class ViewController: NSViewController {
         
         view.addSubview(targetView)        
         view.addSubview(alphaSlider)
-               
+        
+        alphaSlider.isContinuous = false
+        
         targetView.processingView.addSubview(gridView)        
         
         gridView.snp.makeConstraints { (make) in
