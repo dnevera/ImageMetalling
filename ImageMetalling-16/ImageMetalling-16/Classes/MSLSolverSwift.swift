@@ -65,11 +65,7 @@ private extension float2 {
 
 public class MSLSolverSwift {
     
-    public enum Kind {
-        case affine
-        case similarity
-        case rigid
-    }
+    public typealias Kind = MLSSolverKind
     
     public enum Error:Swift.Error {
         case diffSize
@@ -104,12 +100,8 @@ public class MSLSolverSwift {
         pHat = []
     }
     
-    public func value(at point:float2) -> float2 {
-        
-        if count <= 0 {
-            return point;
-        }
-        
+    public func value(at point:float2) -> float2 {        
+        if count <= 0 { return point }  
         return (point - pStar) * M + qStar    
     }
     
@@ -141,7 +133,7 @@ public class MSLSolverSwift {
         }
         
         pStar = pStar / weight                
-        qStar = qStar / weight
+        qStar = qStar / weight        
     }
     
     private func solveHat(){        
@@ -183,7 +175,7 @@ public class MSLSolverSwift {
     private func solveM(){
         switch kind {
         case .affine:
-            M = affineM(point)
+            M = affineM()
         case .similarity, .rigid:
             M = similarityM(point)
         }
@@ -207,7 +199,7 @@ public class MSLSolverSwift {
 //
 extension MSLSolverSwift {
     
-    private func affineMj(_ value:float2) -> float2x2 {
+    private func affineMj() -> float2x2 {
         var m = float2x2(0)
         for i in 0..<count {
 
@@ -219,7 +211,7 @@ extension MSLSolverSwift {
         return m
     }
     
-    private func affineMi(_ value:float2) -> float2x2 {
+    private func affineMi() -> float2x2 {
         var m = float2x2(0)
         for i in 0..<count {
             
@@ -231,8 +223,8 @@ extension MSLSolverSwift {
         return m
     }
     
-    fileprivate func affineM(_ value:float2) -> float2x2 {
-        return affineMi(point).inverse * affineMj(point)
+    fileprivate func affineM() -> float2x2 {
+        return affineMi().inverse * affineMj();
     }
 }
 
@@ -261,7 +253,8 @@ extension MSLSolverSwift {
 //
 // Rigid transformation Matrix
 //
-extension MSLSolverSwift {        
+extension MSLSolverSwift {     
+    
     fileprivate func rigidMu1(index i:Int) -> Float {
         return w[i]*dot(qHat[i], pHat[i])        
     }

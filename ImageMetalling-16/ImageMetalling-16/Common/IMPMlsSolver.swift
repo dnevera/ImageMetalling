@@ -63,9 +63,7 @@ public class IMPMlsSolver:IMPContextProvider{
         guard controls.p.count == controls.q.count && controls.p.count > 0 && points.count > 0 else {
             complete?([])
             return
-        }
-        
-        threadgroups.width = points.count                       
+        }        
                 
         context.execute(.async, complete: {             
             if let b = self.outputPointsBuffer {
@@ -74,6 +72,8 @@ public class IMPMlsSolver:IMPContextProvider{
             complete?(self._points)
         }) { (commandBuffer) in
             
+            self.threadgroups.width = self.points.count                       
+
             let length = MemoryLayout<float2>.size * self.controls.p.count
             
             if self._points.count != self.points.count {

@@ -27,14 +27,55 @@ using namespace simd;
 #include "MLSSolverCommon.h"
 #include "IMPConstants-Bridging-Metal.h"
 
-class MLSSolver{
+#ifdef __METAL_VERSION__
+static inline float2x2 __inverse(const float2x2 _src) //, thread float2x2* _dst)
+{    
+#ifdef __METAL_VERSION__
+    float src[4] = {_src[0][0],_src[0][1],_src[1][0],_src[1][1]};
+#else
+    float src[4] = {_src.columns[0][0],_src.columns[0][1],_src.columns[1][0],_src.columns[1][1]};
+#endif    
+    float dst[4] = {0,0,0,0};
+    float det = 0;
+    
+    /* Compute adjoint: */
+    
+    dst[0] = + src[3];
+    dst[1] = - src[1];
+    dst[2] = - src[2];
+    dst[3] = + src[0];
+    
+    /* Compute determinant: */
+    
+    det = src[0] * dst[0] + src[1] * dst[2];
+    
+    /* Multiply adjoint with reciprocal of determinant: */
+    
+    det = 1.0f / det;
+    
+    dst[0] *= det;
+    dst[1] *= det;
+    dst[2] *= det;
+    dst[3] *= det;
+    
+    return (float2x2){(float2){dst[0],dst[1]},(float2){dst[2],dst[3]}};
+}
+#else
+#define __inverse inverse
+#endif
 
+static inline float2 __slashReflect(float2 point) {
+    return (float2){-point.y, point.x};
+}
+
+class MLSSolver{
+    
 public:
     
     
     /**
      Create Mean least square solver
-
+     
      @param point current point solve for 
      @param p source control points 
      @param q destination control points
@@ -56,8 +97,9 @@ public:
     point_(point),
     kind_(kind), 
     alpha_(alpha), 
-    p_(p), q_(q),
-    weight(0)
+    count_(count),
+    weight_(0),
+    p_(p), q_(q)
     {    
 #ifndef __METAL_VERSION__
         w_ = new float[count_];   
@@ -66,17 +108,26 @@ public:
 #endif
         
         solveW();
+        solveStars();
+        solveHat();
+        solveM();  
+#ifndef __METAL_VERSION__
+        delete pHat_;
+        delete qHat_;
+        pHat_=qHat_=0;
+#endif
     }    
     
     float2 value(float2 point) {
-        return point;
+        if (count_ <= 0) return point;   
+        return (point - pStar_) * M + qStar_;    
     }
     
     ~MLSSolver() {
 #ifndef __METAL_VERSION__
         delete w_;
-        delete pHat_;
-        delete qHat_;
+        if (pHat_) delete pHat_;
+        if (qHat_) delete qHat_;
 #endif
     }
     
@@ -100,11 +151,16 @@ private:
     thread float2 qHat_[MLS_MAXIMUM_POINTS];
 #endif
     
-    float weight;
-        
+    float weight_;
+    float2 pStar_;
+    float2 qStar_;
+    float mu_;
+    
+    float2x2 M;
+    
     void solveW() {
-                
-        weight = 0;
+        
+        weight_ = 0;
         
         for (int i=0; i<count_; i++) {
             
@@ -113,12 +169,146 @@ private:
             if (d < FLT_EPSILON)  d = FLT_EPSILON; 
             
             w_[i] = 1.0 / d;
-            weight = weight + w_[i];
+            weight_ = weight_ + w_[i];
         }
         
-        if (weight < FLT_EPSILON)  weight = FLT_EPSILON;
-    }    
+        if (weight_ < FLT_EPSILON)  weight_ = FLT_EPSILON;
+    }  
     
+    void solveStars() {
+        pStar_ = float2(0);
+        qStar_ = float2(0);
+        
+        for (int i=0; i<count_; i++) {
+            pStar_ += float2(w_[i]) * p_[i];
+            qStar_ += float2(w_[i]) * q_[i];
+        }
+        
+        pStar_ = pStar_ / weight_;                
+        qStar_ = qStar_ / weight_;
+    }
+    
+    void solveHat(){        
+        
+        mu_ = 0;
+        
+        float _rmu1 = 0;
+        float _rmu2 = 0;
+        
+        for (int i=0; i<count_; i++) {
+            
+            pHat_[i] = p_[i] - pStar_;                        
+            qHat_[i] = q_[i] - qStar_;
+            
+            switch (kind_) {            
+                case MLSSolverKindSimilarity:
+                    mu_ += similarityMu(i);
+                    break;                
+                case MLSSolverKindRigid:
+                    _rmu1 += rigidMu1(i); 
+                    _rmu2 += rigidMu2(i);
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        switch (kind_) {            
+            case MLSSolverKindRigid:
+                mu_ = sqrt(_rmu1*_rmu1 + _rmu2*_rmu2);
+                break;
+            default:
+                break;
+        }
+        
+        if (mu_ < FLT_EPSILON)  mu_ = FLT_EPSILON; 
+        
+        mu_ = 1/mu_;
+    }
+    
+    void solveM() {
+        switch (kind_) {
+            case MLSSolverKindAffine:
+                M = affineM();
+                break;
+            case MLSSolverKindSimilarity:
+            case MLSSolverKindRigid:
+                M = similarityM(point_);
+                break;
+        }
+    }  
+    
+    float2x2 affineMj() {
+        float2x2 m = (float2x2){(float2){0,0},(float2){0,0}};
+        
+        for (int i=0; i<count_; i++) {
+            
+            float2   p = w_[i] * pHat_[i];
+            float2x2 pt({p, float2(0)});
+            float2x2 qp({(float2){qHat_[i].x, 0.0}, (float2){qHat_[i].y, 0.0}});
+            
+#ifdef __METAL_VERSION__
+            m = m + pt * qp;
+#else
+            float2x2 mi = matrix_multiply(pt,qp);
+            m = matrix_add(m, mi);
+#endif
+        }
+        return m;
+    }
+    
+    float2x2 affineMi() {
+        float2x2 m = (float2x2){(float2){0,0},(float2){0,0}};
+        
+        for (int i=0; i<count_; i++) {
+            
+            float2   p = pHat_[i];
+            float2x2 pt({p, float2(0)});
+            float2x2 pp({(float2){w_[i] * pHat_[i].x, 0.0}, (float2){w_[i] * qHat_[i].y, 0.0}});
+            
+#ifdef __METAL_VERSION__
+            m = m + pt * pp;
+#else
+            float2x2 mi = pt * pp;
+            m = matrix_add(m, mi);
+#endif
+        }
+        
+        return m;
+    }
+    
+    float2x2 affineM() {
+        return __inverse(affineMi()) * affineMj();
+    }
+    
+    float similarityMu(int i)  {
+        return w_[i]*dot(pHat_[i], pHat_[i]);
+    }
+    
+    float2x2 similarityM(float2 value) {
+        
+        float2x2 m = (float2x2){(float2){0,0},(float2){0,0}};
+        
+        for (int i=0; i<count_; i++) {
+            
+            float2 sp = -1 * __slashReflect(pHat_[i]);
+            float2 sq = -1 * __slashReflect(qHat_[i]);
+            
+            float2x2 _p({(float2){w_[i] * pHat_[i].x, w_[i] * sp.x}, (float2){w_[i] * pHat_[i].y, w_[i] * sp.y}});
+            float2x2 _q({qHat_[i], sq});
+                        
+            m = m + (float2x2)(_p * _q);
+        }
+        return  mu_ * m; 
+    }
+    
+    float rigidMu1(int i) {
+        return w_[i]*dot(qHat_[i], pHat_[i]);        
+    }
+    
+    float rigidMu2(int i) {
+        return w_[i]*dot(qHat_[i],  __slashReflect(pHat_[i]));        
+    }
 };
 
 #endif /* __cplusplus */

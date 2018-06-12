@@ -13,7 +13,7 @@ import IMProcessing
 
 class GridView: NSView {
     
-    var mslKind:MSLSolverSwift.Kind = .affine {
+    var mlsKind:MSLSolverSwift.Kind = .affine {
         didSet{
             updatePoints()
         }
@@ -74,7 +74,6 @@ class GridView: NSView {
         var q = [float2]()
         
         for (i,k) in knotsGrid.children.enumerated() {
-            //if i > 10 { break }
             if let kk = k as? KnotNode, kk.isPinned {
                 q.append(k.position.convert(from: knotsGrid.box))
                 p.append(knotsGrid.mlsPoints.sources[i])
@@ -83,32 +82,53 @@ class GridView: NSView {
         
         do {
             
-            let controls = IMPMlsSolver.Controls(p: p, q: q, kind: .affine, alpha: 1.0) 
+            let controls = IMPMlsSolver.Controls(p: p, q: q, kind: mlsKind, alpha: 1.0) 
             
             mls_solver.controls = controls
             
+            self.mls_solver.process { (points) in
+                DispatchQueue.main.async {
+                    for i in 0..<points.count {
+                        
+                        let knot = self.knotsGrid.children[i] as! KnotNode
+                        
+                        if knot.isPinned { continue }
+                        
+                        knot.position = points[i].convert(to: self.knotsGrid.box)
+                    }                    
+                }
+            }    
+
+            return
+            
             for i in 0..<knotsGrid.children.count {
+
+                //if i >= 1 { continue }
                 
                 let knot = knotsGrid.children[i] as! KnotNode 
                 
-                if knot.isPinned { continue }
                 
-//                self.mls_solver.process { (points) in
-//                    //Swift.print(".... points \(points)")
-//                }    
-                                
-//                let msl = try _MLSSolver(point: knot.position.convert(from: knotsGrid.box), 
-//                                      p: p, 
-//                                      q: q)
+                let p1 = knot.position.convert(from: knotsGrid.box)
                 
-                let msl = try MSLSolverSwift(point: knot.position.convert(from: knotsGrid.box), 
+                let msl = try _MLSSolver(point: p1, 
+                                      p: p, 
+                                      q: q,
+                                      kind: mlsKind,
+                                      alpha: 1.5
+                )
+                
+                let _msl = try MSLSolverSwift(point: p1, 
                                         p: p,  
                                         q: q,
-                                        kind: mslKind,
+                                        kind: mlsKind,
                                         alpha: 1.5
-                ) 
+                )
                 
-                knot.position = msl.value(at: knotsGrid.mlsPoints.sources[i]).convert(to: knotsGrid.box)
+                let pp = msl.value(at: knotsGrid.mlsPoints.sources[i]).convert(to: knotsGrid.box)
+                let pp2 = _msl.value(at: knotsGrid.mlsPoints.sources[i]).convert(to: knotsGrid.box)
+                
+                //Swift.print("p[\(i) = \(pp)]")
+                knot.position = pp2
             }                
         }
         catch let error {

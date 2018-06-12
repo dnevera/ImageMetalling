@@ -18,15 +18,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         
-        if controller.gridView.mslKind  == .affine {
-            affineItem.state = .on
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { 
+            if self.controller.gridView.mlsKind  == .affine {
+                self.affineItem.state = .on
+            }
+            else if self.controller.gridView.mlsKind  == .similarity {
+                self.singularityItem.state = .on
+            } 
+            else if self.controller.gridView.mlsKind  == .rigid {
+                self.rigidItem.state = .on
+            }                       
         }
-        else if controller.gridView.mslKind  == .similarity {
-            singularityItem.state = .on
-        } 
-        else if controller.gridView.mslKind  == .rigid {
-            rigidItem.state = .on
-        }           
     }
     
     func applicationDidBecomeActive(_ notification: Notification) {
@@ -52,19 +54,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         for m in items { m.state = .off }
         
         affineItem.state = .on
-        controller.gridView.mslKind = .affine
+        controller.gridView.mlsKind = .affine
     }
     
     @IBAction func toggleSimilarity(_ sender: NSMenuItem) {
         for m in items { m.state = .off }
         singularityItem.state = .on
-        controller.gridView.mslKind = .similarity
+        controller.gridView.mlsKind = .similarity
     }
     
     @IBAction func toggleRigid(_ sender: NSMenuItem) {
         for m in items { m.state = .off }
         rigidItem.state = .on
-        controller.gridView.mslKind = .rigid
+        controller.gridView.mlsKind = .rigid
     }
     
 }

@@ -82,6 +82,6 @@ kernel void kernel_mlsSolver(
                              uint gid [[thread_position_in_grid]]
                              ){
     float2 point = input_points[gid];
-    //MLSSolver solver = MLSSolver(point,p,q,count,kind,alpha);
-    //output_points[gid] = point;/// solver.value(point);
+    MLSSolver solver = MLSSolver(point,p,q,count,kind,alpha);
+    output_points[gid] = solver.value(point);
 }

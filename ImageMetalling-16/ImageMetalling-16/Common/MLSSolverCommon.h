@@ -17,6 +17,23 @@ typedef NS_ENUM(uint, MLSSolverKind) {
     MLSSolverKindRigid      = 2
 };
 
+//# define double4 vector_double4
+//# define double3 vector_double3
+//# define double2 vector_double2
+//
+//# define double2x2 matrix_double2x2
+//# define double3x3 matrix_double3x3
+//# define double4x4 matrix_double4x4
+//
+//# define double2x3 matrix_double2x3
+//# define double3x2 matrix_double3x2
+//
+//# define double3x4 matrix_double3x4
+//# define double4x3 matrix_float4x3
+//
+//# define double2x4 matrix_double2x4
+//# define double4x2 matrix_double4x2
+
 #else
 
 typedef enum : uint {
