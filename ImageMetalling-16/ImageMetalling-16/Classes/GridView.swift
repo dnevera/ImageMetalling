@@ -12,6 +12,7 @@ import simd
 import IMProcessing
 
 let USE_MOUSE_OVER = false
+let PRINT_TIME = false
 
 class GridView: NSView {
     
@@ -21,12 +22,14 @@ class GridView: NSView {
         case metal
     }
     
+    let resolution = 16
+    
     var solverAlpha:Float = 0.5 {
         didSet{
             updatePoints()
         }
     }
-
+    
     var solverLang:SolverLang = .metal {
         didSet{
             updatePoints()
@@ -39,7 +42,10 @@ class GridView: NSView {
         }
     }
     
-    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, dimension: (width:10, height: 10), radius:10, padding:20)
+    lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, 
+                                             dimension: (width:self.resolution, height: self.resolution), 
+                                             radius:10, 
+                                             padding:20)
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -101,28 +107,41 @@ class GridView: NSView {
         
         let controls = IMPMLSSolver.Controls(p: p, q: q, kind: mlsKind, alpha: solverAlpha) 
         
-        switch solverLang {
+        let tm = Date()
+        
+        switch self.solverLang {
         case .cpp:
             
             self.mls_solver_cpp.process(controls: controls) { (points) in
-                self.knotsGrid.update(points)
+                DispatchQueue.main.async {
+                    self.knotsGrid.update(points)
+                    if PRINT_TIME {
+                        Swift.print(" ... cpp   processing time \(-tm.timeIntervalSinceNow)")
+                    }
+                }
             }   
             
         case .swift:
             self.mls_solver_swift.process(controls: controls) { (points) in
-                self.knotsGrid.update(points)
+                DispatchQueue.main.async {
+                    self.knotsGrid.update(points)
+                    if PRINT_TIME {
+                        Swift.print(" ... swift processing time \(-tm.timeIntervalSinceNow)")
+                    }
+                }
             }
             
         case .metal:
             self.mls_solver.process(controls: controls) { (points) in
                 DispatchQueue.main.async {
                     self.knotsGrid.update(points)
+                    if PRINT_TIME {
+                        Swift.print(" ... metal processing time \(-tm.timeIntervalSinceNow)")
+                    }
                 }
             }   
-        }
-        
-        
-    }
+        }                        
+    }        
     
     @objc private func pressHandler(recognizer:NSPanGestureRecognizer)  {
         if lastNode != nil && lastIndex >= 0 {
@@ -153,7 +172,7 @@ class GridView: NSView {
     }
     
     override func mouseMoved(with event: NSEvent) {
-            
+        
         let location = event.locationInWindow
         let point  = skview.convert(location,from:nil)
         

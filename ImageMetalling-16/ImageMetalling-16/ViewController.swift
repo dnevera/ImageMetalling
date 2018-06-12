@@ -13,12 +13,30 @@ class ViewController: NSViewController {
 
     lazy var gridView = GridView(frame: self.view.bounds)
     
+    lazy var alphaSlider = NSSlider(value: 1, minValue: 0, maxValue: 2, target: self, action: #selector(slider(sender:)))
+    
     override func viewDidLoad() {
         super.viewDidLoad()   
+        
         view.addSubview(gridView)
-        gridView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
+        view.addSubview(alphaSlider)
+        
+        alphaSlider.snp.makeConstraints { (make) in
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
+        
+        gridView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalTo(alphaSlider.snp.top)
+        }
+    }
+    
+    @objc func slider(sender:NSSlider)  {
+        gridView.solverAlpha = sender.floatValue
     }
 }
 
