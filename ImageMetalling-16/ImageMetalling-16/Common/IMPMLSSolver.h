@@ -25,55 +25,6 @@
 
 using namespace simd;
 
-#ifdef __METAL_VERSION__
-
-template <typename T, int numCols, int numRows = numCols>
-METAL_FUNC matrix<T,numRows,numCols> _MM_inverse(thread const matrix<T,numCols,numRows>& m) {
-    matrix<T,numRows,numCols> r;
-    for (int i=0;i!=numCols;++i)
-        for (int j=0;j!=numRows;++j)
-            r[j][i] = m[i][j];
-    return r;
-}
-
-
-static inline float2x2 __inverse(const float2x2 _src) 
-{    
-//#ifdef __METAL_VERSION__
-    float src[4] = {_src[0][0],_src[0][1],_src[1][0],_src[1][1]};
-//#else
-//    float src[4] = {_src.columns[0][0],_src.columns[0][1],_src.columns[1][0],_src.columns[1][1]};
-//#endif    
-    float dst[4] = {0,0,0,0};
-    float det = 0;
-    
-    /* Compute adjoint: */
-    
-    dst[0] = + src[3];
-    dst[1] = - src[1];
-    dst[2] = - src[2];
-    dst[3] = + src[0];
-    
-    /* Compute determinant: */
-    
-    //det = src[0] * dst[0] + src[1] * dst[2];
-    det = determinant(_src);
-    
-    /* Multiply adjoint with reciprocal of determinant: */
-    
-    det = 1.0f / det;
-    
-    dst[0] *= det;
-    dst[1] *= det;
-    dst[2] *= det;
-    dst[3] *= det;
-    
-    return (float2x2){(float2){dst[0],dst[1]},(float2){dst[2],dst[3]}};
-}
-#else
-#define __inverse inverse
-#endif
-
 static inline float2 __slashReflect(float2 point) {
     return (float2){-point.y, point.x};
 }
