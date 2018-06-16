@@ -10,8 +10,26 @@ import Foundation
 import IMProcessing
 
 public class CommonPlaneFilter: IMPFilter {
-    public var reference:float3            = float3(0)   { didSet{ dirty = true } }
-    public var space:IMPColorSpace         = .rgb        { didSet{ dirty = true } }
+
+    public var rgb:float3 { 
+        set{   
+            reference = space.from(.rgb, value: newValue)
+        }         
+        get {
+            return space.to(.rgb, value: reference)
+        }
+    }
+
+    public var reference:float3            = float3(0)   { 
+        didSet{
+            dirty = true             
+        }         
+    }
+    public var space:IMPColorSpace         = .rgb        {
+        didSet{ 
+            reference = space.from(oldValue, value: reference)
+        }         
+    }
     public var spaceChannels:(Int,Int) = (0,1)       { didSet{ dirty = true } }
     
     public override func configure(complete: IMPFilter.CompleteHandler?) {

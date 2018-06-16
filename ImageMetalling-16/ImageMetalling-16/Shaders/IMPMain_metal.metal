@@ -12,8 +12,8 @@
 using namespace metal;
 #include <SceneKit/scn_metal> 
 
-#include "MLSSolver.hpp"
-#include "MLSSolverCommon.h"
+#include "IMPMLSSolver.h"
+#include "IMPMLSSolverCommon.h"
 
 // Стандартные параметры модели (узла) 
 typedef struct  {
@@ -82,46 +82,41 @@ kernel void kernel_mlsSolver(
                              uint gid [[thread_position_in_grid]]
                              ){
     float2 point = input_points[gid];
-    MLSSolver solver = MLSSolver(point,p,q,count,kind,alpha);
+    IMPMLSSolver solver = IMPMLSSolver(point,p,q,count,kind,alpha);
     output_points[gid] = solver.value(point);
 }
 
 
-inline float4 color_plane(float2 xy, float3 color, IMPColorSpaceIndex space, uint2  spacePlanes, bool drawClipping) {
+inline float4 color_plane(float2 xy, float3 reference, IMPColorSpaceIndex space, uint2  spacePlanes, bool drawClipping) {
     
-    float2 yrange = IMPgetColorSpaceRange (space, spacePlanes.x);
-    float2 zrange = IMPgetColorSpaceRange (space, spacePlanes.y);
+    float2 xrange = IMPgetColorSpaceRange (space, spacePlanes.x);
+    float2 yrange = IMPgetColorSpaceRange (space, spacePlanes.y);
     
-    float3 nc = IMPConvertColor(IMPRgbSpace, space, color);    
+    float3 nc = reference; //IMPConvertColor(IMPRgbSpace, space, reference);    
     
-    nc[spacePlanes.x] = xy.x * (yrange.y - yrange.x) + yrange.x;
-    nc[spacePlanes.y] = xy.y * (zrange.y - zrange.x) + zrange.x;
+    nc[spacePlanes.x] = xy.x * (xrange.y - xrange.x) + xrange.x;
+    nc[spacePlanes.y] = xy.y * (yrange.y - yrange.x) + yrange.x;
     
     nc = IMPConvertColor(space, IMPRgbSpace, nc);
     
     float4 result = float4(nc,1);
     float  a = 1;
     
-    if (drawClipping){
-        if (result.x<0 || result.x>1) {
-            a = 0.5;
-        }
-        
-        if (result.y<0 || result.y>1) {
-            a = 0.5;
-        }
-        
-        if (result.z<0 || result.z>1) {
-            a = 0.5;
-        }
+    if (drawClipping){        
+        for(int i=0; i<3; i++){
+            if (result[i]<0 || result[i]>1) {
+                a = 0.2;
+                break;
+            }
+        }        
     }
     
-    return mix(float4(0.5,0.5,0.5,1),result,float4(a));
+    return mix(float4(0.2,0.2,0.2,1),result,float4(a));
 }
 
 kernel void kernel_mlsPlaneTransform(metal::texture2d<float, metal::access::sample> inTexture [[texture(0)]],
                          metal::texture2d<float, metal::access::write> outTexture [[texture(1)]],
-                         constant float3              &color          [[buffer(0)]],
+                         constant float3              &reference          [[buffer(0)]],
                          constant IMPColorSpaceIndex  &space          [[buffer(1)]],
                          constant uint2               &spacePlanes    [[buffer(2)]],
                          
@@ -136,10 +131,10 @@ kernel void kernel_mlsPlaneTransform(metal::texture2d<float, metal::access::samp
 {
     float2 xy = float2(gid)/float2(outTexture.get_width(),outTexture.get_height());    
     
-    MLSSolver solver = MLSSolver(xy, p, q, count, kind, alpha);
+    IMPMLSSolver solver = IMPMLSSolver(xy, p, q, count, kind, alpha);
     xy = solver.value(xy);
     
-    float4 nc = color_plane(xy, color, space, spacePlanes, true);
+    float4 nc = color_plane(xy, reference, space, spacePlanes, false);
         
     outTexture.write(nc, gid);    
 }

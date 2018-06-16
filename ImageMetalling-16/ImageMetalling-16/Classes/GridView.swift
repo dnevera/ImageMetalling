@@ -23,7 +23,7 @@ class GridView: NSView, IMPDeferrable {
         case metal
     }
     
-    let resolution = 8
+    let resolution = 12
     
     var solverAlpha:Float = 0.5 {
         didSet{
@@ -31,7 +31,7 @@ class GridView: NSView, IMPDeferrable {
         }
     }
     
-    var solverLang:SolverLang = .metal {
+    var solverLang:SolverLang = .cpp {
         didSet{
             updatePoints(updatePlane: true)
         }
@@ -109,12 +109,16 @@ class GridView: NSView, IMPDeferrable {
         }
         
         let controls = IMPMLSSolver.Controls(p: p, q: q, kind: mlsKind, alpha: solverAlpha) 
-                
+        
         let tm = Date()
-
+        
         if updatePlane {
-            self.updateControls?(controls)
+            DispatchQueue.global().async {
+                self.updateControls?(controls)                
+            }
         }
+        
+        //return
         
         if PRINT_TIME {
             Swift.print(" ... updateControls   processing time \(-tm.timeIntervalSinceNow)")
@@ -164,11 +168,15 @@ class GridView: NSView, IMPDeferrable {
     @objc private func panHandler(recognizer:NSPanGestureRecognizer)  {
         let location:NSPoint = recognizer.location(in: skview)
         
-        if lastNode != nil && lastIndex >= 0 {            
-            lastNode?.position = location    
-            (lastNode as? KnotNode)?.isPinned = true
+        if lastNode != nil && lastIndex >= 0 {
             
-            self.updatePoints(updatePlane: recognizer.state == .ended)
+            DispatchQueue.global().async {
+                self.lastNode?.position = location    
+                (self.lastNode as? KnotNode)?.isPinned = true                
+            }
+            
+            //self.updatePoints(updatePlane: recognizer.state == .ended)
+            self.updatePoints(updatePlane: true)
         }
     }
     

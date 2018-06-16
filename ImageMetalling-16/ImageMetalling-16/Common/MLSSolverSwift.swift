@@ -40,7 +40,7 @@ public class MLSSolverCpp:MLSSolverProtocol {
         let count = Int32(cp.count)        
         
         for (i,p) in points.enumerated() {            
-            guard let mls = MLSSolverBridge(p, source: &cp, destination: &cq, count: count, kind: controls.kind, alpha: controls.alpha) else {continue}
+            guard let mls = IMPMLSSolverBridge(p, source: &cp, destination: &cq, count: count, kind: controls.kind, alpha: controls.alpha) else {continue}
             result[i] = mls.value(p)
         }
         complete?(result)

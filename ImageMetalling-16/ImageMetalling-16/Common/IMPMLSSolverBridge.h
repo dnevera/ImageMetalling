@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MLSSolverCommon.h"
+#import "IMPMLSSolverCommon.h"
 #import <simd/simd.h>
 
-@interface MLSSolverBridge : NSObject
+@interface IMPMLSSolverBridge : NSObject
 - (instancetype) initWith:(simd_float2)point 
                   source:(simd_float2*)source 
              destination:(simd_float2*)destination 

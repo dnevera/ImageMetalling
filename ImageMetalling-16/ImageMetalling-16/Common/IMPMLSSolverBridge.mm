@@ -6,20 +6,20 @@
 //  Copyright © 2018 ImageMetalling. All rights reserved.
 //
 
-#import "MLSSolverBridge.h"
-#import "MLSSolver.hpp"
+#import "IMPMLSSolverBridge.h"
+#import "IMPMLSSolver.h"
 #import "IMPConstants-Bridging-Metal.h"
 
-@implementation MLSSolverBridge
+@implementation IMPMLSSolverBridge
 {
-    MLSSolver *solver;
+    IMPMLSSolver *solver;
 }
 -(instancetype) initWith:(float2)point source:(float2 *)source destination:(float2 *)destination count:(int)count kind:(MLSSolverKind)kind alpha:(float)alpha {
     
     self = [super init];
     
     if (self) {
-        solver = new MLSSolver(point,source,destination,count,kind,alpha);
+        solver = new IMPMLSSolver(point,source,destination,count,kind,alpha);
     }
     
     return self;

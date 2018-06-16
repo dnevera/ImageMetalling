@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		310574CE20CEB82900FD96FD /* MLSSolverBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */; };
 		310574D120CEC93500FD96FD /* IMPMLSSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310574D020CEC93500FD96FD /* IMPMLSSolver.swift */; };
 		3109E70D20C800DF00063D97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70C20C800DF00063D97 /* AppDelegate.swift */; };
 		3109E70F20C800DF00063D97 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3109E70E20C800DF00063D97 /* ViewController.swift */; };
@@ -25,14 +24,14 @@
 		314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */; };
 		314CA41220C834FA0084EFA4 /* MNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA41120C834FA0084EFA4 /* MNode.swift */; };
 		316C88FD20CFBA050027B437 /* MLSControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C88FC20CFBA050027B437 /* MLSControls.swift */; };
+		317D6B7220D52C3500C5F178 /* IMPMLSSolverBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */; };
 		52DAE41814B8317BF5F33D06 /* Pods_ImageMetalling_16.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		28B7790A72024AAA44C184C2 /* Pods-ImageMetalling-16.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.release.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.release.xcconfig"; sourceTree = "<group>"; };
-		310574CC20CEB82900FD96FD /* MLSSolverBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLSSolverBridge.h; sourceTree = "<group>"; };
-		310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MLSSolverBridge.mm; sourceTree = "<group>"; };
-		310574CF20CEB90F00FD96FD /* MLSSolverCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLSSolverCommon.h; sourceTree = "<group>"; };
+		310574CC20CEB82900FD96FD /* IMPMLSSolverBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMPMLSSolverBridge.h; sourceTree = "<group>"; };
+		310574CF20CEB90F00FD96FD /* IMPMLSSolverCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMPMLSSolverCommon.h; sourceTree = "<group>"; };
 		310574D020CEC93500FD96FD /* IMPMLSSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPMLSSolver.swift; sourceTree = "<group>"; };
 		3109E70920C800DF00063D97 /* ImageMetalling-16.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ImageMetalling-16.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3109E70C20C800DF00063D97 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -53,8 +52,10 @@
 		314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotRelationNode.swift; sourceTree = "<group>"; };
 		314CA41120C834FA0084EFA4 /* MNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNode.swift; sourceTree = "<group>"; };
 		3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageMetalling-16-Bridging-Header.h"; sourceTree = "<group>"; };
-		3154C1F420CEAB6000A005A3 /* MLSSolver.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MLSSolver.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
+		3154C1F420CEAB6000A005A3 /* IMPMLSSolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMPMLSSolver.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		316C88FC20CFBA050027B437 /* MLSControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSControls.swift; sourceTree = "<group>"; };
+		317D6B6F20D52A8800C5F178 /* IMPMatrixExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMPMatrixExtension.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
+		317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IMPMLSSolverBridge.mm; sourceTree = "<group>"; };
 		53CE4F19BCA57762039CC6B5 /* Pods-ImageMetalling-16.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.debug.xcconfig"; sourceTree = "<group>"; };
 		A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageMetalling_16.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -148,13 +149,14 @@
 			isa = PBXGroup;
 			children = (
 				3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */,
-				310574CF20CEB90F00FD96FD /* MLSSolverCommon.h */,
-				3154C1F420CEAB6000A005A3 /* MLSSolver.hpp */,
 				316C88FC20CFBA050027B437 /* MLSControls.swift */,
-				310574CC20CEB82900FD96FD /* MLSSolverBridge.h */,
-				310574CD20CEB82900FD96FD /* MLSSolverBridge.mm */,
 				314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */,
 				310574D020CEC93500FD96FD /* IMPMLSSolver.swift */,
+				310574CC20CEB82900FD96FD /* IMPMLSSolverBridge.h */,
+				317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */,
+				3154C1F420CEAB6000A005A3 /* IMPMLSSolver.h */,
+				317D6B6F20D52A8800C5F178 /* IMPMatrixExtension.h */,
+				310574CF20CEB90F00FD96FD /* IMPMLSSolverCommon.h */,
 				3142A25F20CFE487009B4440 /* TargetView.swift */,
 			);
 			path = Common;
@@ -265,8 +267,6 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/IMProcessing/IMProcessing.framework",
 				"${BUILT_PRODUCTS_DIR}/IMProcessingUI/IMProcessingUI.framework",
-				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
-				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Surge/Surge.framework",
 			);
@@ -274,8 +274,6 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IMProcessing.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IMProcessingUI.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Surge.framework",
 			);
@@ -301,11 +299,11 @@
 				311DB7BF20CCF7E50074E560 /* MLSMesh.swift in Sources */,
 				3142A26020CFE487009B4440 /* TargetView.swift in Sources */,
 				314CA40820C8167B0084EFA4 /* GridView.swift in Sources */,
-				310574CE20CEB82900FD96FD /* MLSSolverBridge.mm in Sources */,
 				314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */,
 				314651AB20CFC24A00144A5F /* MLSSolverSwift.swift in Sources */,
 				314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */,
 				314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */,
+				317D6B7220D52C3500C5F178 /* IMPMLSSolverBridge.mm in Sources */,
 				3142A26320CFE71B009B4440 /* IMPColorPlaneFilter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

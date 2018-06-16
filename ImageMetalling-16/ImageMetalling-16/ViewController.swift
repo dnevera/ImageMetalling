@@ -24,7 +24,7 @@ class ViewController: NSViewController {
     
     lazy var gridView = GridView(frame: self.view.bounds)
     
-    lazy var alphaSlider = NSSlider(value: 1, minValue: 0, maxValue: 2, target: self, action: #selector(slider(sender:)))
+    lazy var alphaSlider = NSSlider(value: 0.5, minValue: 0, maxValue: 4, target: self, action: #selector(slider(sender:)))
     
     override func viewDidLoad() {
         super.viewDidLoad()   
@@ -35,9 +35,10 @@ class ViewController: NSViewController {
         view.addSubview(targetView)        
         view.addSubview(alphaSlider)
         
-        alphaSlider.isContinuous = false
+        //alphaSlider.isContinuous = false
         
-        targetView.processingView.addSubview(gridView)        
+        targetView.processingView.addSubview(gridView)
+        targetView.processingView.isPaused = false
         
         gridView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
@@ -46,14 +47,14 @@ class ViewController: NSViewController {
         alphaSlider.snp.makeConstraints { (make) in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-10)
         }
         
         targetView.snp.makeConstraints { (make) in
             make.top.equalToSuperview()
             make.left.equalToSuperview()
             make.right.equalToSuperview()
-            make.bottom.equalTo(alphaSlider.snp.top)
+            make.bottom.equalTo(alphaSlider.snp.top).offset(-10)
         }
     }
     
@@ -64,7 +65,10 @@ class ViewController: NSViewController {
                                               moveCenter: false)
         targetView.sizeFit()  
         
-        planeFilter.reference = float3(0.5,0.5,0.5)
+        planeFilter.rgb = float3(0.5,0.5,0.5)
+        planeFilter.space = .hsv
+        planeFilter.spaceChannels = (0,1)
+        
         targetView.processingView.image = planeFilter.destination
         
        
@@ -83,7 +87,11 @@ class ViewController: NSViewController {
     }
     
     @objc func slider(sender:NSSlider)  {
-        gridView.solverAlpha = sender.floatValue
+//        gridView.solverAlpha = sender.floatValue
+        self.planeFilter.reference = float3(0.5,0.5, sender.floatValue)
+        self.planeFilter.context.runOperation(.async) {                
+            self.planeFilter.process()
+        }
     }
 }
 

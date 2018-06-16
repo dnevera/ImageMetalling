@@ -6,35 +6,44 @@
 //  Copyright © 2018 ImageMetalling. All rights reserved.
 //
 
-#ifndef ___MSLSolver_hpp
-#define ___MSLSolver_hpp
+#ifndef ___IMPMSLSolver_hpp
+#define ___IMPMSLSolver_hpp
 
 #ifdef __cplusplus
 
+#include <simd/simd.h>
+
 #ifdef __METAL_VERSION__
-
-#include <simd/simd.h>
-
 #define MLS_MAXIMUM_POINTS 4096
-
 #else
-
 #import <Foundation/Foundation.h>
-#include <simd/simd.h>
-using namespace simd;
 #endif
 
-#include "MLSSolverCommon.h"
+#include "IMPMatrixExtension.h"
+#include "IMPMLSSolverCommon.h"
 #include "IMPConstants-Bridging-Metal.h"
 
+using namespace simd;
+
 #ifdef __METAL_VERSION__
+
+template <typename T, int numCols, int numRows = numCols>
+METAL_FUNC matrix<T,numRows,numCols> _MM_inverse(thread const matrix<T,numCols,numRows>& m) {
+    matrix<T,numRows,numCols> r;
+    for (int i=0;i!=numCols;++i)
+        for (int j=0;j!=numRows;++j)
+            r[j][i] = m[i][j];
+    return r;
+}
+
+
 static inline float2x2 __inverse(const float2x2 _src) 
 {    
-#ifdef __METAL_VERSION__
+//#ifdef __METAL_VERSION__
     float src[4] = {_src[0][0],_src[0][1],_src[1][0],_src[1][1]};
-#else
-    float src[4] = {_src.columns[0][0],_src.columns[0][1],_src.columns[1][0],_src.columns[1][1]};
-#endif    
+//#else
+//    float src[4] = {_src.columns[0][0],_src.columns[0][1],_src.columns[1][0],_src.columns[1][1]};
+//#endif    
     float dst[4] = {0,0,0,0};
     float det = 0;
     
@@ -47,7 +56,8 @@ static inline float2x2 __inverse(const float2x2 _src)
     
     /* Compute determinant: */
     
-    det = src[0] * dst[0] + src[1] * dst[2];
+    //det = src[0] * dst[0] + src[1] * dst[2];
+    det = determinant(_src);
     
     /* Multiply adjoint with reciprocal of determinant: */
     
@@ -68,7 +78,7 @@ static inline float2 __slashReflect(float2 point) {
     return (float2){-point.y, point.x};
 }
 
-class MLSSolver{
+class IMPMLSSolver{
     
 public:
     
@@ -83,7 +93,7 @@ public:
      @param kind kind of solver
      @param alpha degree of deforamtion
      */
-    MLSSolver(const float2 point, 
+    IMPMLSSolver(const float2 point, 
 #ifndef __METAL_VERSION__              
               const float2 *p, 
               const float2 *q,
@@ -130,7 +140,7 @@ public:
         return (point - pStar_) * M + qStar_;    
     }
     
-    ~MLSSolver() {
+    ~IMPMLSSolver() {
 #ifndef __METAL_VERSION__
         delete w_;
         if (pHat_) delete pHat_;
@@ -272,7 +282,7 @@ private:
     }
     
     float2x2 affineM() {
-        return __inverse(affineMi()) * affineMj();
+        return inverse(affineMi()) * affineMj();
     }
     
     float similarityMu(int i)  {
@@ -307,4 +317,4 @@ private:
 
 #endif /* __cplusplus */
 
-#endif /* ___MSLSolver_hpp */
+#endif /* ___IMPMSLSolver_hpp */

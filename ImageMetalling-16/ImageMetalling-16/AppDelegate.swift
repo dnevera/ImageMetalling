@@ -66,9 +66,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     lazy var langItems: [NSMenuItem] = [self.swift, self.cpp, self.metal] 
     
     @IBAction func reset(_ sender: NSMenuItem) {
-        controller.gridView.knotsGrid.reset()
-        controller.alphaSlider.floatValue = 1
-        controller.gridView.solverAlpha = 1
+        controller.gridView.knotsGrid.reset()        
+        controller.gridView.solverAlpha = 0.5
+        controller.alphaSlider.floatValue = controller.gridView.solverAlpha 
         controller.gridView.updatePoints(updatePlane: true)
     }
     
