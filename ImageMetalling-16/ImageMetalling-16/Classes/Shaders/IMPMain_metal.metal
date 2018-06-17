@@ -48,14 +48,14 @@ vertex VertexOutput projectionVertex(VertexInput in [[ stage_in ]],
 {    
     VertexOutput vert;
     
-    // конвертируем координаты [-1:1] в представление цветов: [0:1]
+    // конвертируем координаты [-1:1] в представление цветов: [0:1]    
     vert.rgb =  (in.position+1) * 0.5;
     
     // прикладываем LUT
-    vert.rgb = lut3d.sample(IMProcessing::lutSampler, vert.rgb).rgb;
+    float3 rgb = lut3d.sample(IMProcessing::lutSampler, vert.rgb).rgb;
     
     // вычисляем новую позицию вершины 
-    float3 pos = (vert.rgb - 0.5) * 2;
+    float3 pos = (rgb - 0.5) * 2;
     
     // позиционируем в соответствии с проекцией
     vert.position   = scn_node.modelViewProjectionTransform * float4(pos, 1.0);
@@ -67,8 +67,8 @@ vertex VertexOutput projectionVertex(VertexInput in [[ stage_in ]],
 fragment float4 materialFragment(VertexOutput in [[stage_in]])
 {
     // текущий семпл    
-            
-    return float4(in.rgb, 0.6);
+    
+    return float4(in.rgb, 0.7);
 }
 
 kernel void kernel_mlsSolver(
@@ -92,7 +92,7 @@ inline float4 color_plane(float2 xy, float3 reference, IMPColorSpaceIndex space,
     float2 xrange = IMPgetColorSpaceRange (space, spacePlanes.x);
     float2 yrange = IMPgetColorSpaceRange (space, spacePlanes.y);
     
-    float3 nc = reference; //IMPConvertColor(IMPRgbSpace, space, reference);    
+    float3 nc = reference;     
     
     nc[spacePlanes.x] = xy.x * (xrange.y - xrange.x) + xrange.x;
     nc[spacePlanes.y] = xy.y * (yrange.y - yrange.x) + yrange.x;
@@ -114,27 +114,69 @@ inline float4 color_plane(float2 xy, float3 reference, IMPColorSpaceIndex space,
     return mix(float4(0.2,0.2,0.2,1),result,float4(a));
 }
 
-kernel void kernel_mlsPlaneTransform(metal::texture2d<float, metal::access::sample> inTexture [[texture(0)]],
-                         metal::texture2d<float, metal::access::write> outTexture [[texture(1)]],
-                         constant float3              &reference          [[buffer(0)]],
-                         constant IMPColorSpaceIndex  &space          [[buffer(1)]],
-                         constant uint2               &spacePlanes    [[buffer(2)]],
-                         
-                         constant float2  *p      [[buffer(3)]],
-                         constant float2  *q      [[buffer(4)]],
-                         constant int    &count   [[buffer(5)]],
-                         constant MLSSolverKind  &kind [[buffer(6)]],
-                         constant float    &alpha [[buffer(7)]],
-                         
-                         metal::uint2 gid [[thread_position_in_grid]]
-                         )
+kernel void kernel_mlsPlaneTransform(
+                                     metal::texture2d<float, metal::access::sample> source     [[texture(0)]],
+                                     metal::texture2d<float, metal::access::write>  outTexture [[texture(1)]],
+                                     constant float3              &reference      [[buffer(0)]],
+                                     constant IMPColorSpaceIndex  &space          [[buffer(1)]],
+                                     constant uint2               &spacePlanes    [[buffer(2)]],
+                                     
+                                     constant float2  *p           [[buffer(3)]],
+                                     constant float2  *q           [[buffer(4)]],
+                                     constant int    &count        [[buffer(5)]],
+                                     constant MLSSolverKind  &kind [[buffer(6)]],
+                                     constant float    &alpha      [[buffer(7)]],
+                                     
+                                     metal::uint2 gid [[thread_position_in_grid]]
+                                     )
 {
     float2 xy = float2(gid)/float2(outTexture.get_width(),outTexture.get_height());    
     
     IMPMLSSolver solver = IMPMLSSolver(xy, p, q, count, kind, alpha);
     xy = solver.value(xy);
     
-    float4 nc = color_plane(xy, reference, space, spacePlanes, false);
+    float4 rgba = color_plane(xy, reference, space, spacePlanes, false);       
+    
+    outTexture.write(rgba, gid);    
+}
+
+
+kernel void kernel_mlsLutTransform(
+                                     metal::texture2d<float, metal::access::read> lut [[texture(0)]],
+                                     metal::texture2d<float, metal::access::write>  outTexture [[texture(1)]],
+                                     constant float3              &reference      [[buffer(0)]],
+                                     constant IMPColorSpaceIndex  &space          [[buffer(1)]],
+                                     constant uint2               &spacePlanes    [[buffer(2)]],
+                                     
+                                     constant float2  *p           [[buffer(3)]],
+                                     constant float2  *q           [[buffer(4)]],
+                                     constant int    &count        [[buffer(5)]],
+                                     constant MLSSolverKind  &kind [[buffer(6)]],
+                                     constant float    &alpha      [[buffer(7)]],
+                                     
+                                     metal::uint2 gid [[thread_position_in_grid]]
+                                     )
+{
         
-    outTexture.write(nc, gid);    
+    float2 xyLut = float2(gid)/float2(lut.get_width(),lut.get_height());    
+    xyLut = float2(xyLut.x, xyLut.y);    
+    
+    float3 rgb = lut.read(gid).rgb; 
+    
+    float3 lutXyz = IMPConvertColor(IMPRgbSpace, 
+                                    space, 
+                                    rgb);
+    
+    float2 xy(lutXyz[spacePlanes.x], lutXyz[spacePlanes.y]);
+    
+    float2 value = IMPMLSSolver(xy, p, q, count, kind, alpha).value(xy);
+        
+    lutXyz[spacePlanes.x] = value.x;
+    lutXyz[spacePlanes.y] = value.y;
+        
+    float3 lutRgb = IMPConvertColor(space, 
+                                    IMPRgbSpace,
+                                    lutXyz);
+    
+    outTexture.write(float4(lutRgb,1), gid);    
 }

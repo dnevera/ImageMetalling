@@ -34,10 +34,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.rigidItem.state = .on
             }   
             
-            if self.controller.gridView.solverLang  == .swift {
-                self.swift.state = .on
-            }
-            else if self.controller.gridView.solverLang  == .cpp {
+//            if self.controller.gridView.solverLang  == .swift {
+//                self.swift.state = .on
+//            }
+            //else 
+            if self.controller.gridView.solverLang  == .cpp {
                 self.cpp.state = .on
             } 
             else if self.controller.gridView.solverLang  == .metal {
@@ -92,11 +93,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         controller.gridView.mlsKind = .rigid
     }
     
-    @IBAction func solveInSwift(_ sender: NSMenuItem) {
-        for m in langItems { m.state = .off }
-        swift.state = .on
-        controller.gridView.solverLang = .swift
-    }
+//    @IBAction func solveInSwift(_ sender: NSMenuItem) {
+//        for m in langItems { m.state = .off }
+//        swift.state = .on
+//        //controller.gridView.solverLang = .swift
+//    }
     
     @IBAction func solveInMetal(_ sender: NSMenuItem) {
         for m in langItems { m.state = .off }

@@ -10,6 +10,7 @@ import Foundation
 import simd
 
 protocol MLSSolverProtocol {
+    typealias Kind = MLSSolverKind
     var points:[float2] {set get}
     func process(controls:MLSControls, complete:((_ points:[float2])->Void)?)
 }

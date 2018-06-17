@@ -19,7 +19,7 @@ class GridView: NSView, IMPDeferrable {
     
     public enum SolverLang {
         case cpp
-        case swift
+        //case swift
         case metal
     }
     
@@ -37,7 +37,7 @@ class GridView: NSView, IMPDeferrable {
         }
     }
     
-    var mlsKind:MLSSolverSwift.Kind = .affine {
+    var mlsKind:MLSSolverProtocol.Kind = .affine {
         didSet{
             updatePoints(updatePlane: true)
         }
@@ -91,7 +91,7 @@ class GridView: NSView, IMPDeferrable {
     let context = IMPContext()
     
     lazy var mls_solver:MLSSolverProtocol       = IMPMLSSolver(context: self.context, points:self.knotsGrid.mesh.sources)
-    lazy var mls_solver_swift:MLSSolverProtocol = MLSSolverSwift(points:self.knotsGrid.mesh.sources)
+    //lazy var mls_solver_swift:MLSSolverProtocol = MLSSolverSwift(points:self.knotsGrid.mesh.sources)
     lazy var mls_solver_cpp:MLSSolverProtocol   = MLSSolverCpp(points:self.knotsGrid.mesh.sources)
     
     lazy var updateQ = DispatchQueue(label: "updateQ")
@@ -136,15 +136,15 @@ class GridView: NSView, IMPDeferrable {
                 }
             }   
             
-        case .swift:
-            self.mls_solver_swift.process(controls: controls) { (points) in
-                DispatchQueue.main.async {
-                    self.knotsGrid.update(points)
-                    if PRINT_TIME {
-                        Swift.print(" ... swift processing time \(-tm.timeIntervalSinceNow)")
-                    }
-                }
-            }
+//        case .swift:
+//            self.mls_solver_swift.process(controls: controls) { (points) in
+//                DispatchQueue.main.async {
+//                    self.knotsGrid.update(points)
+//                    if PRINT_TIME {
+//                        Swift.print(" ... swift processing time \(-tm.timeIntervalSinceNow)")
+//                    }
+//                }
+//            }
             
         case .metal:
             self.mls_solver.process(controls: controls) { (points) in
@@ -175,8 +175,8 @@ class GridView: NSView, IMPDeferrable {
                 (self.lastNode as? KnotNode)?.isPinned = true                
             }
             
-            //self.updatePoints(updatePlane: recognizer.state == .ended)
-            self.updatePoints(updatePlane: true)
+            self.updatePoints(updatePlane: recognizer.state == .ended)
+            //self.updatePoints(updatePlane: true)
         }
     }
     

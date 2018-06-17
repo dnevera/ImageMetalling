@@ -23,7 +23,7 @@ using namespace simd;
 // https://github.com/niswegmann/small-matrix-inverse
 //
 template <typename T>
-static inline matrix<T,2,2> inverse(const matrix<T,2,2> __src) 
+METAL_FUNC matrix<T,2,2> inverse(const matrix<T,2,2> __src) 
 {    
     float src[4] = {
         __src[0][0],__src[0][1],
@@ -55,7 +55,7 @@ static inline matrix<T,2,2> inverse(const matrix<T,2,2> __src)
 }
 
 template <typename T>
-static inline matrix<T,3,3> inverse(const matrix<T,3,3> __src)
+METAL_FUNC matrix<T,3,3> inverse(const matrix<T,3,3> __src)
 {
     float src[9] = {
         __src[0][0],__src[0][1],__src[0][2],

@@ -29,6 +29,10 @@ static inline float2 __slashReflect(float2 point) {
     return (float2){-point.y, point.x};
 }
 
+//static inline float3 __slashReflect(float3 point) {
+//    return (float3){-point.y, point.x, point.z};
+//}
+
 class IMPMLSSolver{
     
 public:
@@ -211,8 +215,15 @@ private:
         
         for (int i=0; i<count_; i++) {
             
-            float2x2 pt({w_[i] * pHat_[i], float2(0)});
-            float2x2 qp({(float2){qHat_[i].x, 0.0}, (float2){qHat_[i].y, 0.0}});
+            float2x2 pt({
+                w_[i] * pHat_[i], 
+                float2(0)                
+            });
+            
+            float2x2 qp({
+                (float2){qHat_[i].x, 0.0}, 
+                (float2){qHat_[i].y, 0.0}                
+            });
             
             m = m + (float2x2)(pt * qp);
         }
@@ -224,8 +235,15 @@ private:
         
         for (int i=0; i<count_; i++) {
             
-            float2x2 pt({pHat_[i], float2(0)});
-            float2x2 pp({(float2){w_[i] * pHat_[i].x, 0.0}, (float2){w_[i] * pHat_[i].y, 0.0}});
+            float2x2 pt({
+                pHat_[i], 
+                float2(0)                
+            });
+            
+            float2x2 pp({
+                (float2){w_[i] * pHat_[i].x, 0.0}, 
+                (float2){w_[i] * pHat_[i].y, 0.0}                
+            });
             
             m = m + (float2x2)(pt * pp);
         }        
@@ -249,7 +267,11 @@ private:
             float2 sp = -1 * __slashReflect(pHat_[i]);
             float2 sq = -1 * __slashReflect(qHat_[i]);
             
-            float2x2 _p({(float2){w_[i] * pHat_[i].x, w_[i] * sp.x}, (float2){w_[i] * pHat_[i].y, w_[i] * sp.y}});
+            float2x2 _p({
+                (float2){w_[i] * pHat_[i].x, w_[i] * sp.x}, 
+                (float2){w_[i] * pHat_[i].y, w_[i] * sp.y}                
+            });
+            
             float2x2 _q({qHat_[i], sq});
                         
             m = m + (float2x2)(_p * _q);

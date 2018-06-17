@@ -9,7 +9,7 @@
 import Foundation
 import IMProcessing
 
-public class CommonPlaneFilter: IMPFilter {
+public class IMPCommonPlaneFilter: IMPFilter {
 
     public var rgb:float3 { 
         set{   
@@ -28,19 +28,18 @@ public class CommonPlaneFilter: IMPFilter {
     public var space:IMPColorSpace         = .rgb        {
         didSet{ 
             reference = space.from(oldValue, value: reference)
+            dirty = true             
         }         
     }
     public var spaceChannels:(Int,Int) = (0,1)       { didSet{ dirty = true } }
     
     public override func configure(complete: IMPFilter.CompleteHandler?) {
         super.extendName(suffix: "Common Plane")
-        let ci = NSImage(color:NSColor.darkGray, size:NSSize(width: 400, height: 400))
-        source = IMPImage(context: context, image: ci)
         super.configure(complete: complete)
     }
 }
 
-public class IMPColorPlaneFilter: CommonPlaneFilter {
+public class IMPMSLPlaneFilter: IMPCommonPlaneFilter {
 
     public typealias Controls=MLSControls
 
@@ -68,13 +67,20 @@ public class IMPColorPlaneFilter: CommonPlaneFilter {
             dirty = true
         }
     }
+      
+    public var kernelName:String {
+        return "kernel_mlsPlaneTransform"
+    }
     
     override public func configure(complete: IMPFilter.CompleteHandler?) {
         
-        super.extendName(suffix: "Plane Filter")
+        super.extendName(suffix: "MLS Plane Filter")
         super.configure(complete: nil)
+
+        let ci = NSImage(color:NSColor.darkGray, size:NSSize(width: 800, height: 800))
+        source = IMPImage(context: context, image: ci)
                 
-        let kernel = IMPFunction(context: self.context, kernelName: "kernel_mlsPlaneTransform")
+        let kernel = IMPFunction(context: self.context, kernelName: kernelName)
         
         kernel.optionsHandler = {(shader, commandEncoder, input, output) in                       
                         
@@ -114,7 +120,7 @@ public class IMPColorPlaneFilter: CommonPlaneFilter {
             commandEncoder.setBytes(&alpha, 
                                     length: MemoryLayout.stride(ofValue: alpha), 
                                     index: 7)
-            
+                        
         }
         
         add(function: kernel) { (image) in
@@ -126,6 +132,36 @@ public class IMPColorPlaneFilter: CommonPlaneFilter {
     private lazy var qBuffer:MTLBuffer = self.context.device.makeBuffer(length: MemoryLayout.size(ofValue: [float2]()), options:[])!   
 }
 
+
+public class IMPMSLLutFilter: IMPMSLPlaneFilter {
+   
+    public override var kernelName:String {
+        return "kernel_mlsLutTransform"
+    }
+    
+    public var cLut:IMPCLut! 
+    
+    override public func configure(complete: IMPFilter.CompleteHandler?) {                
+        super.extendName(suffix: "MLS Lut Filter")
+        super.configure(complete: nil)       
+        source = identityLut                
+        cLut =  try! IMPCLut(context: context, lutType: .lut_2d, lutSize: 64, format: .float)
+        
+        addObserver(destinationUpdated: { image in
+            do {
+                try self.cLut.update(from: image)
+            }
+            catch let error {
+                Swift.print("IMPMSLLutFilter error: \(error)")
+            }
+        })
+    }
+    
+    private lazy var identityLut:IMPCLut = 
+        try! IMPCLut(context: context, lutType: .lut_2d, lutSize: 64, format: .float)
+    
+
+}
 
 public extension NSImage {
     
