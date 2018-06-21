@@ -25,6 +25,7 @@
 		314CA41220C834FA0084EFA4 /* MNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA41120C834FA0084EFA4 /* MNode.swift */; };
 		316C88FD20CFBA050027B437 /* MLSControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C88FC20CFBA050027B437 /* MLSControls.swift */; };
 		317D6B7220D52C3500C5F178 /* IMPMLSSolverBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */; };
+		31A9FEA320DC449C00779F60 /* IMPFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A9FEA220DC449B00779F60 /* IMPFilterView.swift */; };
 		31BE81FC20D550DB00E0A2D5 /* LutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BE81F920D550DB00E0A2D5 /* LutView.swift */; };
 		31BE81FD20D550DB00E0A2D5 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BE81FB20D550DB00E0A2D5 /* SceneView.swift */; };
 		52DAE41814B8317BF5F33D06 /* Pods_ImageMetalling_16.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A78DDA250F6610F14E8546B8 /* Pods_ImageMetalling_16.framework */; };
@@ -59,6 +60,7 @@
 		317D6B6F20D52A8800C5F178 /* IMPMatrixExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMPMatrixExtension.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IMPMLSSolverBridge.mm; sourceTree = "<group>"; };
 		318B4EB420D54ADE009075BA /* IMPMLSSolver3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMPMLSSolver3D.h; sourceTree = "<group>"; };
+		31A9FEA220DC449B00779F60 /* IMPFilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPFilterView.swift; sourceTree = "<group>"; };
 		31BE81F920D550DB00E0A2D5 /* LutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LutView.swift; sourceTree = "<group>"; };
 		31BE81FB20D550DB00E0A2D5 /* SceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
 		53CE4F19BCA57762039CC6B5 /* Pods-ImageMetalling-16.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageMetalling-16.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ImageMetalling-16/Pods-ImageMetalling-16.debug.xcconfig"; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 				317D6B6F20D52A8800C5F178 /* IMPMatrixExtension.h */,
 				310574CF20CEB90F00FD96FD /* IMPMLSSolverCommon.h */,
 				3142A25F20CFE487009B4440 /* TargetView.swift */,
+				31A9FEA220DC449B00779F60 /* IMPFilterView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				3142A26020CFE487009B4440 /* TargetView.swift in Sources */,
 				314CA40820C8167B0084EFA4 /* GridView.swift in Sources */,
 				314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */,
+				31A9FEA320DC449C00779F60 /* IMPFilterView.swift in Sources */,
 				314651AB20CFC24A00144A5F /* MLSSolverSwift.swift in Sources */,
 				314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */,
 				314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */,

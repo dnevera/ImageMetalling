@@ -9,18 +9,25 @@
 import Cocoa
 import SnapKit
 import IMProcessing
+import IMProcessingUI
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, IMPDeferrable {
     
+    let contextFilters = IMPContext(lazy:false)
     let context = IMPContext(lazy:true)
     
-    lazy var planeFilter:IMPMSLPlaneFilter = IMPMSLPlaneFilter(context:self.context)
-  
+    lazy var planeFilter:IMPMSLPlaneFilter = IMPMSLPlaneFilter(context:self.contextFilters)
+    
     lazy var lutFilter:IMPMSLLutFilter = {
-        let filter = IMPMSLLutFilter(context:self.context)
+        let filter = IMPMSLLutFilter(context:self.contextFilters)
         
         filter.cLut.addObserver(updated: { (lut) in
-            self.lut3DView.lut = self.lutFilter.cLut
+            self.deferrable.delay = 0.5
+            self.deferrable.block = {
+                self.context.runOperation(.async, { 
+                    self.lut3DView.lut = self.lutFilter.cLut                
+                })                    
+            }
         })
         
         return filter
@@ -54,7 +61,7 @@ class ViewController: NSViewController {
         view.addSubview(lut2DView)        
         view.addSubview(alphaSlider)
         
-        alphaSlider.isContinuous = false
+        alphaSlider.isContinuous = true
         
         colorPlaneView.processingView.addSubview(gridView)
         colorPlaneView.processingView.isPaused = false
@@ -82,23 +89,26 @@ class ViewController: NSViewController {
             make.right.equalTo(colorPlaneView.snp.right)
             make.bottom.equalTo(alphaSlider.snp.top).offset(-10)
         }
-
+        
         lut3DView.snp.makeConstraints { (make) in
             make.top.equalToSuperview()
             make.right.equalToSuperview()
             make.left.equalTo(colorPlaneView.snp.right).offset(5)
             make.bottom.equalTo(alphaSlider.snp.top).offset(-10)
         }
-
+        
     }
     
     override func viewDidAppear() {
         super.viewDidAppear()
         colorPlaneView.processingView.fitViewSize(size: NSSize(width: 1024, height: 1024), 
-                                              to: self.colorPlaneView.bounds.size, 
-                                              moveCenter: false)
+                                                  to: self.colorPlaneView.bounds.size, 
+                                                  moveCenter: false)
         colorPlaneView.sizeFit()  
         lut2DView.sizeFit()  
+        
+        colorPlaneView.processingView.isPaused = false
+        lut2DView.processingView.isPaused = false
         
         let space = IMPColorSpace.lab
         let reference = float3(50,0,0)
@@ -113,36 +123,20 @@ class ViewController: NSViewController {
         planeFilter.spaceChannels = spaceChannels
         lutFilter.spaceChannels = spaceChannels
         
-        colorPlaneView.processingView.image = planeFilter.destination
-        lut2DView.processingView.image = lutFilter.destination
-               
-        planeFilter.addObserver(destinationUpdated: { (image) in
-            self.colorPlaneView.processingView.image = image
-        })
-        
-        lutFilter.addObserver(destinationUpdated: { (image) in
-            self.lut2DView.processingView.image = image
-        })
+        colorPlaneView.processingView.filter = planeFilter
+        lut2DView.processingView.filter = lutFilter
         
         gridView.updateControls = { controls in
             self.planeFilter.controls = controls   
-            self.lutFilter.controls = controls   
-
-            self.planeFilter.context.runOperation(.async) {                            
-                self.planeFilter.process()
-                self.lutFilter.process()
-            
-            } 
+            self.lutFilter.controls = controls                   
         }
         
     }
     
     @objc func slider(sender:NSSlider)  {
-//        gridView.solverAlpha = sender.floatValue
-        self.planeFilter.reference = float3(0,1, sender.floatValue)
-        self.planeFilter.context.runOperation(.async) {                
-            self.planeFilter.process()
-        }
+        //        gridView.solverAlpha = sender.floatValue
+        let value = sender.floatValue*100
+        self.planeFilter.reference = float3(value,0,1)
     }
 }
 

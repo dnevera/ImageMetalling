@@ -126,7 +126,7 @@ class LutView: SceneView, SCNSceneRendererDelegate {
         let g = SCNSphere(radius: 2);
         
         /// Повышаем детализацию "монолита"
-        g.segmentCount = 128
+        g.segmentCount = 64
         
         ///
         /// Определяем материал геометрии, который будем рендерить и заодно деформировать в программе на MSL

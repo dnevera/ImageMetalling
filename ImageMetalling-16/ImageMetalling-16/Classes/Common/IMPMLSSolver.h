@@ -73,17 +73,16 @@ public:
 #endif
         
         solveW();
-        solveStars();
         solveHat();
         solveM();  
+        
 #ifndef __METAL_VERSION__
         delete pHat_;
         delete qHat_;
         pHat_=qHat_=0;
 #endif
     }    
-    
-    
+        
     /**
      Return new position for source point
 
@@ -133,7 +132,9 @@ private:
     void solveW() {
         
         weight_ = 0;
-        
+        pStar_ = float2(0);
+        qStar_ = float2(0);
+
         for (int i=0; i<count_; i++) {
             
             float d =  pow(distance(p_[i], point_), 2*alpha_);
@@ -142,23 +143,17 @@ private:
             
             w_[i] = 1.0 / d;
             weight_ = weight_ + w_[i];
+            
+            pStar_ += w_[i] * p_[i];
+            qStar_ += w_[i] * q_[i];
+
         }
         
         if (weight_ < FLT_EPSILON)  weight_ = FLT_EPSILON;
-    }  
-    
-    void solveStars() {
-        pStar_ = float2(0);
-        qStar_ = float2(0);
-        
-        for (int i=0; i<count_; i++) {
-            pStar_ += w_[i] * p_[i];
-            qStar_ += w_[i] * q_[i];
-        }
         
         pStar_ = pStar_ / weight_;                
         qStar_ = qStar_ / weight_;
-    }
+    }  
     
     void solveHat(){        
         
@@ -209,50 +204,41 @@ private:
                 break;
         }
     }  
-    
-    float2x2 affineMj() {
-        float2x2 m = (float2x2){(float2){0,0},(float2){0,0}};
-        
+                   
+    float2x2 affineM() {
+        float2x2 mi = (float2x2){(float2){0,0},(float2){0,0}};
+        float2x2 mj = (float2x2){(float2){0,0},(float2){0,0}};
+
         for (int i=0; i<count_; i++) {
             
-            float2x2 pt({
-                w_[i] * pHat_[i], 
-                float2(0)                
-            });
-            
-            float2x2 qp({
-                (float2){qHat_[i].x, 0.0}, 
-                (float2){qHat_[i].y, 0.0}                
-            });
-            
-            m = m + (float2x2)(pt * qp);
-        }
-        return m;
-    }
-    
-    float2x2 affineMi() {
-        float2x2 m = (float2x2){(float2){0,0},(float2){0,0}};
-        
-        for (int i=0; i<count_; i++) {
-            
-            float2x2 pt({
+            float2x2 pti({
                 pHat_[i], 
                 float2(0)                
             });
             
-            float2x2 pp({
+            float2x2 ppi({
                 (float2){w_[i] * pHat_[i].x, 0.0}, 
                 (float2){w_[i] * pHat_[i].y, 0.0}                
             });
             
-            m = m + (float2x2)(pt * pp);
+            mi = mi + (float2x2)(pti * ppi);
+            
+            
+            float2x2 ptj({
+                w_[i] * pHat_[i], 
+                float2(0)                
+            });
+            
+            float2x2 qpj({
+                (float2){qHat_[i].x, 0.0}, 
+                (float2){qHat_[i].y, 0.0}                
+            });
+            
+            mj = mj + (float2x2)(ptj * qpj);
         }        
-        return m;
+        return inverse(mi) * mj;
     }
     
-    float2x2 affineM() {
-        return inverse(affineMi()) * affineMj();
-    }
     
     float similarityMu(int i)  {
         return w_[i]*dot(pHat_[i], pHat_[i]);

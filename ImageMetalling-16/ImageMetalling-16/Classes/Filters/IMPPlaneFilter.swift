@@ -77,7 +77,7 @@ public class IMPMSLPlaneFilter: IMPCommonPlaneFilter {
         super.extendName(suffix: "MLS Plane Filter")
         super.configure(complete: nil)
 
-        let ci = NSImage(color:NSColor.darkGray, size:NSSize(width: 800, height: 800))
+        let ci = NSImage(color:NSColor.darkGray, size:NSSize(width: 16, height: 16))
         source = IMPImage(context: context, image: ci)
                 
         let kernel = IMPFunction(context: self.context, kernelName: kernelName)

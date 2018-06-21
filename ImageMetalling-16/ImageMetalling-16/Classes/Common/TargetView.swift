@@ -13,8 +13,8 @@ import IMProcessingUI
 /// Image preview window
 open class TargetView: IMPViewBase{
     
-    public lazy var processingView:IMProcessingView = { 
-        let v = IMProcessingView(frame:NSRect(x: 0, y:0, width: 200, height: 200))
+    public lazy var processingView:IMPFilterView = { 
+        let v = IMPFilterView(frame:NSRect(x: 0, y:0, width: 200, height: 200))
         v.placeHolderColor = NSColor.white
         return v
     }()    
