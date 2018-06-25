@@ -126,7 +126,7 @@ class LutView: SceneView, SCNSceneRendererDelegate {
         let g = SCNSphere(radius: 2);
         
         /// Повышаем детализацию "монолита"
-        g.segmentCount = 64
+        g.segmentCount = 128
         
         ///
         /// Определяем материал геометрии, который будем рендерить и заодно деформировать в программе на MSL
@@ -150,18 +150,18 @@ class LutView: SceneView, SCNSceneRendererDelegate {
     /// Говорим делегату рендеренга, что на новом шаге изменяем позции узловых точек RGB-куба в сцене
     /// Одновременно с этим на GPU шейдер деформирует координаты вершин нашего монолитного RGB-куба
     ///
-    func renderer(_ renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {
-        
-        guard isChanged else { return }
-        
-        for (i,rgb) in colors.enumerated() /*meshGrid.enumerated()*/ {
-            let p = meshGrid[i]
-            let rgba = float4(rgb.r,rgb.g,rgb.b, 0.5)
-            p.color = NSColor(color: rgba)
-        }     
-        
-        self.isChanged = false
-    }
+//    func renderer(_ renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {
+//        
+//        guard isChanged else { return }
+//        
+//        for (i,rgb) in colors.enumerated() /*meshGrid.enumerated()*/ {
+//            let p = meshGrid[i]
+//            let rgba = float4(rgb.r,rgb.g,rgb.b, 0.5)
+//            p.color = NSColor(color: rgba)
+//        }     
+//        
+//        self.isChanged = false
+//    }
     
     override func configure(frame: CGRect) {
         super.configure(frame: frame)
@@ -170,7 +170,7 @@ class LutView: SceneView, SCNSceneRendererDelegate {
         ///
         /// Для наглядности
         ///
-        sceneView.showsStatistics = true
+        //sceneView.showsStatistics = true
                         
         /// Добавляем наш обект
         scene.rootNode.addChildNode(meshNode)            
@@ -211,9 +211,9 @@ class LutView: SceneView, SCNSceneRendererDelegate {
             }
             
             /// Добавляем к сцене узловые точки RGB-куба
-            for n in self.meshGrid {
-                self.meshNode.addChildNode(n)                        
-            }                
+//            for n in self.meshGrid {
+//                self.meshNode.addChildNode(n)                        
+//            }                
         }        
     }    
     

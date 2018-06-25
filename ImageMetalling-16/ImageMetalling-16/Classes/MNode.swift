@@ -45,7 +45,9 @@ open class MNode: SKShapeNode {
         fillColor = color
     }
     
-    private func update() {
+    open func update() {
+        strokeColor = NSColor(red: 1, green: 1, blue: 1, alpha: isPinned ? 1 : 0.5)
+        fillColor = color.withAlphaComponent(isPinned ? 1 : 0.5)
         position = NSPoint(x: CGFloat(_relation.x)*bounds.width+bounds.origin.x, y: CGFloat(_relation.y)*bounds.height+bounds.origin.y)
     }
     

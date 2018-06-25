@@ -68,7 +68,7 @@ fragment float4 materialFragment(VertexOutput in [[stage_in]])
 {
     // текущий семпл    
     
-    return float4(in.rgb, 0.7);
+    return float4(in.rgb, 0.5);
 }
 
 kernel void kernel_mlsSolver(
@@ -132,6 +132,8 @@ kernel void kernel_mlsPlaneTransform(
 {
     float2 xy = float2(gid)/float2(outTexture.get_width(),outTexture.get_height());    
     
+    xy = float2(xy.x,1-xy.y);
+    
     IMPMLSSolver solver = IMPMLSSolver(xy, p, q, count, kind, alpha);
     xy = solver.value(xy);
     
@@ -158,12 +160,12 @@ kernel void kernel_mlsLutTransform(
                                      )
 {
         
-    float2 xyLut = float2(gid)/float2(lut.get_width(),lut.get_height());    
+    float2 xyLut = float2(gid)/float2(outTexture.get_width(),outTexture.get_height());    
     xyLut = float2(xyLut.x, xyLut.y);    
     
     float3 rgb = lut.read(gid).rgb; 
     
-    float3 lutXyz = IMPConvertColor(IMPRgbSpace, 
+    float3 lutXyz = IMPConvertToNormalizedColor(IMPRgbSpace, 
                                     space, 
                                     rgb);
     
@@ -174,7 +176,7 @@ kernel void kernel_mlsLutTransform(
     lutXyz[spacePlanes.x] = value.x;
     lutXyz[spacePlanes.y] = value.y;
         
-    float3 lutRgb = IMPConvertColor(space, 
+    float3 lutRgb = IMPConvertFromNormalizedColor(space, 
                                     IMPRgbSpace,
                                     lutXyz);
     

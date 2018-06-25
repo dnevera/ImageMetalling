@@ -11,6 +11,9 @@ import SpriteKit
 
 open class KnotsGrid: SKShapeNode { 
     
+    public var grouppingIndex = -1
+    public var grouppingKnots:[Int:[KnotNode]] = [:]
+    
     static public let fadeIn  = SKAction.fadeAlpha(to: 1, duration:0.05)
     static public let fadeOut = SKAction.fadeAlpha(to: 0.2, duration:0.15)
     static public let pulse   = SKAction.repeat(SKAction.sequence([fadeOut,fadeIn]), count: 2)
@@ -47,6 +50,8 @@ open class KnotsGrid: SKShapeNode {
         mesh.reset()
         removeAllChildren()
         isInitilized = false
+        grouppingIndex = -1
+        grouppingKnots = [:]
         update()
     }    
     

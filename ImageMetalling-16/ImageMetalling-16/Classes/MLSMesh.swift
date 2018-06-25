@@ -77,28 +77,8 @@ public class MLSMesh {
         }
     }
       
-    public func source(to box: NSRect, at index:Int) -> NSPoint {
-        let px = box.origin.x + box.width  * CGFloat(sources[index].x)
-        let py = box.origin.y + box.height * CGFloat(1-sources[index].y)
-        return NSPoint(x: px, y: py)
-    }
-    
-    public func source(to box: NSRect, at position:(x:Int,y:Int)) -> NSPoint {
-        return source(to: box, at: position.y * dimension.width + position.x)
-    }  
-
-    public func setTarget(point: NSPoint, from box: NSRect, at index:Int) {
-        targets[index] = point.convert(from: box)         
-    }
-    
-    public func setTarget(point: NSPoint, from box: NSRect, at position:(x:Int,y:Int)) {
-        setTarget(point: point, from: box, at: position.y * dimension.width + position.x)
-    }
-    
     public func target(to box: NSRect, at index:Int) -> NSPoint {
-        let px = box.origin.x + box.width  * CGFloat(targets[index].x)
-        let py = box.origin.y + box.height * CGFloat(1-targets[index].y)
-        return NSPoint(x: px, y: py)
+        return targets[index].convert(to: box) 
     }
     
     public func target(to box: NSRect, at position:(x:Int,y:Int)) -> NSPoint {
@@ -108,4 +88,30 @@ public class MLSMesh {
     private var targets:[float2] = []
     
     fileprivate var _sources:[float2]     
+}
+
+
+public extension NSPoint {    
+    public func convert(from box: NSRect, flipped:Bool = false) -> float2 {
+        if box == .zero {
+            return float2(0)
+        }
+        let point = self 
+        let px = Float((point.x-box.origin.x)/(box.size.width))
+        let py = Float((point.y-box.origin.y)/box.size.height)
+        switch flipped {
+        case true:
+            return float2(px,1-py)
+        default:
+            return float2(px,py)
+        }
+    }    
+}
+
+public extension float2 {
+    public func convert(to box: NSRect, flipped:Bool = false) -> NSPoint {
+        let px = box.origin.x + box.width  * CGFloat(self.x)
+        let py = box.origin.y + box.height * ( flipped ? CGFloat(1-self.y) : CGFloat(self.y))
+        return NSPoint(x: px, y: py)
+    }
 }

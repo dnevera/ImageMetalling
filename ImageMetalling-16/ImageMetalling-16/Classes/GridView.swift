@@ -11,6 +11,7 @@ import SpriteKit
 import simd
 import IMProcessing
 import IMProcessingUI
+import Carbon.HIToolbox
 
 let USE_MOUSE_OVER = false
 let PRINT_TIME = false
@@ -22,7 +23,7 @@ class GridView: NSView, IMPDeferrable {
         case metal
     }
     
-    let resolution = 12
+    let resolution = 16
     
     var solverAlpha:Float = 0.5 {
         didSet{
@@ -65,6 +66,18 @@ class GridView: NSView, IMPDeferrable {
     
     var updateControls:((_ controls:MLSControls)->Void)?
     
+    var isGroupping = false {
+        didSet{
+            if knotsGrid.grouppingIndex >= 0 {
+                guard let g = knotsGrid.grouppingKnots[knotsGrid.grouppingIndex], g.count > 0 else {
+                    return
+                } 
+            }
+            knotsGrid.grouppingIndex += 1
+            knotsGrid.grouppingKnots[knotsGrid.grouppingIndex] = []
+        }
+    }    
+    
     func config() {
         
         postsFrameChangedNotifications = true
@@ -76,15 +89,30 @@ class GridView: NSView, IMPDeferrable {
         
         skview.addGestureRecognizer(panGesture)
         
-        pressGesture.numberOfTouchesRequired = 1    
-        skview.addGestureRecognizer(pressGesture)        
+        clickGesture.numberOfTouchesRequired = 1  
+        clickGesture.numberOfClicksRequired = 1
+        skview.addGestureRecognizer(clickGesture)   
+        
+        pressGesture.numberOfTouchesRequired = 1
+        skview.addGestureRecognizer(pressGesture)
         
         addSubview(skview)
         
         skview.autoresizingMask = [.height, .width]
         skview.frame = NSInsetRect(bounds, 0, 0)
         skview.allowsTransparency = true
-        skview.presentScene(scene)                  
+        skview.presentScene(scene)     
+        
+        NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) {
+            self.flagsChanged(with: $0)
+            if $0.modifierFlags.contains([.command]) {
+                self.isGroupping = true
+            }
+            else {
+                self.isGroupping = false
+            }
+            return $0
+        }        
     }
     
     let context = IMPContext()
@@ -111,9 +139,7 @@ class GridView: NSView, IMPDeferrable {
         let tm = Date()
         
         if updatePlane {
-            DispatchQueue.global().async {
-                self.updateControls?(controls)                
-            }
+            self.updateControls?(controls)                
         }
                 
         if PRINT_TIME {
@@ -144,22 +170,66 @@ class GridView: NSView, IMPDeferrable {
         }    
         
     }        
-    
+            
     @objc private func pressHandler(recognizer:NSPanGestureRecognizer)  {
-        if lastNode != nil && lastIndex >= 0 {
-            (lastNode as? KnotNode)?.isPinned = true
-        }        
+        
+        self.window?.makeFirstResponder(self)
+        
+        let location:NSPoint = recognizer.location(in: skview)
+        let point  = skview.convert(location,from:nil)
+        
+        findNode(at: point, leaved: { (index, node) in            
+            (node as? KnotNode)?.isPinned = true
+        })
     }
     
+    var panLocationBegan = CGPoint.zero
     @objc private func panHandler(recognizer:NSPanGestureRecognizer)  {
         let location:NSPoint = recognizer.location(in: skview)
         
+        if isGroupping {            
+            findNode(at: location) { (index, node) in
+                if let node = (node as? KnotNode) {
+                    if let grp = self.knotsGrid.grouppingKnots[self.knotsGrid.grouppingIndex] {
+                        if !grp.contains(where: { (n) -> Bool in
+                            return n == node 
+                        }){
+                            self.knotsGrid.grouppingKnots[self.knotsGrid.grouppingIndex]?.append(node)
+                        }
+                    }
+                    node.isPinned = true                    
+                }
+            }            
+            return
+        }
+                
         if lastNode != nil && lastIndex >= 0 {
-            
-            DispatchQueue.global().async {
-                self.lastNode?.position = location    
-                (self.lastNode as? KnotNode)?.isPinned = true                
+
+            if let idx = knotsGrid.grouppingKnots.index(where: { (key, values) -> Bool in
+                return values.contains(where: { (node) -> Bool in
+                    return  node == lastNode!
+                })
+            }) {
+                let knots = knotsGrid.grouppingKnots[idx] 
+                var offset = CGPoint.zero 
+                for k in knots.value {
+                    if lastNode == k {
+                        offset = CGPoint(x:k.position.x-location.x, y:k.position.y-location.y) 
+                        k.position = location
+                        break
+                    }                    
+                }
+                for k in knots.value {
+                    if lastNode != k {
+                        k.position = CGPoint(x:k.position.x-offset.x, y:k.position.y-offset.y)
+                    }                    
+                }
+
             }
+            else {            
+                self.lastNode?.position = location    
+                (self.lastNode as? KnotNode)?.isPinned = true
+            }                
             
             self.updatePoints(updatePlane: true)
         }
@@ -171,7 +241,7 @@ class GridView: NSView, IMPDeferrable {
         if let t = trackingArea { removeTrackingArea(t) }
         
         trackingArea = NSTrackingArea(rect: frame,
-                                      options: [.activeInKeyWindow,.mouseMoved,.mouseEnteredAndExited],
+                                      options: [.activeInKeyWindow,.mouseMoved, .enabledDuringMouseDrag, .mouseEnteredAndExited],
                                       owner: self, userInfo: nil)
         addTrackingArea(trackingArea!)
     }
@@ -194,7 +264,7 @@ class GridView: NSView, IMPDeferrable {
         }        
     }
     
-    func findNode(at point:NSPoint, leaved: ((_ index:Int, _ node:SKNode?)->Void)? = nil, entered: ((_ index:Int, _ node:SKNode)->Void)) {
+    func findNode(at point:NSPoint, leaved: ((_ index:Int, _ node:SKNode?)->Void)? = nil, entered: ((_ index:Int, _ node:SKNode)->Void)?=nil) {
         
         let sceneTouchPoint = scene.convertPoint(fromView: point)
         let node = knotsGrid.atPoint(sceneTouchPoint)
@@ -212,7 +282,7 @@ class GridView: NSView, IMPDeferrable {
                 if n.parent?.name != nil {
                     n = n.parent!
                 }
-                entered(index, n)
+                entered?(index, n)
                 lastIndex = index
                 lastNode = n
             }
@@ -225,7 +295,10 @@ class GridView: NSView, IMPDeferrable {
     private lazy var skview:SKView = SKView(frame: self.bounds)
     private lazy var scene:SKScene = SKScene(size: self.skview.bounds.size)
     
+    private lazy var clickGesture:NSClickGestureRecognizer = NSClickGestureRecognizer(target: self, action: #selector(pressHandler(recognizer:)))
+   
     private lazy var pressGesture:NSClickGestureRecognizer = NSClickGestureRecognizer(target: self, action: #selector(pressHandler(recognizer:)))
+    
     
     private lazy var panGesture:NSPanGestureRecognizer = NSPanGestureRecognizer(target: self, action: #selector(panHandler(recognizer:)))
     

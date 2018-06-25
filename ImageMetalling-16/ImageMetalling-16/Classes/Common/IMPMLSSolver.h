@@ -14,8 +14,9 @@
 #include <simd/simd.h>
 
 #ifdef __METAL_VERSION__
-#define MLS_MAXIMUM_POINTS 4096
+#define MLS_MAXIMUM_POINTS 512
 #else
+#define MLS_MAXIMUM_POINTS 4096
 #import <Foundation/Foundation.h>
 #endif
 
@@ -29,15 +30,10 @@ static inline float2 __slashReflect(float2 point) {
     return (float2){-point.y, point.x};
 }
 
-//static inline float3 __slashReflect(float3 point) {
-//    return (float3){-point.y, point.x, point.z};
-//}
-
 class IMPMLSSolver{
     
 public:
-    
-    
+        
     /**
      Create Mean least square solver
      
@@ -65,7 +61,8 @@ public:
     count_(count),
     weight_(0),
     p_(p), q_(q)
-    {    
+    {
+        
 #ifndef __METAL_VERSION__
         w_ = new float[count_];   
         pHat_ = new float2[count_];   
@@ -81,6 +78,7 @@ public:
         delete qHat_;
         pHat_=qHat_=0;
 #endif
+        
     }    
         
     /**
@@ -91,7 +89,7 @@ public:
      */
     float2 value(float2 point) {
         if (count_ <= 0) return point;   
-        return (point - pStar_) * M + qStar_;    
+        return (point - pStar_) * M + qStar_;
     }
     
     ~IMPMLSSolver() {
@@ -135,7 +133,7 @@ private:
         pStar_ = float2(0);
         qStar_ = float2(0);
 
-        for (int i=0; i<count_; i++) {
+        for (int i=0; i<count_ && i<MLS_MAXIMUM_POINTS; i++) {
             
             float d =  pow(distance(p_[i], point_), 2*alpha_);
             
@@ -162,7 +160,7 @@ private:
         float _rmu1 = 0;
         float _rmu2 = 0;
         
-        for (int i=0; i<count_; i++) {
+        for (int i=0; i<count_ && i<MLS_MAXIMUM_POINTS; i++) {
             
             pHat_[i] = p_[i] - pStar_;                        
             qHat_[i] = q_[i] - qStar_;
@@ -209,7 +207,7 @@ private:
         float2x2 mi = (float2x2){(float2){0,0},(float2){0,0}};
         float2x2 mj = (float2x2){(float2){0,0},(float2){0,0}};
 
-        for (int i=0; i<count_; i++) {
+        for (int i=0; i<count_ && i<MLS_MAXIMUM_POINTS; i++) {
             
             float2x2 pti({
                 pHat_[i], 
@@ -248,7 +246,7 @@ private:
         
         float2x2 m = (float2x2){(float2){0,0},(float2){0,0}};
         
-        for (int i=0; i<count_; i++) {
+        for (int i=0; i<count_ && i<MLS_MAXIMUM_POINTS; i++) {
             
             float2 sp = -1 * __slashReflect(pHat_[i]);
             float2 sq = -1 * __slashReflect(qHat_[i]);

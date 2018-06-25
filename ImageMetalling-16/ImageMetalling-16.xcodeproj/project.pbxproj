@@ -15,15 +15,15 @@
 		311DB7BF20CCF7E50074E560 /* MLSMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311DB7BE20CCF7E50074E560 /* MLSMesh.swift */; };
 		3142A26020CFE487009B4440 /* TargetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3142A25F20CFE487009B4440 /* TargetView.swift */; };
 		3142A26320CFE71B009B4440 /* IMPPlaneFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3142A26220CFE71B009B4440 /* IMPPlaneFilter.swift */; };
-		314651AB20CFC24A00144A5F /* MLSSolverSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */; };
+		314651AB20CFC24A00144A5F /* MLSSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314651AA20CFC24A00144A5F /* MLSSolver.swift */; };
 		314CA40220C801840084EFA4 /* IMPMain_metal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40120C801840084EFA4 /* IMPMain_metal.metal */; };
 		314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40320C815C60084EFA4 /* KnotNode.swift */; };
 		314CA40820C8167B0084EFA4 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40720C8167B0084EFA4 /* GridView.swift */; };
 		314CA40C20C817D00084EFA4 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40B20C817D00084EFA4 /* WindowController.swift */; };
 		314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */; };
-		314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */; };
 		314CA41220C834FA0084EFA4 /* MNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314CA41120C834FA0084EFA4 /* MNode.swift */; };
 		316C88FD20CFBA050027B437 /* MLSControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C88FC20CFBA050027B437 /* MLSControls.swift */; };
+		3176A78020DE8DC700E9AA18 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3176A77F20DE8DC700E9AA18 /* ImageViewController.swift */; };
 		317D6B7220D52C3500C5F178 /* IMPMLSSolverBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */; };
 		31A9FEA320DC449C00779F60 /* IMPFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A9FEA220DC449B00779F60 /* IMPFilterView.swift */; };
 		31BE81FC20D550DB00E0A2D5 /* LutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BE81F920D550DB00E0A2D5 /* LutView.swift */; };
@@ -46,17 +46,18 @@
 		311DB7BE20CCF7E50074E560 /* MLSMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSMesh.swift; sourceTree = "<group>"; };
 		3142A25F20CFE487009B4440 /* TargetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetView.swift; sourceTree = "<group>"; };
 		3142A26220CFE71B009B4440 /* IMPPlaneFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPPlaneFilter.swift; sourceTree = "<group>"; };
-		314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MLSSolverSwift.swift; sourceTree = "<group>"; };
+		314651AA20CFC24A00144A5F /* MLSSolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MLSSolver.swift; sourceTree = "<group>"; };
 		314CA40120C801840084EFA4 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; };
 		314CA40320C815C60084EFA4 /* KnotNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotNode.swift; sourceTree = "<group>"; };
 		314CA40720C8167B0084EFA4 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		314CA40B20C817D00084EFA4 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotsGrid.swift; sourceTree = "<group>"; };
-		314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotRelationNode.swift; sourceTree = "<group>"; };
 		314CA41120C834FA0084EFA4 /* MNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNode.swift; sourceTree = "<group>"; };
 		3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageMetalling-16-Bridging-Header.h"; sourceTree = "<group>"; };
 		3154C1F420CEAB6000A005A3 /* IMPMLSSolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMPMLSSolver.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		316C88FC20CFBA050027B437 /* MLSControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLSControls.swift; sourceTree = "<group>"; };
+		3176A77F20DE8DC700E9AA18 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		3176A78120DF92AD00E9AA18 /* ImageMetalling-16.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ImageMetalling-16.entitlements"; sourceTree = "<group>"; };
 		317D6B6F20D52A8800C5F178 /* IMPMatrixExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMPMatrixExtension.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IMPMLSSolverBridge.mm; sourceTree = "<group>"; };
 		318B4EB420D54ADE009075BA /* IMPMLSSolver3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMPMLSSolver3D.h; sourceTree = "<group>"; };
@@ -108,9 +109,11 @@
 		3109E70B20C800DF00063D97 /* ImageMetalling-16 */ = {
 			isa = PBXGroup;
 			children = (
+				3176A78120DF92AD00E9AA18 /* ImageMetalling-16.entitlements */,
 				314CA3FF20C8017A0084EFA4 /* Classes */,
 				3109E70C20C800DF00063D97 /* AppDelegate.swift */,
 				3109E70E20C800DF00063D97 /* ViewController.swift */,
+				3176A77F20DE8DC700E9AA18 /* ImageViewController.swift */,
 				314CA40B20C817D00084EFA4 /* WindowController.swift */,
 				3109E71020C800E000063D97 /* Assets.xcassets */,
 				3109E71220C800E000063D97 /* Main.storyboard */,
@@ -139,7 +142,6 @@
 				314CA41120C834FA0084EFA4 /* MNode.swift */,
 				314CA40320C815C60084EFA4 /* KnotNode.swift */,
 				314CA40D20C81AE80084EFA4 /* KnotsGrid.swift */,
-				314CA40F20C8349C0084EFA4 /* KnotRelationNode.swift */,
 				314CA40720C8167B0084EFA4 /* GridView.swift */,
 			);
 			path = Classes;
@@ -158,7 +160,7 @@
 			children = (
 				3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */,
 				316C88FC20CFBA050027B437 /* MLSControls.swift */,
-				314651AA20CFC24A00144A5F /* MLSSolverSwift.swift */,
+				314651AA20CFC24A00144A5F /* MLSSolver.swift */,
 				310574D020CEC93500FD96FD /* IMPMLSSolver.swift */,
 				310574CC20CEB82900FD96FD /* IMPMLSSolverBridge.h */,
 				317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */,
@@ -225,6 +227,11 @@
 					3109E70820C800DF00063D97 = {
 						CreatedOnToolsVersion = 9.4;
 						LastSwiftMigration = 0940;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -322,9 +329,9 @@
 				314CA40820C8167B0084EFA4 /* GridView.swift in Sources */,
 				314CA40420C815C60084EFA4 /* KnotNode.swift in Sources */,
 				31A9FEA320DC449C00779F60 /* IMPFilterView.swift in Sources */,
-				314651AB20CFC24A00144A5F /* MLSSolverSwift.swift in Sources */,
+				314651AB20CFC24A00144A5F /* MLSSolver.swift in Sources */,
 				314CA40E20C81AE80084EFA4 /* KnotsGrid.swift in Sources */,
-				314CA41020C8349C0084EFA4 /* KnotRelationNode.swift in Sources */,
+				3176A78020DE8DC700E9AA18 /* ImageViewController.swift in Sources */,
 				317D6B7220D52C3500C5F178 /* IMPMLSSolverBridge.mm in Sources */,
 				3142A26320CFE71B009B4440 /* IMPPlaneFilter.swift in Sources */,
 			);
@@ -463,7 +470,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "ImageMetalling-16/ImageMetalling_16.entitlements";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -490,7 +496,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "ImageMetalling-16/ImageMetalling_16.entitlements";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;

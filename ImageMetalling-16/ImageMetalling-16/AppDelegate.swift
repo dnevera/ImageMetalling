@@ -24,24 +24,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
 
-            if self.controller.gridView.mlsKind  == .affine {
+            if self.controller.plane01GridView.mlsKind  == .affine {
                 self.affineItem.state = .on
             }
-            else if self.controller.gridView.mlsKind  == .similarity {
+            else if self.controller.plane01GridView.mlsKind  == .similarity {
                 self.singularityItem.state = .on
             } 
-            else if self.controller.gridView.mlsKind  == .rigid {
+            else if self.controller.plane01GridView.mlsKind  == .rigid {
                 self.rigidItem.state = .on
             }   
             
-//            if self.controller.gridView.solverLang  == .swift {
-//                self.swift.state = .on
-//            }
-            //else 
-            if self.controller.gridView.solverLang  == .cpp {
+            if self.controller.plane01GridView.solverLang  == .cpp {
                 self.cpp.state = .on
             } 
-            else if self.controller.gridView.solverLang  == .metal {
+            else if self.controller.plane01GridView.solverLang  == .metal {
                 self.metal.state = .on
             }   
         }
@@ -67,10 +63,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     lazy var langItems: [NSMenuItem] = [self.swift, self.cpp, self.metal] 
     
     @IBAction func reset(_ sender: NSMenuItem) {
-        controller.gridView.knotsGrid.reset()        
-        controller.gridView.solverAlpha = 0.5
-        controller.alphaSlider.floatValue = controller.gridView.solverAlpha 
-        controller.gridView.updatePoints(updatePlane: true)
+
+        controller?.plane01GridView.knotsGrid.reset()        
+        controller?.plane01GridView.solverAlpha = 0.5
+
+        controller?.plane12GridView.knotsGrid.reset()        
+        controller?.plane12GridView.solverAlpha = 0.5
+
+        controller?.alphaSlider.floatValue = controller.plane01GridView.solverAlpha 
+
+        controller?.plane01GridView.updatePoints(updatePlane: true)
+        controller?.plane12GridView.updatePoints(updatePlane: true)
     }
     
     @IBAction func toggleAffine(_ sender: NSMenuItem) {
@@ -78,42 +81,94 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         for m in items { m.state = .off }
         
         affineItem.state = .on
-        controller.gridView.mlsKind = .affine
+        controller?.plane01GridView.mlsKind = .affine
     }
     
     @IBAction func toggleSimilarity(_ sender: NSMenuItem) {
         for m in items { m.state = .off }
         singularityItem.state = .on
-        controller.gridView.mlsKind = .similarity
+        controller?.plane01GridView.mlsKind = .similarity
+        controller?.plane12GridView.mlsKind = .similarity
     }
     
     @IBAction func toggleRigid(_ sender: NSMenuItem) {
         for m in items { m.state = .off }
         rigidItem.state = .on
-        controller.gridView.mlsKind = .rigid
+        controller?.plane01GridView.mlsKind = .rigid
+        controller?.plane12GridView.mlsKind = .rigid
     }
     
-//    @IBAction func solveInSwift(_ sender: NSMenuItem) {
-//        for m in langItems { m.state = .off }
-//        swift.state = .on
-//        //controller.gridView.solverLang = .swift
-//    }
     
     @IBAction func solveInMetal(_ sender: NSMenuItem) {
         for m in langItems { m.state = .off }
         metal.state = .on
-        controller.gridView.solverLang = .metal
+        controller?.plane01GridView.solverLang = .metal
+        controller?.plane12GridView.solverLang = .metal
     }
     
     @IBAction func solveInCpp(_ sender: NSMenuItem) {
         for m in langItems { m.state = .off }
         cpp.state = .on
-        controller.gridView.solverLang = .cpp
+        controller?.plane01GridView.solverLang = .cpp
+        controller?.plane12GridView.solverLang = .cpp
     }
     
     
     @IBAction func pinEdges(_ sender: NSMenuItem) {
-        controller.gridView.knotsGrid.pinEdges()
+        controller?.plane01GridView.knotsGrid.pinEdges()
+        controller?.plane12GridView.knotsGrid.pinEdges()
     }
+    
+    @IBAction func openFile(_ sender: NSMenuItem) {
+        guard let controller = self.controller else {
+            return
+        }
+        if openPanel.runModal() == NSApplication.ModalResponse.OK {
+            if let url = openPanel.urls.first{
+                controller.imageFile = url
+            }
+        }
+    }
+    
+    @IBAction func saveImage(_ sender: NSMenuItem) {
+        guard let controller = self.controller else {
+            return
+        }
+        
+        let p = NSSavePanel()
+        p.isExtensionHidden = false
+        p.allowedFileTypes = [
+            "png", "jpg", "cr2", "tiff"
+        ]
+        
+        p.nameFieldStringValue = ""
+        
+        if p.runModal() == NSApplication.ModalResponse.OK {
+            if let url = p.url {
+                controller.imageSavingFile = url
+            }
+        }        
+    }
+    
+    lazy var openPanel:NSOpenPanel = {
+        let p = NSOpenPanel()
+        p.canChooseFiles = true
+        p.canChooseDirectories = false
+        p.resolvesAliases = true
+        p.isExtensionHidden = false
+        p.allowedFileTypes = [
+            "png", "jpg", "cr2", "tiff", "orf"
+        ]
+        return p
+    }()
+    
+    lazy var savePanel:NSSavePanel = {
+        let p = NSSavePanel()
+        p.isExtensionHidden = false
+        p.allowedFileTypes = [
+            "png", "jpg", "cr2", "tiff"
+        ]
+        return p
+    }()
 }
 
