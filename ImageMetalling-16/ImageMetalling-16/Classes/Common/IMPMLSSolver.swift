@@ -9,7 +9,7 @@
 import Foundation
 import IMProcessing
 
-public class IMPMLSSolver:IMPContextProvider, MLSSolverProtocol{
+public class IMPMLSSolver: IMPContextProvider, MLSSolverProtocol{
     
     public typealias Controls=MLSControls
     

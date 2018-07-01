@@ -77,6 +77,10 @@ public class MLSMesh {
         }
     }
       
+    public func source(to box: NSRect, at index:Int) -> NSPoint {
+        return sources[index].convert(to: box) 
+    }
+    
     public func target(to box: NSRect, at index:Int) -> NSPoint {
         return targets[index].convert(to: box) 
     }

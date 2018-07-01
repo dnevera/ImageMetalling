@@ -13,7 +13,7 @@ import IMProcessing
 import IMProcessingUI
 import Carbon.HIToolbox
 
-let USE_MOUSE_OVER = false
+let USE_MOUSE_OVER = true
 let PRINT_TIME = false
 
 class GridView: NSView, IMPDeferrable {
@@ -23,9 +23,12 @@ class GridView: NSView, IMPDeferrable {
         case metal
     }
     
-    let resolution = 16
+    let resolution = 8
+    let radius:CGFloat = 10
     
-    var solverAlpha:Float = 0.5 {
+    static let defaultSolverAlpha:Float = 0.5
+    
+    var solverAlpha:Float = defaultSolverAlpha {
         didSet{
             updatePoints(updatePlane: true)
         }
@@ -45,7 +48,7 @@ class GridView: NSView, IMPDeferrable {
     
     lazy var knotsGrid:KnotsGrid = KnotsGrid(bounds: self.bounds, 
                                              dimension: (width:self.resolution, height: self.resolution), 
-                                             radius:10, 
+                                             radius:self.radius, 
                                              padding:20)
     
     override init(frame frameRect: NSRect) {
@@ -93,8 +96,8 @@ class GridView: NSView, IMPDeferrable {
         clickGesture.numberOfClicksRequired = 1
         skview.addGestureRecognizer(clickGesture)   
         
-        pressGesture.numberOfTouchesRequired = 1
-        skview.addGestureRecognizer(pressGesture)
+        doubleClickGesture.numberOfClicksRequired = 2
+        skview.addGestureRecognizer(doubleClickGesture)
         
         addSubview(skview)
         
@@ -122,15 +125,50 @@ class GridView: NSView, IMPDeferrable {
     
     lazy var updateQ = DispatchQueue(label: "updateQ")
     
+    var newSources:[float2] = []
+    var newTargets:[KnotNode] = []
+    
+    func reset()  {
+        for i in newTargets {
+            i.removeFromParent()
+        }
+        newSources = []
+        newTargets = []
+        knotsGrid.reset()        
+        solverAlpha = GridView.defaultSolverAlpha     
+        updatePoints(updatePlane: true)
+    }
+    
+    func addKnot(point:float2)  {
+        DispatchQueue.main.async {
+            let position = point.convert(to: self.bounds)
+            let knot = KnotNode(bounds: self.bounds, radius: self.radius, name: "newTarget:\(self.newTargets.count)")
+            knot.position = position
+            knot.shape = .circle
+            knot.isPinned = true
+            self.knotsGrid.addChild(knot)
+            self.newSources.append(point)
+            self.newTargets.append(knot)
+        }
+    }
+    
     func updatePoints(updatePlane:Bool = false)  {
         
         var p = [float2]()
         var q = [float2]()
-        
-        for (i,k) in knotsGrid.children.enumerated() {
-            if let kk = k as? KnotNode, kk.isPinned {
-                q.append(k.position.convert(from: knotsGrid.box))
+                
+        for (i,_) in knotsGrid.mesh.sources.enumerated() {
+            if let kk = knotsGrid.children[i] as? KnotNode, kk.isPinned {
+                q.append(kk.position.convert(from: knotsGrid.box))
                 p.append(knotsGrid.mesh.sources[i])
+            }
+        }
+        
+        for (i,_) in newSources.enumerated() {
+            let kk = newTargets[i]
+            if kk.isPinned {
+                q.append(kk.position.convert(from: knotsGrid.box))
+                p.append(newSources[i])
             }
         }
         
@@ -170,20 +208,55 @@ class GridView: NSView, IMPDeferrable {
         }    
         
     }        
+    
+    @objc private func doubleClickHandler(recognizer:NSPanGestureRecognizer)  {
+        self.window?.makeFirstResponder(self)
+        
+        let location:NSPoint = recognizer.location(in: skview)
+        //let point  = skview.convert(location,from:nil)
+
+        findNode(at: location) { (index, node) in     
+            if let n = node as? KnotNode {
+                
+                Swift.print(" nnnnnnn -> \(n)")
+                
+                if let idx = self.newTargets.index(of: n), n.isPinned{
+                    self.newSources.remove(at: idx)
+                    self.newTargets.remove(at: idx)
+                    n.removeFromParent()
+                    self.updatePoints(updatePlane: true)
+                    return
+                }
+                
+                n.isPinned = !n.isPinned
+                if !n.isPinned {
+                    self.updatePoints(updatePlane: true)
+                }
+                if n.isAllwaysPinned, let name = n.name, let idx = Int(name) {
+                    n.position = self.knotsGrid.mesh.source(to: self.knotsGrid.box, at: idx) 
+                    self.updatePoints(updatePlane: true)
+                }
+                n.run(KnotsGrid.pulse)
+            } 
+        }        
+    }
             
     @objc private func pressHandler(recognizer:NSPanGestureRecognizer)  {
         
         self.window?.makeFirstResponder(self)
         
         let location:NSPoint = recognizer.location(in: skview)
-        let point  = skview.convert(location,from:nil)
+        //let point  = skview.convert(location,from:nil)
         
-        findNode(at: point, leaved: { (index, node) in            
-            (node as? KnotNode)?.isPinned = true
-        })
+        findNode(at: location) { (index, node) in     
+            if let n = node as? KnotNode {
+                n.isPinned = true                
+            } 
+        }
     }
     
     var panLocationBegan = CGPoint.zero
+    
     @objc private func panHandler(recognizer:NSPanGestureRecognizer)  {
         let location:NSPoint = recognizer.location(in: skview)
         
@@ -203,7 +276,7 @@ class GridView: NSView, IMPDeferrable {
             return
         }
                 
-        if lastNode != nil && lastIndex >= 0 {
+        if lastNode != nil /*&& lastIndex >= 0*/ {
 
             if let idx = knotsGrid.grouppingKnots.index(where: { (key, values) -> Bool in
                 return values.contains(where: { (node) -> Bool in
@@ -253,14 +326,10 @@ class GridView: NSView, IMPDeferrable {
         
         findNode(at: point, leaved: { (index, node) in
             guard USE_MOUSE_OVER else {return}
-            if index >= 0 && index < self.knotsGrid.children.count {
-                node?.run(KnotsGrid.scaleIn)
-            }
+            node?.run(KnotsGrid.scaleIn)
         }) { (index, node) in
             guard USE_MOUSE_OVER else {return}
-            if self.lastIndex < 0 {
-                node.run(KnotsGrid.scaleOut)
-            }
+            node.run(KnotsGrid.scaleOut)
         }        
     }
     
@@ -272,17 +341,34 @@ class GridView: NSView, IMPDeferrable {
         if node == scene || node == knotsGrid {
             leaved?(lastIndex, lastNode)
             lastIndex = -1
+            lastNode = nil
             return
-        }
-        
-        if let name = node.name, let index = Int(name) {
+        }        
+                
+        if let name = node.name, name.hasPrefix("newTarget:") {
+            if let newIndex = Int(name.replacingOccurrences(of: "newTarget:", with: "")) {
+                if lastNode != node {
+                    leaved?(lastIndex, lastNode)
+                }
+                lastNode = node
+                lastIndex = newIndex
+                entered?(lastIndex, lastNode!)
+            }
+        }         
+        else if let name = node.name, let index = Int(name) {
             if index >= 0 {
                 
                 var n = node
                 if n.parent?.name != nil {
                     n = n.parent!
                 }
+                
+                if lastNode != n {
+                    leaved?(lastIndex, lastNode)
+                }
+
                 entered?(index, n)
+                                
                 lastIndex = index
                 lastNode = n
             }
@@ -294,11 +380,10 @@ class GridView: NSView, IMPDeferrable {
     
     private lazy var skview:SKView = SKView(frame: self.bounds)
     private lazy var scene:SKScene = SKScene(size: self.skview.bounds.size)
-    
+        
     private lazy var clickGesture:NSClickGestureRecognizer = NSClickGestureRecognizer(target: self, action: #selector(pressHandler(recognizer:)))
    
-    private lazy var pressGesture:NSClickGestureRecognizer = NSClickGestureRecognizer(target: self, action: #selector(pressHandler(recognizer:)))
-    
+    private lazy var doubleClickGesture:NSClickGestureRecognizer = NSClickGestureRecognizer(target: self, action: #selector(doubleClickHandler(recognizer:)))
     
     private lazy var panGesture:NSPanGestureRecognizer = NSPanGestureRecognizer(target: self, action: #selector(panHandler(recognizer:)))
     

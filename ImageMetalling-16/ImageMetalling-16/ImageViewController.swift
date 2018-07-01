@@ -17,8 +17,6 @@ class ImageViewController: NSViewController {
         
     public lazy var imageView:TargetView = {
         let v = TargetView(frame: self.view.bounds)
-        v.processingView.debug = true
-        v.processingView.name = "Image View"
         v.processingView.filter = self.filter                
         return v
     }()
@@ -42,6 +40,9 @@ class ImageViewController: NSViewController {
         })
     }
     
+    var patchColorHandler:((_ color:float3)->Void)? = nil
+    
+    
     /// Создаем фильтр обзёрвера цветов текстуры 
     private lazy var patchColors:IMPColorObserver = {
         let f = IMPColorObserver(context: self.filter.context)
@@ -59,28 +60,10 @@ class ImageViewController: NSViewController {
             
             // 
             // Поскольку мы читаем только одну область то берем первый элемент массива 
-            // прочитаных семполов цветов
-            // 
-            var rgb = f.colors[0]
-            
-            // представление [0-1] в NSColor
-            let color = NSColor(color: float4(rgb.r,rgb.g,rgb.b,1))
-            
-            // инвертируем цвет
-            let inverted_rgb = float3(1) - rgb 
-            let inverted_color = NSColor(color: float4(inverted_rgb.r,inverted_rgb.g,inverted_rgb.b,1))
-            
-            // для отображения в textfield переведем в 8-битное представление
-            rgb = rgb * float3(255)
-            
-            DispatchQueue.main.async {
-                
-                Swift.print("color = \(f.colors)")
-                // просто рисуем 
-                //self.patch.strokeColor = inverted_color                
-                //self.colorLabel.backgroundColor = color
-                //self.colorLabel.stringValue = String(format: "%3.0f, %3.0f, %3.0f", rgb.r, rgb.g, rgb.b)
-            }
+            // прочитаных семплов цветов
+            //             
+            self.patchColorHandler?(f.colors[0])            
+          
         })        
         return f
     }()
@@ -88,10 +71,9 @@ class ImageViewController: NSViewController {
     private lazy var clickGesture:NSClickGestureRecognizer = NSClickGestureRecognizer(target: self, action: #selector(clickHandler(recognizer:)))
 
     @objc private func clickHandler(recognizer:NSPanGestureRecognizer)  {
-        let position:NSPoint = recognizer.location(in: imageView)
-        //patch.position = position
+        let position:NSPoint = recognizer.location(in: imageView.processingView)
         
-        let size = imageView.bounds.size
+        let size = imageView.processingView.bounds.size
         let point =  float2((position.x / size.width).float, 1-(position.y / size.height).float)
         
         patchColors.centers = [point]

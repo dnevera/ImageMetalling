@@ -35,14 +35,18 @@ open class KnotNode: MNode {
             if isPinned == true {
                 shape = .circle
             }
+            else {
+                shape = .cross
+            }
             update()
         }
-    }
+    }        
     
-    public init(bounds:NSRect, radius:CGFloat, shape:Shape = .cross) {
+    public init(bounds:NSRect, radius:CGFloat, shape:Shape = .cross, name:String? = nil) {
         super.init(bounds:bounds)
         self.radius = radius
         self.shape = shape
+        self.name = name
         update()
     }    
     

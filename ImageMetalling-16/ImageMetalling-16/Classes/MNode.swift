@@ -16,8 +16,10 @@ open class MNode: SKShapeNode {
     
     public var color:NSColor = NSColor(red: 0, green: 0, blue: 0, alpha: 0) { didSet{ update() } }
         
-    public var isPinned:Bool = false { didSet{ update() } }
+    public var isPinned:Bool = false { didSet{ if isAllwaysPinned { isPinned = isAllwaysPinned }; update() } }
     
+    public var isAllwaysPinned:Bool = false { didSet{ if isAllwaysPinned { isPinned = isAllwaysPinned } } }
+
     public var bounds:NSRect { didSet{ update() } }
     
     public var relation:float2 {

@@ -66,11 +66,14 @@ vertex VertexOutput projectionVertex(VertexInput in [[ stage_in ]],
 // Фрагментный шейдер программы
 fragment float4 materialFragment(VertexOutput in [[stage_in]])
 {
-    // текущий семпл    
-    
+    // текущий семпл        
     return float4(in.rgb, 0.5);
 }
 
+
+///
+/// Ядро солвера расчитываем новые координаты для каждой точки
+///
 kernel void kernel_mlsSolver(
                              constant float2  *input_points  [[buffer(0)]],
                              device float2    *output_points [[buffer(1)]],

@@ -96,22 +96,21 @@ open class KnotsGrid: SKShapeNode {
                     }
                 }                    
                 else {
-                    knot = KnotNode(bounds: box, radius: radius)
+                    knot = KnotNode(bounds: box, radius: radius, name: "\(index)")
                     knot.position = p
-                    knot.name = "\(index)"
                     addChild(knot)     
                     
                     if x == 0 && y == 0 {
-                        knot.isPinned = true
+                        knot.isAllwaysPinned = true
                     }
                     else if x == 0 && y == mesh.dimension.height-1 {
-                        knot.isPinned = true
+                        knot.isAllwaysPinned = true
                     }
                     else if x == mesh.dimension.width-1 && y == mesh.dimension.height-1 {
-                        knot.isPinned = true
+                        knot.isAllwaysPinned = true
                     }
                     else if x == mesh.dimension.width-1 && y == 0 {
-                        knot.isPinned = true
+                        knot.isAllwaysPinned = true
                     }                    
                 }    
                 index += 1

@@ -47,7 +47,7 @@
 		3142A25F20CFE487009B4440 /* TargetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetView.swift; sourceTree = "<group>"; };
 		3142A26220CFE71B009B4440 /* IMPPlaneFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMPPlaneFilter.swift; sourceTree = "<group>"; };
 		314651AA20CFC24A00144A5F /* MLSSolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MLSSolver.swift; sourceTree = "<group>"; };
-		314CA40120C801840084EFA4 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; };
+		314CA40120C801840084EFA4 /* IMPMain_metal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = IMPMain_metal.metal; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		314CA40320C815C60084EFA4 /* KnotNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnotNode.swift; sourceTree = "<group>"; };
 		314CA40720C8167B0084EFA4 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		314CA40B20C817D00084EFA4 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
@@ -60,7 +60,6 @@
 		3176A78120DF92AD00E9AA18 /* ImageMetalling-16.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ImageMetalling-16.entitlements"; sourceTree = "<group>"; };
 		317D6B6F20D52A8800C5F178 /* IMPMatrixExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMPMatrixExtension.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IMPMLSSolverBridge.mm; sourceTree = "<group>"; };
-		318B4EB420D54ADE009075BA /* IMPMLSSolver3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMPMLSSolver3D.h; sourceTree = "<group>"; };
 		31A9FEA220DC449B00779F60 /* IMPFilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMPFilterView.swift; sourceTree = "<group>"; };
 		31BE81F920D550DB00E0A2D5 /* LutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LutView.swift; sourceTree = "<group>"; };
 		31BE81FB20D550DB00E0A2D5 /* SceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
@@ -158,6 +157,8 @@
 		3154C1EE20CEA9B900A005A3 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				3142A25F20CFE487009B4440 /* TargetView.swift */,
+				31A9FEA220DC449B00779F60 /* IMPFilterView.swift */,
 				3154C1EF20CEAA3700A005A3 /* ImageMetalling-16-Bridging-Header.h */,
 				316C88FC20CFBA050027B437 /* MLSControls.swift */,
 				314651AA20CFC24A00144A5F /* MLSSolver.swift */,
@@ -165,11 +166,8 @@
 				310574CC20CEB82900FD96FD /* IMPMLSSolverBridge.h */,
 				317D6B7120D52C3500C5F178 /* IMPMLSSolverBridge.mm */,
 				3154C1F420CEAB6000A005A3 /* IMPMLSSolver.h */,
-				318B4EB420D54ADE009075BA /* IMPMLSSolver3D.h */,
 				317D6B6F20D52A8800C5F178 /* IMPMatrixExtension.h */,
 				310574CF20CEB90F00FD96FD /* IMPMLSSolverCommon.h */,
-				3142A25F20CFE487009B4440 /* TargetView.swift */,
-				31A9FEA220DC449B00779F60 /* IMPFilterView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";

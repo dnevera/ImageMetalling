@@ -45,7 +45,14 @@ class ViewController: NSViewController, IMPDeferrable {
         }
     } 
     
-    lazy var imageViewController = ImageViewController()
+    lazy var imageViewController:ImageViewController = {
+       let c =  ImageViewController()
+        c.patchColorHandler = { color in                                                 
+            self.plane01GridView.addKnot(point: self.plane01Filter.planeCoord(for:color))
+            self.plane12GridView.addKnot(point: self.plane12Filter.planeCoord(for:color))
+        }
+        return c
+    }()
     
     let context = IMPContext(lazy:true)
             
@@ -65,12 +72,9 @@ class ViewController: NSViewController, IMPDeferrable {
                 self.imageViewController.filter.clut = filter.cLut
             })
 
-            //self.deferrable.delay = 1/60
-            //self.deferrable.block = {
-                self.context.runOperation(.async, { 
-                    self.lut3DView.lut = filter.cLut      
-                })                    
-           // }
+            self.context.runOperation(.async, { 
+                self.lut3DView.lut = filter.cLut      
+            })                    
         })
         
         return filter
@@ -201,17 +205,17 @@ class ViewController: NSViewController, IMPDeferrable {
         
         lut2DView.sizeFit()  
                         
-        plane01Filter.space = .hsp
-        plane01Filter.reference = float3(0,1,1)
-        plane01Filter.spaceChannels = (0,2)
+        plane01Filter.space = .lab
+        plane01Filter.reference = float3(80,0,0)
+        plane01Filter.spaceChannels = (1,2)
 
         lut01Filter.space = plane01Filter.space        
         lut01Filter.reference = plane01Filter.reference        
         lut01Filter.spaceChannels = plane01Filter.spaceChannels
 
-        plane12Filter.space = .hsp
-        plane12Filter.reference = float3(0,0,0.5)
-        plane12Filter.spaceChannels =  (0,1)
+        plane12Filter.space = .hsv
+        plane12Filter.reference = float3(0,1,1)
+        plane12Filter.spaceChannels =  (0,2)
 
         lut12Filter.space = plane12Filter.space        
         lut12Filter.reference = plane12Filter.reference        
@@ -222,8 +226,6 @@ class ViewController: NSViewController, IMPDeferrable {
     
     @objc func slider(sender:NSSlider)  {
         plane01GridView.solverAlpha = sender.floatValue
-        //let value = sender.floatValue*100
-        //self.planeFilter.reference = float3(value,0,1)
     }
     
     

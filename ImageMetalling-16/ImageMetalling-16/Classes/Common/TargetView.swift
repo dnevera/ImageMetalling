@@ -29,7 +29,11 @@ open class TargetView: IMPViewBase{
         _scrollView.magnify(toFit: rect)
     }
     
-    private var isSizeFit = true
+    private var isSizeFit = true {
+        didSet{
+            processingView.setNeedsDisplay(processingView.bounds)
+        }        
+    }
     
     ///  Fite image to current view size
     public func sizeFit(){

@@ -18,13 +18,3 @@
                     kind:(MLSSolverKind)kind alpha:(float)alpha;
 - (simd_float2) value:(simd_float2)point;
 @end
-
-
-@interface IMPMLSSolverBridge3D : NSObject
-- (instancetype) initWith:(simd_float3)point 
-                   source:(simd_float3*)source 
-              destination:(simd_float3*)destination 
-                    count:(int)count 
-                     kind:(MLSSolverKind)kind alpha:(float)alpha;
-- (simd_float3) value:(simd_float3)point;
-@end

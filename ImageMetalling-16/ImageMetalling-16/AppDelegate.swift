@@ -64,16 +64,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func reset(_ sender: NSMenuItem) {
 
-        controller?.plane01GridView.knotsGrid.reset()        
-        controller?.plane01GridView.solverAlpha = 0.5
+        controller?.alphaSlider.floatValue = GridView.defaultSolverAlpha 
 
-        controller?.plane12GridView.knotsGrid.reset()        
-        controller?.plane12GridView.solverAlpha = 0.5
-
-        controller?.alphaSlider.floatValue = controller.plane01GridView.solverAlpha 
-
-        controller?.plane01GridView.updatePoints(updatePlane: true)
-        controller?.plane12GridView.updatePoints(updatePlane: true)
+        controller?.plane01GridView.reset()        
+        controller?.plane12GridView.reset()        
     }
     
     @IBAction func toggleAffine(_ sender: NSMenuItem) {

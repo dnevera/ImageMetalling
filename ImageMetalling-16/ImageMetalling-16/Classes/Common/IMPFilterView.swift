@@ -52,12 +52,25 @@ open class IMPFilterView: MTKView {
         device = MTLCreateSystemDefaultDevice()
         configure()
     }
+        
+    open override var frame: NSRect {
+        didSet{
+            self.filter?.dirty = true
+        }        
+    }    
+    
+    open override func setNeedsDisplay(_ invalidRect: NSRect) {
+        super.setNeedsDisplay(invalidRect)
+        self.filter?.dirty = true
+    }
     
     open func configure() {
         delegate = self
         isPaused = false
         enableSetNeedsDisplay = false
         framebufferOnly = true
+        postsBoundsChangedNotifications = true
+        postsFrameChangedNotifications = true
         clearColor = MTLClearColorMake(0, 0, 0, 0)
     }
     
