@@ -161,11 +161,7 @@ kernel void kernel_mlsLutTransform(
                                      
                                      metal::uint2 gid [[thread_position_in_grid]]
                                      )
-{
-        
-    float2 xyLut = float2(gid)/float2(outTexture.get_width(),outTexture.get_height());    
-    xyLut = float2(xyLut.x, xyLut.y);    
-    
+{            
     float3 rgb = lut.read(gid).rgb; 
     
     float3 lutXyz = IMPConvertToNormalizedColor(IMPRgbSpace, 

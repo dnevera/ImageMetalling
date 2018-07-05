@@ -206,7 +206,7 @@ class ViewController: NSViewController, IMPDeferrable {
         lut2DView.sizeFit()  
                         
         plane01Filter.space = .lab
-        plane01Filter.reference = float3(80,0,0)
+        plane01Filter.reference = float3(90,1,1)
         plane01Filter.spaceChannels = (1,2)
 
         lut01Filter.space = plane01Filter.space        
@@ -214,8 +214,8 @@ class ViewController: NSViewController, IMPDeferrable {
         lut01Filter.spaceChannels = plane01Filter.spaceChannels
 
         plane12Filter.space = .hsv
-        plane12Filter.reference = float3(0,1,1)
-        plane12Filter.spaceChannels =  (0,2)
+        plane12Filter.reference = float3(0,1,0.5)
+        plane12Filter.spaceChannels =  (0,1)
 
         lut12Filter.space = plane12Filter.space        
         lut12Filter.reference = plane12Filter.reference        
