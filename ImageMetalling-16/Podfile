@@ -3,14 +3,10 @@ use_frameworks!
 
 target 'ImageMetalling-16' do
     platform :osx, '10.13'
-    #pod 'RxSwift',    '~> 4.0'
-    #pod 'RxCocoa',    '~> 4.0'
-    pod 'SnapKit' 
-    pod 'Surge', :git => 'https://github.com/dnevera/Surge.git', :branch => 'develop-swift4'
-    #pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing', :branch => 'develop-swift4'
-    #pod 'IMProcessingUI', :git => 'https://bitbucket.org/degrader/improcessingui', :branch => 'develop-swift4'
-    pod 'IMProcessing', :path => '../../Dehancer/IMProcessing-swift4'
-    pod 'IMProcessingUI', :path => '../../Dehancer/IMProcessingUI-swift4'
+    pod 'SnapKit'
+    pod 'Surge', :git => 'https://github.com/dnevera/Surge.git', :tag => '1.0.2'
+    pod 'IMProcessing', :git => 'https://bitbucket.org/degrader/improcessing', :tag => '0.10.0'
+    pod 'IMProcessingUI', :git => 'https://bitbucket.org/degrader/improcessingui', :tag => '0.10.0'
 end
 
 post_install do |installer|
