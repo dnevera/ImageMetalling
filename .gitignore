@@ -12,3 +12,11 @@ Index
 DegradrFilterTest.xcscheme
 */**/Build
 */**/Checkouts
+*DerivedData/
+build
+*-build-*
+*.user
+ofx/**/config/config.xml
+ofx/**/meta/package.xml
+ImageMetalling-17.iml
+ImageMetalling-17/.idea
