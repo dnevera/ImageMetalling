@@ -48,7 +48,7 @@ The log file is written to using printf style functions, rather than via c++ ios
 
 #include "Log.h"
 
-namespace dehancer {
+namespace imetalling {
     namespace log {
 
         /** @brief log file */
@@ -185,5 +185,5 @@ namespace dehancer {
             }
 #endif
         }
-    };
-};
+    }
+}

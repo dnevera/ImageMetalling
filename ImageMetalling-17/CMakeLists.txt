@@ -180,8 +180,8 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/ofx
         ${CMAKE_SOURCE_DIR}/ofx/kernels
         ${CMAKE_CURRENT_BINARY_DIR}/generated
-        ${CURL_INCLUDE_DIR}
-        ${SQLITE3_INCLUDE_DIRS}
+        ${CMAKE_BINARY_DIR}/external/include
+        ${CMAKE_BINARY_DIR}/external/include/openfx
         ./
 )
 

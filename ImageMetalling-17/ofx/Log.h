@@ -40,7 +40,7 @@ England
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries.
 */
-namespace dehancer {
+namespace imetalling {
 
     /** @brief this namespace wraps up logging functionality */
     namespace log {

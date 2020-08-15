@@ -6,7 +6,7 @@
 
 #include <string>
 
-namespace dehancer {
+namespace imetalling {
 
     /**
       * MUST BE defined in certain plugin module

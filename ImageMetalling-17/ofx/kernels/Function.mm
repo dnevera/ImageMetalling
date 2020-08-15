@@ -5,10 +5,9 @@
 
 #include "Function.h"
 #include "Log.h"
-//#include "version.h"
 #include "PluginPaths.h"
 
-namespace dehancer {
+namespace imetalling {
 
     /**
      * MUST BE defined in certain plugin module
@@ -228,7 +227,7 @@ namespace dehancer {
             command_queue_(command_queue),
             kernel_name_(kernel_name)
     {
-            OFX::Log::error(true, " ********** Plugin::Function ha not been implemented yet...);
+            log::error(true, " ********** Plugin::Function ha not been implemented yet...);
     }
 #endif
 

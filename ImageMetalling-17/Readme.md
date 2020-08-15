@@ -14,12 +14,12 @@
 - SQLite3
 - BLAS
 - LAPACK
-- dispatchq: https://github.com/dehancer/capy-dispatchq
+- dispatchq: https://github.com/imetalling/capy-dispatchq
 - ed25519cpp: https://github.com/dnevera/ed25519cpp
 - base64cpp: https://github.com/dnevera/base64cpp
-- dehancer-common-cpp: https://github.com/dehancer/dehancer-common-cpp
-- armadillo-code: https://github.com/dehancer/armadillo-code
-- dehancer-maths-cpp: https://github.com/dehancer/dehancer-maths-cpp 
-- dehancer-xmp-cpp: https://github.com/dehancer/dehancer-xmp-cpp
+- imetalling-common-cpp: https://github.com/imetalling/imetalling-common-cpp
+- armadillo-code: https://github.com/imetalling/armadillo-code
+- imetalling-maths-cpp: https://github.com/imetalling/imetalling-maths-cpp 
+- imetalling-xmp-cpp: https://github.com/imetalling/imetalling-xmp-cpp
 - rxcpp: https://github.com/ReactiveX/RxCpp
   

@@ -12,7 +12,7 @@
 #include <mutex>
 #include <functional>
 
-namespace dehancer {
+namespace imetalling {
 
 #ifdef __DEHANCER_USING_METAL__
     typedef std::function<id<MTLTexture> (id<MTLComputeCommandEncoder>& compute_encoder)> FunctionHandler;
