@@ -7,7 +7,6 @@
 #include <vector>
 #include <cstdint>
 
-
 #ifdef __APPLE__
 #import <simd/simd.h>
 #endif

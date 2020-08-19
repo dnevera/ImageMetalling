@@ -1,7 +1,7 @@
 ## Compilation 
 
     cmake \
-    -DBUILD_TESTING=ON -DPRINT_DEBUG=ON -DQT_INSTALLER_PREFIX=/Users/denn/Develop/QtInstaller -DQT_INSTALLER_ON=ON -DCMAKE_PREFIX_PATH=/Users/denn/Develop/Qt/5.13.0/clang_64/lib/cmake -DCMAKE_INSTALL_PREFIX=/Library/OFX/Plugins
+    -DBUILD_TESTING=ON -DPRINT_DEBUG=ON -DQT_INSTALLER_PREFIX=~/Develop/QtInstaller -DQT_INSTALLER_ON=ON -DCMAKE_PREFIX_PATH=~/Develop/Qt/5.13.0/clang_64/lib/cmake -DCMAKE_INSTALL_PREFIX=/Library/OFX/Plugins
 
 ## Requirements  
 

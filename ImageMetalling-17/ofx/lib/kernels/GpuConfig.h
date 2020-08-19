@@ -15,6 +15,8 @@ using Texture        = id<MTLTexture>;
 using CommandEncoder = id<MTLComputeCommandEncoder>;
 using GridSize       = MTLSize;
 
+#define TEXTURE_RELEASE release
+
 #else
 
 #error "You must define Texture, CommandEncoder, GridSize"

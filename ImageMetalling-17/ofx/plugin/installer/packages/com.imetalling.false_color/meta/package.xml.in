@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>IM False Color component</DisplayName>
+    <Description>IM False Color</Description>
+    <Version>1</Version>
+    <ReleaseDate>@TODAY@</ReleaseDate>
+    <Licenses>
+        <License name="Dehancer Public License Agreement" file="license.txt" />
+    </Licenses>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+</Package>

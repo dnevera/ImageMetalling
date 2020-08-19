@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>IM False Color Plugin</Name>
+    <Version>1</Version>
+    <Title>IM False Color Plugin Installer</Title>
+    <Publisher>Dehancer Lab</Publisher>
+    <StartMenuDir>Super App</StartMenuDir>
+    <TargetDir>@PLUGIN_BUNDLE_INSTALATION_PATH@</TargetDir>
+</Installer>

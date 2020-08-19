@@ -3,22 +3,20 @@
 //
 
 #include "Factory.h"
+#include "Plugin.h"
 
-#include "FactoryUtils.h"
-#include "ofxsLog.h"
 #include <string>
 #include <algorithm>
 
-namespace imetalling {
+namespace imetalling::falsecolor {
 
-    Factory::Factory(const std::string& id,
-                     const std::string& prev_id,
-                     const std::string& name,
-                     const std::string& capture):
+    Factory::Factory(const std::string& plugin_id,
+                     const std::string& plugin_name,
+                     const std::string& plugin_description):
             OFX::PluginFactoryHelper<Factory>(id, versionMajor, versionMinor),
-            id_(id),
-            name_(name),
-            capture_(capture)
+            id_(plugin_id),
+            name_(plugin_name),
+            description_(plugin_description)
     {
     }
 
@@ -45,9 +43,9 @@ namespace imetalling {
       _pluginTitle.append(".");
       _pluginTitle.append(std::to_string(versionMinor));
 
-      desc.setLabels(_pluginName, _pluginTitle, capture_);
+      desc.setLabels(_pluginName, _pluginTitle, description_);
       desc.setPluginGrouping(grouping);
-      desc.setPluginDescription(capture_);
+      desc.setPluginDescription(description_);
 
       // Add the supported contexts, only filter at the moment
       desc.addSupportedContext(OFX::eContextFilter);
@@ -79,10 +77,47 @@ namespace imetalling {
 
     void Factory::describeInContext(OFX::ImageEffectDescriptor &desc, OFX::ContextEnum p_Context) {
 
+      OFX::ClipDescriptor *srcClip = desc.defineClip(kOfxImageEffectSimpleSourceClipName);
+
+      srcClip->addSupportedComponent(OFX::ePixelComponentRGBA);
+      srcClip->setTemporalClipAccess(false);
+      srcClip->setSupportsTiles(supportsTiles);
+      srcClip->setIsMask(false);
+
+      OFX::ClipDescriptor *dstClip = desc.defineClip(kOfxImageEffectOutputClipName);
+
+      dstClip->addSupportedComponent(OFX::ePixelComponentRGBA);
+      dstClip->setSupportsTiles(supportsTiles);
+
+      /// MARK - Page
+      OFX::PageParamDescriptor *page = desc.definePageParam("main_page");
+
+
+      /// MARK - Profile output group
+      OFX::GroupParamDescriptor* group = desc.defineGroupParam("falseColorGroup");
+
+      group->setHint("False Color Group");
+      group->setLabels("False Color", "False Color", "False Color");
+      group->setOpen(false);
+
+
+      OFX::BooleanParamDescriptor *false_color_enabled = desc.defineBooleanParam(controls::false_color_enabled_check_box);
+      false_color_enabled->setDefault(false);
+
+      false_color_enabled->setLabels("False Colors (IRE, 16 zones)", "Check False Colors", "Check False Colors");
+
+      false_color_enabled->setEvaluateOnChange(true);
+      false_color_enabled->setParent(*group);
+      page->addChild(*false_color_enabled);
+
     }
 
     void Factory::load() {
       PluginFactory::load();
+    }
+
+    OFX::ImageEffect *Factory::createInstance(OfxImageEffectHandle handle, OFX::ContextEnum) {
+      return new Plugin(handle);
     }
 
 }

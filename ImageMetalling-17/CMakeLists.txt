@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.17)
 project(ImageMetalling_17)
 
+set (PLUGIN_ID "com.imetalling.false_color")
+set (PLUGIN_BUNDLE_NAME "IMFalseColor")
+set (PLUGIN_BUNDLE_INSTALATION_PATH "/Library/OFX/Plugins/${PLUGIN_BUNDLE_NAME}.ofx.bundle")
+
 #
 # CXX 1x
 #
@@ -16,7 +20,6 @@ set(CMAKE_POLICY_DEFAULT_CMP0054 NEW)
 #
 option(QT_INSTALLER_PREFIX /usr/local/QtInstaller/bin)
 option(QT_INSTALLER_ON OFF)
-option(INSTALL_ON OFF)
 option(DEHANCER_RESIGN_RESOURCES OFF)
 option(MACDEPLOY OFF)
 option(BUILD_PRO_ONLY OFF)
@@ -35,10 +38,8 @@ find_package (CURL REQUIRED)
 find_package (Qt5Core REQUIRED)
 find_package (Qt5Gui REQUIRED)
 find_package (Qt5Widgets REQUIRED)
-find_package (SQLite3 REQUIRED)
 find_package (BLAS REQUIRED)
 find_package (LAPACK REQUIRED)
-find_package (YAML-CPP REQUIRED)
 
 add_definitions(-DCURL_STATICLIB )
 
@@ -48,8 +49,11 @@ if(NOT PKG_CONFIG_FOUND)
     message(FATAL_ERROR "sudo apt-get install pkg-config, or brew install pkg-config")
 endif()
 
-set(COMMON_DEPENDECIES ImageMetallingKernel)
-set(COMMON_LIBRARIES  ${EXPAT_LIBRARIES}; ${ZLIB_LIBRARIES}; ${Iconv_LIBRARIES}; ${CURL_LIBRARIES}; SQLite3; libyaml-cpp.a)
+set (CURRENT_METAL_TARGET_NAME ImageMetallingKernel)
+set (CURRENT_METAL_TARGET_LIB ${CURRENT_METAL_TARGET_NAME}.metallib)
+set (COMMON_DEPENDECIES ${CURRENT_METAL_TARGET_NAME})
+set (COMMON_LIBRARIES  ${EXPAT_LIBRARIES}; ${ZLIB_LIBRARIES}; ${Iconv_LIBRARIES}; ${CURL_LIBRARIES})
+
 string(TIMESTAMP TODAY "%Y-%m-%d")
 
 message(STATUS "CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
@@ -59,8 +63,6 @@ set (CMAKE_OSX_DEPLOYMENT_TARGET $ENV{MACOSX_DEPLOYMENT_TARGET})
 set (CMAKE_INSTALL_PREFIX "/Library/OFX/Plugins")
 set (EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
-set (CURRENT_METAL_TARGET_NAME ImageMetallingKernel)
-set (CURRENT_METAL_TARGET_LIB ${CURRENT_METAL_TARGET_NAME}.metallib)
 
 #
 # OFX
@@ -177,8 +179,8 @@ link_directories(
 )
 
 include_directories(
-        ${CMAKE_SOURCE_DIR}/ofx
-        ${CMAKE_SOURCE_DIR}/ofx/kernels
+        ${CMAKE_SOURCE_DIR}/ofx/lib
+        ${CMAKE_SOURCE_DIR}/ofx/lib/kernels
         ${CMAKE_CURRENT_BINARY_DIR}/generated
         ${CMAKE_BINARY_DIR}/external/include
         ${CMAKE_BINARY_DIR}/external/include/openfx

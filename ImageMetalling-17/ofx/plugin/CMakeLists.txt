@@ -1,0 +1,19 @@
+set(CURRENT_TARGET_NAME ${PLUGIN_BUNDLE_NAME})
+set(INSTALLER_APP_NAME IMFalseColorOfxInstaller)
+
+if (PLUGIN_INSTALLER_DIR)
+    set (PREP_BUNDLE_DIR ${PLUGIN_INSTALLER_DIR}/${PLUGIN_ID})
+else()
+    set (PREP_BUNDLE_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_ID})
+endif()
+
+set (PREP_INSTALLER_DIR ${PREP_BUNDLE_DIR}/installer)
+set(PREP_INSTALLER_DATA_DIR ${PREP_INSTALLER_DIR}/installer/packages/${PLUGIN_ID}/data)
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/ofx/resources
+        DESTINATION ${PREP_INSTALLER_DATA_DIR}/Contents
+        FILES_MATCHING
+        PATTERN "com.imetalling.*.png"
+        )
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeConfig.in)

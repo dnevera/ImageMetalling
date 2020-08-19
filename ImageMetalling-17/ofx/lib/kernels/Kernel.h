@@ -31,9 +31,8 @@ namespace imetalling {
 
         GridSize get_thread_groups(int w, int h, int d) override ;
 
-        virtual const Texture get_source() const { return source_;};
-        virtual const Texture get_destination() const { return destination_ ? destination_ : source_;}
-        virtual void set_destination(Texture& dest) { destination_ = dest;}
+        [[nodiscard]] virtual Texture get_source() const { return source_;};
+        [[nodiscard]] virtual Texture get_destination() const { return destination_ ? destination_ : source_;}
 
         ~Kernel() override ;
 

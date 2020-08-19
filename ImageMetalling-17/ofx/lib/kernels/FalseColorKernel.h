@@ -16,8 +16,6 @@ namespace imetalling {
                          bool wait_until_completed = WAIT_UNTIL_COMPLETED);
         void setup(CommandEncoder &commandEncoder) override ;
     private:
-#ifdef __DEHANCER_USING_METAL__
         std::vector<simd::float3> color_map_;
-#endif
     };
 }

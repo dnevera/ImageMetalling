@@ -6,7 +6,6 @@
 
 #include "GpuConfig.h"
 
-#include <string>
 #include <vector>
 #include <unordered_map>
 #include <mutex>
@@ -14,10 +13,7 @@
 
 namespace imetalling {
 
-#ifdef __DEHANCER_USING_METAL__
     typedef std::function<id<MTLTexture> (id<MTLComputeCommandEncoder>& compute_encoder)> FunctionHandler;
-#define DEHANCER_RELEASE release
-#endif
 
     class Function {
 
@@ -40,8 +36,6 @@ namespace imetalling {
         virtual GridSize get_thread_groups(int w, int h, int d);
         virtual ComputeSize get_compute_size(const Texture &texture);
 
-#ifdef __DEHANCER_USING_METAL__
-
         id<MTLComputePipelineState> get_pipeline();
 
         inline id<MTLCommandQueue> get_command_queue() {
@@ -57,7 +51,6 @@ namespace imetalling {
         }
 
         void execute(const FunctionHandler& block);
-#endif
 
         Texture make_texture(size_t width, size_t height, size_t depth = 1);
         static Texture make_texture(const void *command_queue, size_t width, size_t height, size_t depth = 1);
@@ -70,7 +63,6 @@ namespace imetalling {
         const void *command_queue_;
         std::string kernel_name_;
 
-#ifdef __DEHANCER_USING_METAL__
     public:
         typedef std::unordered_map<std::string, id<MTLComputePipelineState>> PipelineKernel;
         typedef std::unordered_map<id<MTLCommandQueue>, PipelineKernel> PipelineCache;
@@ -81,7 +73,6 @@ namespace imetalling {
         id<MTLComputePipelineState> pipelineState_;
         static PipelineCache pipelineCache_;
         static std::mutex mutex_;
-#endif
 
     };
 }

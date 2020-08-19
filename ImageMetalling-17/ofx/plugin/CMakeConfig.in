@@ -1,0 +1,97 @@
+set(BUNDLE_DIR ${CMAKE_INSTALL_PREFIX}/${CURRENT_TARGET_NAME}.ofx.bundle)
+set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+message(STATUS "LIBS: ${COMMON_LIBRARIES}")
+message(STATUS "INSTALL to ${CMAKE_INSTALL_PREFIX}")
+
+include_directories(
+        ..
+        ${CMAKE_BINARY_DIR}/external/include
+)
+
+file (GLOB PLUGIN_SOURCES ${PLUGIN_SOURCES}
+        ./*.cpp
+        ./*.mm
+        )
+
+set(PLUGIN_STATIC_SOURCES ${PLUGIN_SOURCES})
+
+list(REMOVE_ITEM ${PLUGIN_STATIC_SOURCES} EXCLUDE PATTERN "Plugin.cpp")
+
+message(STATUS "PLUGIN_STATIC_SOURCES ${PLUGIN_STATIC_SOURCES}")
+
+add_library(${CURRENT_TARGET_NAME} SHARED ${PLUGIN_SOURCES})
+set_target_properties(${CURRENT_TARGET_NAME} PROPERTIES BUNDLE TRUE)
+set_target_properties(${CURRENT_TARGET_NAME} PROPERTIES PREFIX "")
+set_target_properties(${CURRENT_TARGET_NAME} PROPERTIES SUFFIX ".ofx")
+
+target_link_libraries(
+        ${CURRENT_TARGET_NAME}
+        PUBLIC
+        ${COMMON_LIBRARIES}
+        image_metalling_gpulib
+)
+
+add_dependencies(${CURRENT_TARGET_NAME}
+        ${CURRENT_METAL_TARGET_NAME}
+        ${COMMON_DEPENDECIES}
+        )
+
+set(PREP_PACKAGE_XML  ${SOURCE_DIR}/installer/packages/${PLUGIN_ID}/meta/package.xml)
+set(PREP_PACKAGE_CONFIG_XML  ${SOURCE_DIR}/installer/config/config.xml)
+
+
+configure_file(${PREP_PACKAGE_XML}.in ${PREP_PACKAGE_XML})
+configure_file(${PREP_PACKAGE_CONFIG_XML}.in ${PREP_PACKAGE_CONFIG_XML})
+
+set(APP_NAME ${INSTALLER_APP_NAME})
+set(APP_FOLDER ${APP_NAME}.app)
+set(INFO_PLIST ${APP_FOLDER}/Contents/Info.plist)
+
+message(STATUS "APP_NAME: ${APP_NAME}")
+message(STATUS "APP_FOLDER: ${APP_FOLDER}")
+message(STATUS "PREP_BUNDLE_DIR: ${PREP_BUNDLE_DIR}")
+message(STATUS "PLUGIN_INSTALLER_DIR: ${PLUGIN_INSTALLER_DIR}")
+
+#
+# Prepare installer
+#
+
+
+find_program (SED_TOOL NAMES sed)
+if (NOT SED_TOOL)
+    message (FATAL_ERROR "Unable to find sed")
+endif (NOT SED_TOOL)
+
+install(DIRECTORY installer DESTINATION ${PREP_INSTALLER_DIR}/..
+        FILES_MATCHING
+        PATTERN "*"
+        PATTERN "Readme" EXCLUDE
+        PATTERN ".DS_Store" EXCLUDE
+        PATTERN "*.xml.in" EXCLUDE
+        PATTERN "install_manifest.txt" EXCLUDE)
+
+install(TARGETS ${CURRENT_TARGET_NAME}
+        RUNTIME DESTINATION ${PREP_INSTALLER_DATA_DIR}/Contents/MacOS/${OFX_ARCH_NAME}
+        LIBRARY DESTINATION ${PREP_INSTALLER_DATA_DIR}/Contents/MacOS/${OFX_ARCH_NAME}
+        )
+
+install(FILES ${CMAKE_BINARY_DIR}/ofx/lib/shaders/${CURRENT_METAL_TARGET_LIB}
+        DESTINATION ${PREP_INSTALLER_DATA_DIR}/Contents/MacOS/Metallib)
+
+#
+# Create installer
+#
+set (BUNDLE_MAKER "${QT_INSTALLER_PREFIX}/bin/binarycreator --offline-only -c config/config.xml -p packages ${APP_NAME}")
+install(CODE "execute_process(COMMAND ${BUNDLE_MAKER} WORKING_DIRECTORY \"${PREP_INSTALLER_DIR}\" OUTPUT_FILE /tmp/cmake-imetalling.out ERROR_FILE /tmp/cmake-imetalling.err)")
+
+#
+# Replace bundle id
+#
+install(CODE "execute_process(COMMAND ${SED_TOOL} -i.back \"s/com.yourcompany.installerbase/com.imetalling.installer/g\" ${INFO_PLIST} WORKING_DIRECTORY \"${PREP_INSTALLER_DIR}\")")
+install(CODE "execute_process(COMMAND rm -f ${INFO_PLIST}.back WORKING_DIRECTORY \"${PREP_INSTALLER_DIR}\")")
+install(CODE "execute_process(COMMAND rm -rf ${APP_FOLDER} WORKING_DIRECTORY \"${PLUGIN_INSTALLER_DIR}\")")
+install(CODE "execute_process(COMMAND mv  ${APP_FOLDER} ${PLUGIN_INSTALLER_DIR} WORKING_DIRECTORY \"${PREP_INSTALLER_DIR}\")")
+install(CODE "execute_process(COMMAND rm -rf ${PREP_BUNDLE_DIR})")
+
+

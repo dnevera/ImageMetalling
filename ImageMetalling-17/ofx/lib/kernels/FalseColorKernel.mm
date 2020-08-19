@@ -22,11 +22,9 @@ namespace imetalling {
     }
 
     void FalseColorKernel::setup(CommandEncoder &compute_encoder) {
-#ifdef __DEHANCER_USING_METAL__
         uint level = static_cast<uint>(color_map_.size());
         uint size = sizeof(simd::float3)*level;
         [compute_encoder setBytes:color_map_.data() length:size atIndex:0];
         [compute_encoder setBytes:&level length:sizeof(level) atIndex:1];
-#endif
     }
 }
