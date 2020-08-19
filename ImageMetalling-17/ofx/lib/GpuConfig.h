@@ -10,7 +10,6 @@
 
 #ifdef __DEHANCER_USING_METAL__
 
-using GpuBuffer      = id<MTLBuffer>;
 using Texture        = id<MTLTexture>;
 using CommandEncoder = id<MTLComputeCommandEncoder>;
 using GridSize       = MTLSize;

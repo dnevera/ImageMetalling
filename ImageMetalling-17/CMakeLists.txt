@@ -191,5 +191,4 @@ set(COMMON_LIBRARIES
         ${COMMON_LIBRARIES};
         ${BLAS_LIBRARIES};${LAPACK_LIBRARIES})
 
-
 add_subdirectory(ofx)
