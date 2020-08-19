@@ -13,7 +13,15 @@ set (BUILD_SHARED_LIBS OFF)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wc++17-extensions")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdeclspec -fms-extensions")
 # disable developer warnings
-set(CMAKE_POLICY_DEFAULT_CMP0054 NEW)
+set (CMAKE_POLICY_DEFAULT_CMP0054 NEW)
+
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ObjC++ -fvisibility=hidden -Wno-unused-command-line-argument -F/Library/Frameworks ")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Metal")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework MetalKit")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework MetalPerformanceShaders")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation ")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Cocoa")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Security")
 
 #
 # CMAKE Options
@@ -25,6 +33,12 @@ option(MACDEPLOY OFF)
 option(BUILD_PRO_ONLY OFF)
 option(BUILD_TESTING OFF)
 option(PRINT_DEBUG ON)
+
+
+if(PRINT_DEBUG)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DPRINT_DEBUG=1")
+endif()
+
 #
 # External projects
 #
@@ -73,6 +87,7 @@ ExternalProject_Add(ofx_lib
         -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
         -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
         -DBUILD_TESTING=OFF
+        -DPRINT_DEBUG=${PRINT_DEBUG}
         -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         )

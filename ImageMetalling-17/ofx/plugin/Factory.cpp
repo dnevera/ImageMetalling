@@ -65,9 +65,7 @@ namespace imetalling::falsecolor {
       desc.setSupportsTiles(supportsTiles);
       desc.setRenderThreadSafety(OFX::eRenderFullySafe);
 
-#ifdef __APPLE__
       desc.setSupportsMetalRender(true);
-#endif
 
       // Indicates that the plugin output does not depend on location or neighbours of a given pixel.
       // Therefore, this plugin could be executed during LUT generation.
@@ -98,7 +96,7 @@ namespace imetalling::falsecolor {
 
       group->setHint("False Color Group");
       group->setLabels("False Color", "False Color", "False Color");
-      group->setOpen(false);
+      group->setOpen(true);
 
 
       OFX::BooleanParamDescriptor *false_color_enabled = desc.defineBooleanParam(controls::false_color_enabled_check_box);

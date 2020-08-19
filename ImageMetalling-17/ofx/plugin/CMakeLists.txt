@@ -8,7 +8,7 @@ else()
 endif()
 
 set (PREP_INSTALLER_DIR ${PREP_BUNDLE_DIR}/installer)
-set (PREP_INSTALLER_DATA_DIR ${PREP_INSTALLER_DIR}/installer/packages/${PLUGIN_ID}/data)
+set (PREP_INSTALLER_DATA_DIR ${PREP_INSTALLER_DIR}/packages/${PLUGIN_ID}/data)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/ofx/resources
         DESTINATION ${PREP_INSTALLER_DATA_DIR}/Contents

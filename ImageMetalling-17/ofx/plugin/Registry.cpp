@@ -5,7 +5,7 @@
 #include "Factory.h"
 
 #define PLUGIN_BUNDLE_INSTALATION_PATH "/Library/OFX/Plugins/IMFalseColor.ofx.bundle"
-#define METAL_LIB_PATH "Contents/MacOS/Metallib/ImageMetalling.metallib"
+#define METAL_LIB_PATH "Contents/MacOS/Metallib/ImageMetallingKernel.metallib"
 
 void OFX::Plugin::getPluginIDs(PluginFactoryArray& p_FactoryArray)
 {

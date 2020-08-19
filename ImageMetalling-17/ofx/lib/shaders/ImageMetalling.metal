@@ -37,3 +37,52 @@ kernel void kernel_falseColor(
 
   outTexture.write(color,gid);
 }
+
+kernel void kernel_buffer_to_texture(
+
+        const device float*    p_Input   [[buffer (0)]],
+        texture2d<float, access::write>  destination  [[ texture(0) ]],
+
+        constant unsigned int& p_Width   [[buffer (2)]],
+        constant unsigned int& p_Height  [[buffer (3)]],
+
+        uint2 id [[thread_position_in_grid]])
+{
+  if ((id.x < p_Width) && (id.y < p_Height)) {
+    const int index = ((id.y * p_Width) + id.x) * 4;
+    float4 inColor(p_Input[index + 0], p_Input[index + 1], p_Input[index + 2], p_Input[index + 3]);
+    destination.write(inColor,id);
+  }
+}
+
+kernel void kernel_texture_to_buffer(
+
+        texture2d<float, access::read> source [[texture(0)]],
+        device float*                  p_Output [[buffer (0)]],
+
+        uint2 id [[thread_position_in_grid]])
+{
+  unsigned int p_Width = source.get_width();
+  unsigned int p_Height = source.get_height();
+
+  if ((id.x < p_Width) && (id.y < p_Height)) {
+    const int index = ((id.y * p_Width) + id.x) * 4;
+
+    float4 color     = source.read(id);
+
+    p_Output[index + 0] = color.r;
+    p_Output[index + 1] = color.g;
+    p_Output[index + 2] = color.b;
+    p_Output[index + 3] = color.rgba.a;
+  }
+}
+
+kernel void kernel_dehancer_pass(
+        texture2d<float, access::sample>  source       [[texture(0)]],
+        texture2d<float, access::write>   destination  [[texture(1)]],
+
+        uint2 id [[thread_position_in_grid]])
+{
+  float4 color     = source.read(id);
+  destination.write(color, id);
+}
