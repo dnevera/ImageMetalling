@@ -10,6 +10,9 @@
 
 namespace imetalling {
 
+    /**
+     * Фцнктор размещения текущего фрейма в текстуре Metal
+     */
     class Image2Texture : public Function {
 
     public:

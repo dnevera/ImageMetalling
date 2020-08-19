@@ -45,8 +45,8 @@ namespace imetalling {
     }
 
     void Kernel::setup(CommandEncoder &commandEncoder) {
-      if (optionsHandler) {
-        optionsHandler(commandEncoder);
+      if (options_handler) {
+        options_handler(commandEncoder);
       }
     };
 

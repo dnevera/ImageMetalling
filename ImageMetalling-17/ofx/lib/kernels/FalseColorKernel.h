@@ -8,6 +8,9 @@
 
 namespace imetalling {
 
+    /**
+     * Класс трансляции изображения в карту экспозиций
+     */
     class FalseColorKernel: public Kernel {
     public:
         FalseColorKernel(const void *command_queue,

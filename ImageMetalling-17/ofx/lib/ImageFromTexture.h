@@ -10,6 +10,9 @@
 
 namespace imetalling {
 
+    /**
+     * Функтор выгрузки текстуры Mеtal в хостовый буфер OFX
+     */
     class ImageFromTexture: public Function {
     public:
         ImageFromTexture(void *command_queue, Image& image, const Texture texture, bool wait_until_completed = WAIT_UNTIL_COMPLETED);

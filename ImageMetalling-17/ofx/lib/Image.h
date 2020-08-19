@@ -10,6 +10,10 @@
 
 namespace imetalling{
 
+    /**
+     * Прокси объект к данным фрейма хостовой системы.
+     * В данном случае OFX.
+     */
     class Image {
     private:
         std::shared_ptr<OFX::Image> image_;

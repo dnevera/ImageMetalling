@@ -8,6 +8,9 @@
 
 namespace imetalling {
 
+    /**
+     * Bypass ядро
+     */
     class PassKernel: public Kernel {
 
     public:

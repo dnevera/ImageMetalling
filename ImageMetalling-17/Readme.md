@@ -16,19 +16,20 @@
 ## Необходимое (но избыточное!)  
 
 - PkgConfig
-- EXPAT
-- ZLIB 
-- Iconv
-- CURL
 - Qt5.13
 - BLAS
 - LAPACK
-- dispatchq: https://github.com/imetalling/capy-dispatchq
-- ed25519cpp: https://github.com/dnevera/ed25519cpp
-- base64cpp: https://github.com/dnevera/base64cpp
-- imetalling-common-cpp: https://github.com/imetalling/imetalling-common-cpp
-- armadillo-code: https://github.com/imetalling/armadillo-code
 - dehancer-maths-cpp: https://github.com/imetalling/imetalling-maths-cpp 
-- dehancer-xmp-cpp: https://github.com/imetalling/imetalling-xmp-cpp
-- rxcpp: https://github.com/ReactiveX/RxCpp
+- dehancer-common-cpp: https://github.com/imetalling/imetalling-common-cpp
+- dehancer-external: https://github.com/dehancer/dehancer-external
+
+## Структура проекта
+
+- ofx - сборка OFX плагина
+- .... lib - сборка всей металической либы, может быть определена как независимая от OFX часть, но нет мы не пойдем так далеко 
+- ....... kernels - хостовая обертка для металических ядер
+- ....... shaders - ядра Metal
+- .... plugin - сборка OFX
+- ....... installer - конфигурация Qt Installer
+- .... resources - иконки и вот это всё
   

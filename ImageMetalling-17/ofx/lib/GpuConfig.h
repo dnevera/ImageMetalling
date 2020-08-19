@@ -2,6 +2,10 @@
 // Created by denn nevera on 2019-07-21.
 //
 
+/***
+ *  Конфигурация проекта
+ */
+
 #ifdef __APPLE__
 #import <Metal/Metal.h>
 #import <simd/simd.h>

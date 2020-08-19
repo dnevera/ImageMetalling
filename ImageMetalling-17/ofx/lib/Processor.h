@@ -20,11 +20,13 @@ namespace imetalling {
     public:
 
         /**
-         * Dehancer Image processor
+         * OFX процессор. По сути функтор запуска металических ядер от имени OFX.
+         * В недрах подшотавливаем проксирование структур хостовой системы OFX в классы
+         * Metal.
          * @param instance - ofx effect instance
-         * @param source - source image
-         * @param destination - destination image
-         * @param args- ofx rendering args
+         * @param source - source clip, OFX структура текущего исходного клипа
+         * @param destination - destination clip, OFX структура текущего целевого клипа
+         * @param args- ofx rendering args, параметры рендеринга
          */
         explicit Processor(
                 OFX::ImageEffect* instance,
@@ -40,9 +42,6 @@ namespace imetalling {
          * Process image with Metal
          */
         void processImagesMetal() override ;
-
-    private:
-        void* cached_command_queue_ = nil;
 
     private:
         OFX::ImageEffect* interaction_;

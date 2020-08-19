@@ -44,11 +44,7 @@ endif()
 #
 include(ExternalProject)
 
-#find_package (PkgConfig REQUIRED)
-find_package (EXPAT REQUIRED)
-find_package (ZLIB REQUIRED)
-find_package (Iconv REQUIRED)
-find_package (CURL REQUIRED)
+find_package (PkgConfig REQUIRED)
 find_package (Qt5Core REQUIRED)
 find_package (Qt5Gui REQUIRED)
 find_package (Qt5Widgets REQUIRED)
@@ -66,7 +62,7 @@ endif()
 set (CURRENT_METAL_TARGET_NAME ImageMetallingKernel)
 set (CURRENT_METAL_TARGET_LIB ${CURRENT_METAL_TARGET_NAME}.metallib)
 set (COMMON_DEPENDECIES ${CURRENT_METAL_TARGET_NAME})
-set (COMMON_LIBRARIES  ${EXPAT_LIBRARIES}; ${ZLIB_LIBRARIES}; ${Iconv_LIBRARIES}; ${CURL_LIBRARIES})
+set (COMMON_LIBRARIES)
 
 string(TIMESTAMP TODAY "%Y-%m-%d")
 
@@ -95,47 +91,6 @@ set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};ofx_lib)
 set(COMMON_LIBRARIES ${COMMON_LIBRARIES};OpenFXS)
 
 #
-# Capy threads pool dispatcher
-#
-ExternalProject_Add(capy_dispatchq_lib
-        GIT_REPOSITORY https://github.com/dehancer/capy-dispatchq
-        CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-        -DBUILD_TESTING=OFF
-        -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        )
-set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};capy_dispatchq_lib)
-set(COMMON_LIBRARIES ${COMMON_LIBRARIES};capy_dispatchq)
-
-#
-# Ed25519
-#
-ExternalProject_Add(ed25519cpplib
-        GIT_REPOSITORY https://github.com/dnevera/ed25519cpp
-        CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-        -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        )
-set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};ed25519cpplib)
-set(COMMON_LIBRARIES  ${COMMON_LIBRARIES};ed25519cpp)
-
-#
-# Base64
-#
-ExternalProject_Add(base64cpplib
-        GIT_REPOSITORY https://github.com/dnevera/base64cpp
-        CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-        -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        )
-set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};base64cpplib)
-set(COMMON_LIBRARIES  ${COMMON_LIBRARIES};base64cpp)
-
-#
 # Common
 #
 ExternalProject_Add(dehancer_common_cpplib
@@ -147,25 +102,6 @@ ExternalProject_Add(dehancer_common_cpplib
         )
 set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};dehancer_common_cpplib)
 set(COMMON_LIBRARIES  ${COMMON_LIBRARIES};dehancer_common_cpp)
-
-
-#
-# Math SDKs
-#
-
-ExternalProject_Add(armadillo-lib
-        GIT_REPOSITORY https://github.com/dehancer/armadillo-code
-        GIT_TAG 9.700.x
-        CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
-        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-        -DBUILD_TESTING=OFF
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        )
-
-set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};armadillo-lib)
-set(COMMON_LIBRARIES ${COMMON_LIBRARIES};armadillo)
-
 
 #
 # Maths
@@ -179,15 +115,6 @@ ExternalProject_Add(dehancer_maths_cpplib
         )
 set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};dehancer_maths_cpplib)
 set(COMMON_LIBRARIES  ${COMMON_LIBRARIES};dehancer_maths_cpp)
-
-ExternalProject_Add(rxcpp
-        GIT_REPOSITORY https://github.com/ReactiveX/RxCpp
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION} -Wno-error=dev -Wno-dev
-        BUILD_ALWAYS NO
-        BUILD_COMMAND echo "skip..."
-        INSTALL_COMMAND make install
-        )
-set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};rxcpp)
 
 link_directories(
         ${CMAKE_BINARY_DIR}/external/lib
