@@ -7,7 +7,7 @@
 #include "kernels/FalseColorKernel.h"
 #include "kernels/PassKernel.h"
 
-namespace imetalling {
+namespace imetalling::falsecolor {
 
     Processor::Processor(
             OFX::ImageEffect *instance,

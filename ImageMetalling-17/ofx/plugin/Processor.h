@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace imetalling {
+namespace imetalling::falsecolor {
 
     class Processor : public OFX::ImageProcessor
     {
