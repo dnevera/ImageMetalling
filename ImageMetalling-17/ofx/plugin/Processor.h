@@ -14,20 +14,23 @@
 
 namespace imetalling::falsecolor {
 
+    /***
+     * Конкретная реализация процессинга изображения
+     */
     class Processor : public OFX::ImageProcessor
     {
 
     public:
 
-        /**
-         * OFX процессор. По сути функтор запуска металических ядер от имени OFX.
-         * В недрах подшотавливаем проксирование структур хостовой системы OFX в классы
-         * Metal.
-         * @param instance - ofx effect instance
-         * @param source - source clip, OFX структура текущего исходного клипа
-         * @param destination - destination clip, OFX структура текущего целевого клипа
-         * @param args- ofx rendering args, параметры рендеринга
-         */
+        ///
+        /// OFX процессор. По сути функтор запуска металических ядер от имени OFX.
+        /// В недрах подготавливаем проксирование структур хостовой системы OFX в классы
+        /// Metal.
+        /// @param instance - ofx effect instance
+        /// @param source - source clip, OFX структура текущего исходного клипа
+        /// @param destination - destination clip, OFX структура текущего целевого клипа
+        /// @param args- ofx rendering args, параметры рендеринга
+        ///
         explicit Processor(
                 OFX::ImageEffect* instance,
                 OFX::Clip* source,
@@ -38,9 +41,10 @@ namespace imetalling::falsecolor {
 
         ~Processor() override ;
 
-        /**
-         * Process image with Metal
-         */
+        ///
+        /// В методе должен быть реализован непосредтвенно необходимый нам процессинг
+        /// созданной из буфера клипа текстуры.
+        ///
         void processImagesMetal() override ;
 
     private:

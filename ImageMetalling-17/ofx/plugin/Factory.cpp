@@ -22,8 +22,8 @@ namespace imetalling::falsecolor {
 
     void Factory::describe(OFX::ImageEffectDescriptor &desc) {
 
-      // Basic labels
 
+      /// Обязательно задать версию плагина
       desc.setVersion(
               versionMajor,
               versionMinor,
@@ -43,28 +43,48 @@ namespace imetalling::falsecolor {
       _pluginTitle.append(".");
       _pluginTitle.append(std::to_string(versionMinor));
 
+      /// И его имя с пояснениями
       desc.setLabels(_pluginName, _pluginTitle, description_);
+
+      /// Неплохобы привязать к группе
       desc.setPluginGrouping(grouping);
+
+      /// И задать описание, что бы хостовая программа могла что-то о расширении показать пользователю
       desc.setPluginDescription(description_);
 
-      // Add the supported contexts, only filter at the moment
+      /// Обязательно определить принадлежность к контексту.
+      /// В нашем случае это фильтр
       desc.addSupportedContext(OFX::eContextFilter);
       desc.addSupportedContext(OFX::eContextGeneral);
 
-      // Add supported pixel depths
+      /// Задать тип пикселя, мы работаем только с float представлением
       desc.addSupportedBitDepth(OFX::eBitDepthFloat);
 
-      // Set a few flags
+      /// Разрешить добавлять больше чем один инстанс
       desc.setSingleInstance(false);
+
+      /// Не даем рриложению параллелить вычисления с кадрами
       desc.setHostFrameThreading(false);
+
+      /// Не даем приложению произвольный доступ к данным клипа
       desc.setTemporalClipAccess(false);
+
+      /// Не даем запускать рендеринг дважды
       desc.setRenderTwiceAlways(false);
 
-      desc.setSupportsMultipleClipPARs(supportsMultipleClipPARs);
-      desc.setSupportsMultiResolution(supportsMultiResolution);
-      desc.setSupportsTiles(supportsTiles);
+      /// не даем разным клипам быть с разным соотношением сторон
+      desc.setSupportsMultipleClipPARs(false);
+
+      /// и разным разрешением
+      desc.setSupportsMultiResolution(false);
+
+      /// так же не даем дробить клипы для обработки (хотя в целом можно)
+      desc.setSupportsTiles(false);
+
+      /// говорим хостовой системе быть осторожной
       desc.setRenderThreadSafety(OFX::eRenderFullySafe);
 
+      /// ну и самое главное говорим хосту создать очередь команд Metal!
       desc.setSupportsMetalRender(true);
 
       // Indicates that the plugin output does not depend on location or neighbours of a given pixel.
@@ -79,13 +99,13 @@ namespace imetalling::falsecolor {
 
       srcClip->addSupportedComponent(OFX::ePixelComponentRGBA);
       srcClip->setTemporalClipAccess(false);
-      srcClip->setSupportsTiles(supportsTiles);
+      srcClip->setSupportsTiles(false);
       srcClip->setIsMask(false);
 
       OFX::ClipDescriptor *dstClip = desc.defineClip(kOfxImageEffectOutputClipName);
 
       dstClip->addSupportedComponent(OFX::ePixelComponentRGBA);
-      dstClip->setSupportsTiles(supportsTiles);
+      dstClip->setSupportsTiles(false);
 
       /// MARK - Page
       OFX::PageParamDescriptor *page = desc.definePageParam("main_page");

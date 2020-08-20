@@ -11,7 +11,8 @@
 namespace imetalling::falsecolor {
 
     /**
-     * @brief The plugin that does our work
+     * @brief Все что мы делаем с картинкой определыем тут.
+     * В нашем случае задаем один параметр - включен или выключен False Color monitor.
      * */
     class Interaction : public OFX::ImageEffect {
 
@@ -19,18 +20,26 @@ namespace imetalling::falsecolor {
         explicit Interaction(OfxImageEffectHandle handle,
                              const std::string &plugin_id);
 
-        /* Override is identity */
+        /**
+         * Вернуть false если состояние и настройки изменились или true если таки изменились
+         * */
         bool isIdentity(
                 const OFX::IsIdentityArguments& args,
                 OFX::Clip*& p_IdentityClip,
                 double& p_IdentityTime) override;
 
-        /* Override changedParam */
+        /**
+         * Тут может быть определена какая-то логика связанная с установкой или вычислениями свойств плагина
+         * при изменения параметров как состороны пользоватля (изменилось состояние контрола в панели),
+         * или со стороны хостовой системы (сменился кадр клипа)
+         * */
         void changedParam(
                 const OFX::InstanceChangedArgs& args,
                 const std::string& param_name) override;
 
     protected:
+        /// немного схалявим и не будем скрывать некоторые данные
+
         OFX::Clip* m_destination_clip = nullptr;
         OFX::Clip* m_source_clip = nullptr;
 
