@@ -19,8 +19,8 @@
 - Qt5.13
 - BLAS
 - LAPACK
-- dehancer-maths-cpp: https://github.com/imetalling/imetalling-maths-cpp 
-- dehancer-common-cpp: https://github.com/imetalling/imetalling-common-cpp
+- dehancer-maths-cpp: https://github.com/imetalling/dehancer-maths-cpp 
+- dehancer-common-cpp: https://github.com/imetalling/dehancer-common-cpp
 - dehancer-external: https://github.com/dehancer/dehancer-external
 
 ## Структура проекта
