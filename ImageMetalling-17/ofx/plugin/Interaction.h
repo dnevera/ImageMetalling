@@ -39,6 +39,7 @@ namespace imetalling::falsecolor {
 
     protected:
         /// немного схалявим и не будем скрывать некоторые данные
+        /// обкладывать геттерами, например
 
         OFX::Clip* m_destination_clip = nullptr;
         OFX::Clip* m_source_clip = nullptr;

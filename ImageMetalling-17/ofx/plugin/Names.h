@@ -18,6 +18,10 @@ namespace imetalling::falsecolor {
     constexpr const int  versionMinor = 0;
 
     namespace controls {
+        /**
+         * Идентификатор чекбокса используется при создании контейнера сьюта (Factory)
+         * и для получения текущего значения в наследниках ImageEffect, например
+         */
         constexpr const char *false_color_enabled_check_box = "false_color_enabled_check_box";
     }
 

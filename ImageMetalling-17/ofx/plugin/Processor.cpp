@@ -20,41 +20,41 @@ namespace imetalling::falsecolor {
             enabled_(enabled),
             interaction_(instance),
             wait_command_queue_(false),
-            // захватить текущий кадр клипа из хостовой памяти OFX
+            /// захватить текущий кадр клипа из хостовой памяти OFX
             source_(source->fetchImage(args.time)),
-            // создать целевой кадр клипа с областью памяти ужа заданной в OFX
+            /// создать целевой кадр клипа с областью памяти ужа заданной в OFX
             destination_(destination->fetchImage(args.time)),
             source_container_(nullptr),
             destination_container_(nullptr)
     {
 
-      // Установить OFX аргументы рендерига на GPU
+      /// Установить OFX аргументы рендерига на GPU
       setGPURenderArgs(args);
 
-      // Установить окно рендерига
+      /// Установить окно рендерига
       setRenderWindow(args.renderWindow);
 
-      // Разместить данные исходного кадра в текстуре Metal
+      /// Разместить данные исходного кадра в текстуре Metal
       source_container_ = std::make_unique<imetalling::Image2Texture>(_pMetalCmdQ, source_);
 
-      // Создать пустую текстуру целевого кадра в Metal
+      /// Создать пустую текстуру целевого кадра в Metal
       destination_container_ = std::make_unique<imetalling::Image2Texture>(_pMetalCmdQ, destination_);
 
-      // Поучить параметры упаковки данных в области памяти целевого кадра
+      /// Поучить параметры упаковки данных в области памяти целевого кадра
       OFX::BitDepthEnum dstBitDepth = destination->getPixelDepth();
       OFX::PixelComponentEnum dstComponents = destination->getPixelComponents();
 
-      // и исходного
+      /// и исходного
       OFX::BitDepthEnum srcBitDepth = source->getPixelDepth();
       OFX::PixelComponentEnum srcComponents = source->getPixelComponents();
 
-      // кинуть в хостовую систему сообщенме о том, что что-то пошло не так
-      // и отменить рендеринг текущего кадра
+      /// кинуть в хостовую систему сообщенме о том, что что-то пошло не так
+      /// и отменить рендеринг текущего кадра
       if ((srcBitDepth != dstBitDepth) || (srcComponents != dstComponents)) {
         OFX::throwSuiteStatusException(kOfxStatErrValue);
       }
 
-      // установить в текущий контекст процессора указатель на область памяти целевого кадра
+      /// установить в текущий контекст процессора указатель на область памяти целевого кадра
       setDstImg(destination_.get_ofx_image());
     }
 

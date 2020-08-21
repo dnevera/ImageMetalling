@@ -13,19 +13,19 @@ namespace imetalling::falsecolor {
 
       // захватить текущий клип из таймлинии
 
-      // целевой
+      /// целевой
       m_destination_clip = fetchClip(kOfxImageEffectOutputClipName);
-      // исходны
+      /// исходны
       m_source_clip = fetchClip(kOfxImageEffectSimpleSourceClipName);
 
       if (paramExists(controls::false_color_enabled_check_box))
-        // если в контрольной панели определен чекбокс получить
+        /// если в контрольной панели определен чекбокс получить
         m_false_color_enabled = fetchBooleanParam(controls::false_color_enabled_check_box);
     }
 
     bool
     Interaction::isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip *&p_IdentityClip, double &p_IdentityTime) {
-      // не будем тут упарываться - пусть GPU вращает вентиляторами
+      /// не будем тут упарываться - пусть GPU вращает вентиляторами
       return false;
     }
 

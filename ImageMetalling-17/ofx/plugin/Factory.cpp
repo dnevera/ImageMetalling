@@ -95,8 +95,12 @@ namespace imetalling::falsecolor {
 
     void Factory::describeInContext(OFX::ImageEffectDescriptor &desc, OFX::ContextEnum p_Context) {
 
+      /// в текущем контексте, зачем-то нужно установить текущие свойсьва клипа
+      /// частично дублирующие свойства дескриптора эффекта
       OFX::ClipDescriptor *srcClip = desc.defineClip(kOfxImageEffectSimpleSourceClipName);
 
+      /// главное сказать что работаем с RGBA
+      /// так проще отмапить данные в Metal текстуру
       srcClip->addSupportedComponent(OFX::ePixelComponentRGBA);
       srcClip->setTemporalClipAccess(false);
       srcClip->setSupportsTiles(false);
@@ -107,25 +111,35 @@ namespace imetalling::falsecolor {
       dstClip->addSupportedComponent(OFX::ePixelComponentRGBA);
       dstClip->setSupportsTiles(false);
 
-      /// MARK - Page
+      /// Создаем UI страницу панели управления OFX плагином
       OFX::PageParamDescriptor *page = desc.definePageParam("main_page");
 
 
-      /// MARK - Profile output group
+      /// Можно добавить выпадающую группу в, которой размещаются котролы,
+      /// но можно и не создавать - это вопрос "проектирования" UI/UX
+      /// конкретной панели конкретного плагина, мы для примеры добавим
       OFX::GroupParamDescriptor* group = desc.defineGroupParam("falseColorGroup");
 
+      /// Устанавливаем отображаемые свойства панели и группы
       group->setHint("False Color Group");
       group->setLabels("False Color", "False Color", "False Color");
       group->setOpen(true);
 
-
+      /// Добавляем в группу чекбокс
       OFX::BooleanParamDescriptor *false_color_enabled = desc.defineBooleanParam(controls::false_color_enabled_check_box);
       false_color_enabled->setDefault(false);
 
+      /// Видимые свойства чекбокса
       false_color_enabled->setLabels("False Colors (IRE, 16 zones)", "Check False Colors", "Check False Colors");
 
+      /// При изменении состояния дать OFX сгенерить событие
+      /// для запуска чтения аттрибутов структуры плагина и рендеринга
       false_color_enabled->setEvaluateOnChange(true);
+
+      /// Привязываем к конкретной группе
       false_color_enabled->setParent(*group);
+
+      /// Добавляем на страницу панели
       page->addChild(*false_color_enabled);
 
     }
