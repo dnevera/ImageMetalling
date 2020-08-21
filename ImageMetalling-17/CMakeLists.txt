@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.15)
 project(ImageMetalling_17)
 
 set (PLUGIN_ID "com.imetalling.false_color")

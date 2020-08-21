@@ -15,7 +15,7 @@ namespace imetalling::falsecolor {
 
       /// целевой
       m_destination_clip = fetchClip(kOfxImageEffectOutputClipName);
-      /// исходны
+      /// исходный
       m_source_clip = fetchClip(kOfxImageEffectSimpleSourceClipName);
 
       if (paramExists(controls::false_color_enabled_check_box))
