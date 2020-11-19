@@ -77,7 +77,7 @@ set (EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 #
 # OFX
 #
-ExternalProject_Add(ofx_lib
+ExternalProject_Add(dehancer_external_project
         GIT_REPOSITORY https://github.com/dehancer/dehancer-external
         CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
@@ -87,8 +87,8 @@ ExternalProject_Add(ofx_lib
         -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         )
-set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};ofx_lib)
-set(COMMON_LIBRARIES ${COMMON_LIBRARIES};OpenFXS)
+set(COMMON_DEPENDECIES ${COMMON_DEPENDECIES};dehancer_external_project)
+set(COMMON_LIBRARIES ${COMMON_LIBRARIES};dehancer_external)
 
 #
 # Common
